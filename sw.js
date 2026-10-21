@@ -1,4 +1,4 @@
-const CACHE = 'vocab-pwa-v4';
+const CACHE = 'vocab-pwa-v5';
 const ASSETS = [
   './',
   './index.html',
@@ -25,17 +25,32 @@ self.addEventListener('activate', e => {
 });
 
 self.addEventListener('fetch', e => {
-  if (e.request.method !== 'GET') return;
-  e.respondWith(
-    caches.match(e.request, { ignoreSearch: true }).then(hit =>
-      hit ||
-      fetch(e.request)
+  const req = e.request;
+  if (req.method !== 'GET') return;
+
+  // 页面导航：网络优先（联网时打开即最新版），离线回退到缓存
+  if (req.mode === 'navigate') {
+    e.respondWith(
+      fetch(req)
         .then(res => {
           const copy = res.clone();
-          caches.open(CACHE).then(c => c.put(e.request, copy));
+          caches.open(CACHE).then(c => c.put(req, copy));   // 保持离线后备为最新
           return res;
         })
-        .catch(() => caches.match('./index.html'))
+        .catch(() => caches.match('./index.html', { ignoreSearch: true }))
+    );
+    return;
+  }
+
+  // 其余静态资源（图标 / manifest 等，更新需升级 CACHE 版本号）：缓存优先
+  e.respondWith(
+    caches.match(req, { ignoreSearch: true }).then(hit =>
+      hit ||
+      fetch(req).then(res => {
+        const copy = res.clone();
+        caches.open(CACHE).then(c => c.put(req, copy));
+        return res;
+      })
     )
   );
 });
