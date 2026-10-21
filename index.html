@@ -911,6 +911,25 @@
 
   .review-banner.show { display: flex; }
 
+  .review-banner .review-action-btn {
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    color: #e8e8e8;
+    font-family: inherit;
+    font-size: 12px;
+    padding: 6px 12px;
+    border-radius: 8px;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: all .15s;
+  }
+  .review-banner .review-action-btn:hover { background: rgba(255, 255, 255, 0.14); }
+  .review-banner .review-action-btn.danger {
+    border-color: rgba(255, 107, 107, 0.45);
+    color: #ff6b6b;
+  }
+  .review-banner .review-action-btn.danger:hover { background: rgba(255, 107, 107, 0.15); }
+
   .review-banner .mode-tag {
     background: #8e44ad;
     color: white;
@@ -1018,7 +1037,9 @@
   <!-- 复习模式横幅 -->
   <div class="review-banner" id="reviewBanner">
     <span class="mode-tag" id="reviewModeTag">复习</span>
-    <span id="reviewBannerText">复习模式：所有替代词例句已乱序排列</span>
+    <span id="reviewBannerText" style="flex:1;">复习模式：所有替代词例句已乱序排列</span>
+    <button class="review-action-btn" id="btnSkipReview" style="display:none;">⏭ 跳过本句</button>
+    <button class="review-action-btn danger" id="btnExitReview">✖ 退出复习</button>
   </div>
 
   <!-- 主面板：本周词表 -->
@@ -1243,6 +1264,10 @@
   const reviewBanner = $("reviewBanner");
   const reviewModeTag = $("reviewModeTag");
   const reviewBannerText = $("reviewBannerText");
+  const btnSkipReview = $("btnSkipReview");
+  const btnExitReview = $("btnExitReview");
+  const prevWordBtn = $("prevWordBtn");
+  const nextWordBtn = $("nextWordBtn");
 
   const practiceWord = $("practiceWord");
   const practicePhonetic = $("practicePhonetic");
@@ -1376,7 +1401,7 @@
         if (!progress.mastered[weekKey]) progress.mastered[weekKey] = [];
         if (!progress.mastered[weekKey].includes(word)) {
           progress.mastered[weekKey].push(word);
-          showMasterPopup(word);
+          if (!state.reviewMode) showMasterPopup(word);
           populateWeekSelect();      // 更新下拉框中的已掌握数
           updateWeekSelect();
         }
@@ -1470,7 +1495,7 @@
   function startFromLatest() {
     state.reviewMode = null;
     state.reviewScope = null;
-    reviewBanner.classList.remove("show");
+    setReviewUI(false);
     const next = pickNextWord(WEEK_KEYS[0], -1);
     if (next) {
       state.currentWeek = next.weekKey;
@@ -1491,7 +1516,7 @@
     }
     state.reviewMode = null;
     state.reviewScope = null;
-    reviewBanner.classList.remove("show");
+    setReviewUI(false);
     state.currentWeek = weekKey;
     state.currentWordIndex = Math.max(0, firstPracticableInWeek(weekKey));
     updateWeekSelect();
@@ -1516,6 +1541,10 @@
     state.reviewMode = mode;
     state.reviewScope = scope;
 
+    // 复习开始：重置本轮统计与计时
+    resetRoundState();
+    setReviewUI(true);
+
     let weeks = scope === "all" ? WEEK_KEYS : [scope];
     let queue = [];
     weeks.forEach(wk => {
@@ -1531,31 +1560,49 @@
       });
     });
 
-    if (mode === "reverse") queue.reverse();
-    if (mode === "shuffle") queue = shuffle(queue);
+    if (mode === "reverse") {
+      queue.reverse();
+    } else {
+      // 乱序复习：错得多的优先，同错误数随机
+      queue = shuffle(queue);
+      queue.sort((a, b) => errCountOf(b) - errCountOf(a));
+    }
 
     state.reviewQueue = queue;
     state.reviewIndex = 0;
 
     reviewBanner.classList.add("show");
     reviewModeTag.style.background = "#8e44ad";
-    const modeName = mode === "reverse" ? "逆序" : "乱序";
+    const modeName = mode === "reverse" ? "逆序" : "乱序·错题优先";
     const scopeName = scope === "all" ? "全部已学词汇" : scope;
     reviewModeTag.textContent = `复习 · ${modeName}`;
-    reviewBannerText.textContent = `${scopeName} · 共 ${queue.length} 条例句 · 当前进度 ${state.reviewIndex + 1}/${queue.length}`;
+
+    if (queue.length === 0) {
+      reviewBannerText.textContent = `${scopeName} · 没有可复习的例句`;
+      typingInput.disabled = true;
+      btnSkipReview.style.display = "none";
+      return;
+    }
+
+    reviewBannerText.textContent = `${scopeName} · 共 ${queue.length} 条例句 · 当前进度 1/${queue.length}`;
+    btnSkipReview.style.display = "";
 
     if (scope !== "all") {
       state.currentWeek = scope;
     }
     renderWeek();
-    if (queue.length > 0) loadReviewItem(0);
+    loadReviewItem(0);
   }
 
   function loadReviewItem(idx) {
     if (idx >= state.reviewQueue.length) {
       stopTimer();
       typingInput.disabled = true;
-      reviewBannerText.textContent = `🎉 复习完成！共完成 ${state.reviewQueue.length} 条例句`;
+      btnSkipReview.style.display = "none";
+      const elapsedMin = Math.max(0.1, (Date.now() - state.roundStartTime) / 60000);
+      const acc = state.totalTyped > 0 ? Math.round((state.correctChars / state.totalTyped) * 100) : 0;
+      reviewBannerText.textContent =
+        `🎉 复习完成！共 ${state.reviewQueue.length} 句 · 用时 ${elapsedMin.toFixed(1)} 分钟 · 正确率 ${acc}% · 得分 ${state.score}`;
       return;
     }
     state.reviewIndex = idx;
@@ -1578,14 +1625,52 @@
     updateWordProgress();
     updateReviewBanner();
     resetTypingForNewSentence();
+    renderExampleList();
   }
 
   function updateReviewBanner() {
     if (!state.reviewMode) return;
-    const modeName = state.reviewMode === "reverse" ? "逆序" : "乱序";
+    const modeName = state.reviewMode === "reverse" ? "逆序" : "乱序·错题优先";
     const scopeName = state.reviewScope === "all" ? "全部已学词汇" : state.reviewScope;
     reviewModeTag.textContent = `复习 · ${modeName}`;
     reviewBannerText.textContent = `${scopeName} · 当前进度 ${state.reviewIndex + 1}/${state.reviewQueue.length}`;
+  }
+
+  // 复习界面的显隐（进入复习时隐藏词卡切换/两遍模式开关，退出时恢复）
+  function setReviewUI(on) {
+    prevWordBtn.style.display = on ? "none" : "";
+    nextWordBtn.style.display = on ? "none" : "";
+    twoPassToggle.style.display = on ? "none" : "";
+    btnExitReview.style.display = on ? "" : "none";
+    btnSkipReview.style.display = on ? "" : "none";
+  }
+
+  function exitReviewMode() {
+    if (!state.reviewMode) return;
+    state.reviewMode = null;
+    state.reviewScope = null;
+    state.reviewQueue = [];
+    state.reviewIndex = 0;
+    reviewBanner.classList.remove("show");
+    setReviewUI(false);
+    renderWeek();
+    renderExampleList();
+    updateWordProgress();
+    startFromLatest();
+  }
+
+  // 某条例句的历史错误数（复习排序用）
+  function errCountOf(item) {
+    const key = exampleKey(item.week, VOCAB_DATA[item.week].words[item.wordIdx].word,
+      VOCAB_DATA[item.week].words[item.wordIdx].replacements[item.repIndex].word, item.exIndex);
+    return progress.errors[key] || 0;
+  }
+
+  // 单条错误徽章的精准更新（避免整列表重渲染）
+  function updateExampleErrorBadge(exIdx, count) {
+    const el = exampleList.querySelector(`.example-item[data-ex-index="${exIdx}"] .ex-err`);
+    if (el) el.textContent = `错 ${count}`;
+    else renderExampleList();   // 首次报错时徽章尚未渲染
   }
 
   // ============================================================
@@ -1650,7 +1735,7 @@
       `;
       card.addEventListener("click", () => {
         if (state.reviewMode) {
-          showCliHint("复习模式下点击单词无效，请先退出复习模式");
+          showCliHint("复习模式下点击单词无效，请点右上角「退出复习」");
           return;
         }
         if (!isPracticable(wd)) {
@@ -1761,10 +1846,11 @@
       const errs = getExampleErrors(state.currentWeek, wd.word, rep.word, i);
       const item = document.createElement("div");
       item.className = "example-item" + (done ? " done" : "");
+      item.dataset.exIndex = i;
       const newHighlighted = highlightWordInText(ex.new, rep.word);
       item.innerHTML = `
         ${done ? '<span class="check">✓</span>' : ''}
-        ${errs ? `<span class="ex-err" title="该句累计错误 ${errs} 次">❌ ${errs}</span>` : ''}
+        ${errs ? `<span class="ex-err" title="该句累计错误 ${errs} 次">错 ${errs}</span>` : ''}
         <div class="ex-old">${escapeHtml(ex.old)}</div>
         <div class="ex-new">${newHighlighted}</div>
         <div class="ex-cn">${escapeHtml(ex.cn)}</div>
@@ -1986,6 +2072,13 @@
       state.currentIndex = expected.start;
     }
     typingInput.value += state.currentSentence.slice(state.currentIndex, expected.end);
+    // 正确：整词计分（一次点击 = 一个词）
+    state.totalTyped++;
+    state.correctChars += token.text.length;
+    state.combo++;
+    state.maxCombo = Math.max(state.maxCombo, state.combo);
+    state.score += 10 + Math.floor(state.combo / 5) * 3;
+    if (state.combo > 0 && state.combo % 10 === 0) showComboPopup(state.combo);
     handleInput();
   }
 
@@ -2008,36 +2101,20 @@
       const key = exampleKey(state.currentWeek, wd.word, rep.word, state.currentExampleIndex);
       progress.errors[key] = (progress.errors[key] || 0) + 1;
       saveProgress();
-      renderExampleList();          // 例句列表同步显示错误次数
+      updateExampleErrorBadge(state.currentExampleIndex, progress.errors[key]);
     }
     updateStats();
   }
 
   function handleInput() {
+    // 点击拼接模式：输入框只读，点击单词时整词填入，这里只负责同步光标位置
     const value = typingInput.value;
     if (value.length < state.currentIndex) {
       state.currentIndex = value.length;
       renderSentenceChars(state.currentSentence, currentRepWord());
       return;
     }
-    while (state.currentIndex < value.length && state.currentIndex < state.currentSentence.length) {
-      const expected = state.currentSentence[state.currentIndex];
-      const typed = value[state.currentIndex];
-      state.totalTyped++;
-      if (typed === expected) {
-        state.correctChars++;
-        state.combo++;
-        state.maxCombo = Math.max(state.maxCombo, state.combo);
-        let pts = 10 + Math.floor(state.combo / 5) * 3;
-        state.score += pts;
-        if (state.combo > 0 && state.combo % 5 === 0) showComboPopup(state.combo);
-      } else {
-        state.combo = 0;
-        state.score = Math.max(0, state.score - 3);
-        recordError();
-      }
-      state.currentIndex++;
-    }
+    state.currentIndex = Math.min(value.length, state.currentSentence.length);
 
     renderSentenceChars(state.currentSentence, currentRepWord());
     updateStats();
@@ -2221,6 +2298,7 @@
     state.correctChars = 0;
     state.totalTyped = 0;
     state.wrongChars = 0;
+    state.roundStartTime = Date.now();
     stopTimer();
     updateStats();
   }
@@ -2604,7 +2682,14 @@
   // 两遍模式开关（旧句 → 新句）
   twoPassToggle.addEventListener("click", () => setTwoPass(!state.twoPass));
 
-  $("prevWordBtn").addEventListener("click", () => {
+  // 复习横幅：跳过本句 / 退出复习
+  btnSkipReview.addEventListener("click", () => {
+    if (!state.reviewMode) return;
+    loadReviewItem(state.reviewIndex + 1);
+  });
+  btnExitReview.addEventListener("click", exitReviewMode);
+
+  prevWordBtn.addEventListener("click", () => {
     if (state.reviewMode) { showCliHint("复习模式下无法切换替代词"); return; }
     const wd = getCurrentWord();
     if (!wd?.replacements) return;
@@ -2613,7 +2698,7 @@
     startRep((state.currentRepIndex - 1 + wd.replacements.length) % wd.replacements.length, 0);
   });
 
-  $("nextWordBtn").addEventListener("click", () => {
+  nextWordBtn.addEventListener("click", () => {
     if (state.reviewMode) { showCliHint("复习模式下无法切换替代词"); return; }
     const wd = getCurrentWord();
     if (!wd?.replacements) return;
