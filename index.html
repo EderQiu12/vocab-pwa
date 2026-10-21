@@ -135,47 +135,6 @@
   }
   .quick-btn select option { background: #0a1628; }
 
-  /* ========== 命令行 ========== */
-  .cli {
-    background: rgba(0, 0, 0, 0.4);
-    border: 1px solid rgba(0, 229, 255, 0.25);
-    border-radius: 12px;
-    padding: 14px 18px;
-    margin-bottom: 16px;
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    font-family: "SF Mono", Monaco, Consolas, monospace;
-  }
-
-  .cli-prompt {
-    color: #00e5ff;
-    font-weight: 700;
-    font-size: 15px;
-    user-select: none;
-  }
-
-  .cli input {
-    flex: 1;
-    background: transparent;
-    border: none;
-    outline: none;
-    color: #e8e8e8;
-    font-family: inherit;
-    font-size: 15px;
-    caret-color: #00e5ff;
-  }
-
-  .cli input::placeholder { color: #4a5070; }
-  .cli-hint { font-size: 11px; color: #6a7090; display: flex; gap: 10px; flex-wrap: wrap; }
-  .cli-hint code {
-    background: rgba(0, 229, 255, 0.1);
-    color: #00e5ff;
-    padding: 2px 6px;
-    border-radius: 4px;
-    font-size: 10.5px;
-  }
-
   /* ========== 主面板 ========== */
   .panel {
     background: rgba(255, 255, 255, 0.04);
@@ -977,23 +936,6 @@
     display: flex; align-items: center; gap: 12px; flex-wrap: wrap;
     margin-bottom: 14px;
   }
-  .practice-options .mode-switch { margin-bottom: 0; }
-  .mode-switch {
-    display: inline-flex; align-items: center; gap: 4px; padding: 4px; flex-wrap: wrap;
-    background: rgba(255, 255, 255, 0.04); border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 14px; margin-bottom: 14px;
-  }
-  .mode-switch .mode-label { font-size: 11.5px; color: #6a7090; padding: 0 6px; }
-  .mode-btn {
-    background: transparent; border: none; cursor: pointer; font-family: inherit;
-    color: rgba(255, 255, 255, 0.6); font-size: 12.5px; padding: 6px 12px;
-    border-radius: 10px; transition: all .15s; white-space: nowrap;
-  }
-  .mode-btn:hover { background: rgba(255, 255, 255, 0.06); color: #fff; }
-  .mode-btn.active {
-    background: rgba(0, 229, 255, 0.16); color: #00e5ff;
-    box-shadow: inset 0 0 0 1px rgba(0, 229, 255, 0.4);
-  }
 
   /* ========== 乱序拼接提示区 ========== */
   .scramble-bar {
@@ -1025,7 +967,8 @@
     25% { transform: translateX(-4px); }
     75% { transform: translateX(4px); }
   }
-  .example-new .char.masked { color: rgba(255, 255, 255, 0.16); }
+  /* 未拼出的字符保留原字形占位（透明隐藏），宽度与字母一致，页面不跳动 */
+  .example-new .char.masked { color: transparent; }
 
   /* 点击拼接模式：输入框只读（禁用键盘输入，只由点击填入） */
   #typingInput.click-only:not(:disabled) {
@@ -1070,19 +1013,6 @@
     <button class="quick-btn secondary" id="btnNextWeek">下一周 ▶</button>
     <button class="quick-btn purple" id="btnReview">🔁 复习本周</button>
     <button class="quick-btn purple" id="btnReviewAll">🗂 全部复习</button>
-  </div>
-
-  <!-- 命令行 -->
-  <div class="cli">
-    <span class="cli-prompt">$</span>
-    <input type="text" id="cliInput" placeholder="回车开始 / 周数如 3 / 复习  / 全部复习..." autocomplete="off" spellcheck="false" />
-    <div class="cli-hint">
-      <code>回车</code> 开始
-      <code>3</code> 第 3 周
-      <code>w3</code> 第 3 周
-      <code>复习</code> 复习本周
-      <code>全部</code> 全部复习
-    </div>
   </div>
 
   <!-- 复习模式横幅 -->
@@ -1177,29 +1107,23 @@
       <div class="example-cn" id="exampleCn"></div>
     </div>
 
-    <!-- 练习选项：练习模式 + 两遍模式 -->
+    <!-- 练习选项：两遍模式 -->
     <div class="practice-options">
-      <div class="mode-switch" id="modeSwitch">
-        <span class="mode-label">练习模式</span>
-        <button class="mode-btn" data-mode="type" title="按原句逐字跟打">⌨️ 原文跟打</button>
-        <button class="mode-btn" data-mode="scramble" title="只看打乱顺序的单词提示，自己拼出原句">🧩 乱序拼接</button>
-        <button class="mode-btn active" data-mode="scrambleClick" title="乱序拼接 + 点击单词直接填入（键盘输入已禁用）">🖱️ 点击拼接</button>
-      </div>
-      <div class="auto-speak-toggle on" id="twoPassToggle" title="开启后：每条例句先练一遍旧句，再练一遍对应的新句">
+      <div class="auto-speak-toggle on" id="twoPassToggle" title="开启后：每条例句先拼一遍旧句，再拼一遍对应的新句">
         <span class="switch"></span><span>两遍模式（旧→新）</span>
       </div>
     </div>
 
     <!-- 乱序单词提示 -->
-    <div class="scramble-bar" id="scrambleBar" style="display:none;">
-      <div class="scramble-title">🧩 <b>单词提示（顺序已打乱）</b>：把它们按正确语序拼成完整句子，在下方输入框敲出来（单词大小写 / 标点已保留）</div>
+    <div class="scramble-bar" id="scrambleBar">
+      <div class="scramble-title">🧩 <b>单词提示（顺序已打乱）</b>：按正确语序依次<b>点击</b>它们，拼出完整句子（大小写 / 标点已保留）</div>
       <div class="word-chips" id="wordChips"></div>
     </div>
 
     <!-- 输入框 -->
     <div class="input-wrapper">
       <input type="text" id="typingInput" placeholder="逐字输入新表达（高亮紫色为本周替代词）..." autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" disabled />
-      <div class="hint">💡 输入正确的字符变绿，错误变红 · 完成一句自动加载下一句</div>
+      <div class="hint">💡 按正确语序点击上方单词拼出整句 · 点对的词变绿，点错抖动提示 · 完成一句自动加载下一句</div>
     </div>
 
     <!-- 该替代词的所有例句列表 -->
@@ -1220,7 +1144,7 @@
       <div class="icon">📝</div>
       <h3>欢迎来到词汇进化训练</h3>
       <p>本程序帮你每周消灭 50 个"舒适词"（comfort word），用更精确、更有画面感的替代词升级你的表达。每个替代词配有真实例句供打字练习。</p>
-      <div class="cmd-hint">在顶部命令行输入 -e 开始第一周</div>
+      <div class="cmd-hint">点击上方「🚀 开始练习」按钮开始第一周</div>
     </div>
   </div>
 </div>
@@ -1293,7 +1217,6 @@
   //  DOM
   // ============================================================
   const $ = (id) => document.getElementById(id);
-  const cliInput = $("cliInput");
   const weekSelect = $("weekSelect");
   const btnStart = $("btnStart");
   const btnPrevWeek = $("btnPrevWeek");
@@ -1338,10 +1261,8 @@
   const exampleList = $("exampleList");
   const typingInput = $("typingInput");
 
-  // 练习模式（原文跟打 / 乱序拼接 / 点击拼接）
-  const modeSwitch = $("modeSwitch");
+  // 两遍模式（旧句 → 新句）
   const scrambleBar = $("scrambleBar");
-  const scrambleTitle = scrambleBar.querySelector(".scramble-title");
   const wordChips = $("wordChips");
   const twoPassToggle = $("twoPassToggle");
   const exampleArrow = $("exampleArrow");
@@ -1393,8 +1314,7 @@
     reviewScope: null,            // null | weekKey | 'all'
     reviewQueue: [],
     reviewIndex: 0,
-    // 练习模式
-    practiceMode: "scrambleClick",  // "type" | "scramble" | "scrambleClick"
+    // 练习模式：固定为点击拼接
     scrambleTokens: [],           // 当前句子的单词（按原语序，记录在原句中的位置）
     scrambleOrder: [],            // 打乱后的 token 索引顺序
     // 两遍模式：每条例句先练一遍旧句，再练一遍新句
@@ -1547,73 +1467,6 @@
     return -1;
   }
 
-  // ============================================================
-  //  命令解析（无 -e 前缀，自然语言风格）
-  // ============================================================
-  function parseCommand(raw) {
-    const s = raw.trim();
-    // 空输入 → 直接开始（从系统推荐第一个未掌握词开始）
-    if (!s) return { cmd: "latest" };
-
-    const lower = s.toLowerCase();
-
-    // 向后兼容：仍支持 -e 前缀
-    let body = s;
-    if (lower.startsWith("-e")) {
-      body = s.slice(2).trim();
-      if (!body) return { cmd: "latest" };
-    }
-
-    const parts = body.split(/\s+/);
-    const first = parts[0].toLowerCase();
-    const second = (parts[1] || "").toLowerCase();
-
-    // ======= 复习类 =======
-    if (["复习", "review", "r"].includes(first) || first === "-r") {
-      const scope = second || "current";
-      if (["全部", "all", "a"].includes(scope)) return { cmd: "review-all", mode: "shuffle", scope: "all" };
-      if (["乱序", "shuffle"].includes(scope)) return { cmd: "review-shuffle", mode: "shuffle", scope: "current" };
-      // 复习指定周：复习 1  / 复习 week-01 / r 3
-      const m = scope.match(/^(?:week-)?0*(\d+)$/i);
-      if (m) return { cmd: "review-week", mode: "reverse", scope: `week-${String(m[1]).padStart(2, "0")}` };
-      return { cmd: "review-current", mode: "reverse", scope: "current" };
-    }
-    if (["全部复习", "全部", "reviewall", "全部"].includes(first)) {
-      return { cmd: "review-all", mode: "shuffle", scope: "all" };
-    }
-
-    // ======= 跳转周 =======
-    // 纯数字: "1", "03", "7"
-    if (/^\d+$/.test(first)) {
-      const n = parseInt(first, 10);
-      if (n >= 1 && n <= WEEK_KEYS.length) {
-        const w = `week-${String(n).padStart(2, "0")}`;
-        return { cmd: "goto-week", week: w };
-      }
-      return { error: "invalid", raw: s, msg: `超出范围：共 ${WEEK_KEYS.length} 周` };
-    }
-    // w1 / w01 / week1 / week-01
-    const wm = first.match(/^w(?:eek)?-?0?(\d+)$/i);
-    if (wm) {
-      const w = `week-${String(wm[1]).padStart(2, "0")}`;
-      if (VOCAB_DATA[w]) return { cmd: "goto-week", week: w };
-      return { error: "invalid", raw: s, msg: `找不到 ${w}，共 ${WEEK_KEYS.length} 周` };
-    }
-
-    // ======= 开始类 =======
-    if (["开始", "start", "go", "s", "最新", "latest", "继续"].includes(first)) {
-      return { cmd: "latest" };
-    }
-
-    // ======= 帮助 =======
-    if (["?", "help", "帮助", "帮"].includes(first)) {
-      return { cmd: "help" };
-    }
-
-    // 仍无法解析 → 返回错误
-    return { error: "unknown", raw: s };
-  }
-
   function startFromLatest() {
     state.reviewMode = null;
     state.reviewScope = null;
@@ -1633,7 +1486,6 @@
 
   function gotoWeek(weekKey) {
     if (!VOCAB_DATA[weekKey]) {
-      flashCliError();
       showCliHint(`找不到 ${weekKey}，目前共有 ${WEEK_KEYS.length} 周`);
       return;
     }
@@ -1645,31 +1497,6 @@
     updateWeekSelect();
     renderWeek();
     startWord(state.currentWordIndex, 0, 0);
-  }
-
-  function executeCommand(raw) {
-    const parsed = parseCommand(raw);
-    if (parsed.error) {
-      if (parsed.error === "empty") return;
-      flashCliError();
-      if (parsed.msg) showCliHint(parsed.msg);
-      return;
-    }
-
-    switch (parsed.cmd) {
-      case "latest":        startFromLatest(); break;
-      case "goto-week":     gotoWeek(parsed.week); break;
-      case "review-current": enterReviewMode("reverse", state.currentWeek); break;
-      case "review-shuffle": enterReviewMode("shuffle", state.currentWeek); break;
-      case "review-week":   state.currentWeek = parsed.scope; updateWeekSelect(); enterReviewMode("reverse", parsed.scope); break;
-      case "review-all":    enterReviewMode("shuffle", "all"); break;
-      case "help":          showCliHint("回车=开始  数字=跳周  复习=本周复习  全部=全部复习"); break;
-    }
-  }
-
-  function flashCliError() {
-    cliInput.style.color = "#e74c3c";
-    setTimeout(() => { cliInput.style.color = ""; }, 600);
   }
 
   function showCliHint(msg) {
@@ -1823,7 +1650,7 @@
       `;
       card.addEventListener("click", () => {
         if (state.reviewMode) {
-          showCliHint("复习模式下点击单词无效，请先退出复习（输入 -e 或 -e week-NN）");
+          showCliHint("复习模式下点击单词无效，请先退出复习模式");
           return;
         }
         if (!isPracticable(wd)) {
@@ -1960,7 +1787,7 @@
     const target = pass === "old" ? ex.old : ex.new;
     exampleOld.textContent = ex.old;
     exampleArrow.textContent = pass === "old"
-      ? "↓ 第一遍：先跟打旧句，第二遍再换成新词"
+      ? "↓ 第一遍：先拼旧句，第二遍再换成新词"
       : "↓ 用新词替换";
     exampleCn.textContent = `中文：${ex.cn}`;
     speakNewBtn.textContent = pass === "old" ? "🔊 本句" : "🔊 新句";
@@ -1981,7 +1808,6 @@
   }
 
   function renderSentenceChars(sentence, repWord) {
-    const masked = isScrambleMode();
     const ranges = findWordRanges(sentence, repWord);
     const html = Array.from(sentence).map((ch, i) => {
       let cls = "char";
@@ -1993,10 +1819,9 @@
       }
       if (i === state.currentIndex) cls += " current";
       if (ranges.some(r => i >= r.start && i < r.end)) cls += " highlight-word";
-      if (masked && !typed) cls += " masked";
-      let display;
-      if (masked && !typed) display = ch === " " ? "&nbsp;" : "·";
-      else display = ch === " " ? "&nbsp;" : escapeHtml(ch);
+      if (!typed) cls += " masked";
+      // 始终渲染真实字符（未拼出的用 CSS 透明隐藏），占位宽度与字母完全一致，避免页面跳动
+      const display = ch === " " ? "&nbsp;" : escapeHtml(ch);
       return `<span class="${cls}">${display}</span>`;
     }).join("");
     exampleNew.innerHTML = html;
@@ -2056,7 +1881,6 @@
     renderSentenceChars(state.currentSentence, currentRepWord());
     renderChips();
     if (!state.timerId) startTimer();
-    if (!isClickMode()) typingInput.focus();
   }
 
   function currentRepWord() {
@@ -2064,19 +1888,14 @@
   }
 
   // ============================================================
-  //  练习模式：原文跟打 / 乱序拼接 / 点击拼接
-  //  - scramble      ：只给打乱顺序的单词提示，自己按语序敲出来
-  //  - scrambleClick ：在 scramble 基础上，点击单词即可直接填入
+  //  练习模式：固定为"点击拼接"（点击打乱单词，按语序拼出整句）
   // ============================================================
-  const PRACTICE_MODE_KEY = "vocab_practice_mode";
-  const PRACTICE_MODES = ["type", "scramble", "scrambleClick"];
-
   function isScrambleMode() {
-    return state.practiceMode === "scramble" || state.practiceMode === "scrambleClick";
+    return true;
   }
 
   function isClickMode() {
-    return state.practiceMode === "scrambleClick";
+    return true;
   }
 
   // 两遍模式：每条例句先练一遍旧句，再练一遍对应的新句
@@ -2096,32 +1915,11 @@
     }
   }
 
-  function setPracticeMode(mode) {
-    state.practiceMode = PRACTICE_MODES.includes(mode) ? mode : "scrambleClick";
-    try { localStorage.setItem(PRACTICE_MODE_KEY, state.practiceMode); } catch (e) {}
-    if (modeSwitch) {
-      modeSwitch.querySelectorAll(".mode-btn").forEach(btn =>
-        btn.classList.toggle("active", btn.dataset.mode === state.practiceMode));
-    }
-    scrambleBar.style.display = isScrambleMode() ? "block" : "none";
-    scrambleTitle.innerHTML = isClickMode()
-      ? "🧩 <b>单词提示（顺序已打乱）</b>：按正确语序依次<b>点击</b>它们即可拼出整句（键盘输入已禁用）"
-      : "🧩 <b>单词提示（顺序已打乱）</b>：把它们按正确语序敲成完整句子（单词大小写 / 标点已保留）";
-    updateTypingInputLock();
-    renderExampleList();
-    renderChips();
-    renderSentenceChars(state.currentSentence, currentRepWord());
-    if (!typingInput.disabled && !isClickMode()) typingInput.focus();
-  }
-
-  // 点击拼接模式下禁用键盘输入（输入框只读，只能靠点击单词填入）
+  // 输入框只读（键盘输入禁用，句子只靠点击单词拼出）
   function updateTypingInputLock() {
-    const clickOnly = isClickMode();
-    typingInput.readOnly = clickOnly;
-    typingInput.classList.toggle("click-only", clickOnly);
-    typingInput.placeholder = clickOnly
-      ? "点击拼接模式：点击上方单词依次拼出整句（键盘输入已禁用）"
-      : "逐字输入新表达（高亮紫色为本周替代词）...";
+    typingInput.readOnly = true;
+    typingInput.classList.add("click-only");
+    typingInput.placeholder = "点击上方单词，按正确语序拼出整句";
   }
 
   // 把句子切成单词（保留大小写与标点），并记录其在原句中的位置
@@ -2153,7 +1951,7 @@
       const token = state.scrambleTokens[ti];
       if (!token) return;
       const chip = document.createElement("span");
-      chip.className = "chip" + (isClickMode() ? " clickable" : "") + (isTokenUsed(token) ? " used" : "");
+      chip.className = "chip clickable" + (isTokenUsed(token) ? " used" : "");
       chip.textContent = token.text;
       chip.dataset.index = String(ti);
       wordChips.appendChild(chip);
@@ -2171,7 +1969,6 @@
 
   // 点击单词 → 直接把该词（含前面的空格）填入输入框
   function clickChip(tokenIndex) {
-    if (!isClickMode()) return;
     const expected = nextScrambleToken();
     const token = state.scrambleTokens[tokenIndex];
     if (!expected || !token || token.text !== expected.text) {
@@ -2794,24 +2591,11 @@
   });
   if (btnReviewAll) btnReviewAll.addEventListener("click", () => enterReviewMode("shuffle", "all"));
 
-  cliInput.addEventListener("keydown", (e) => {
-    if (e.key === "Enter") {
-      executeCommand(cliInput.value);
-      cliInput.value = "";
-    }
-  });
-
   typingInput.addEventListener("input", handleInput);
   typingInput.addEventListener("paste", (e) => e.preventDefault());
   typingInput.addEventListener("contextmenu", (e) => e.preventDefault());
 
-  // 练习模式切换
-  modeSwitch.addEventListener("click", (e) => {
-    const btn = e.target.closest(".mode-btn");
-    if (btn) setPracticeMode(btn.dataset.mode);
-  });
-
-  // 点击单词直接填入（仅"点击拼接"模式）
+  // 点击单词直接填入
   wordChips.addEventListener("click", (e) => {
     const chip = e.target.closest(".chip");
     if (chip) clickChip(parseInt(chip.dataset.index, 10));
@@ -2882,7 +2666,6 @@
       weekPanel.style.display = "none";
       practicePanel.style.display = "none";
       wordDetailPanel.style.display = "none";
-      cliInput.placeholder = "未找到 vocab-data.json，请先运行 generate_examples.py";
       return;
     }
     // 初始化周选择下拉框
@@ -2891,13 +2674,8 @@
     let savedTwoPass = true;
     try { savedTwoPass = localStorage.getItem(TWO_PASS_KEY) !== "0"; } catch (e) {}
     setTwoPass(savedTwoPass);
-    // 恢复上次使用的练习模式（默认：点击拼接）
-    let savedMode = "scrambleClick";
-    try { savedMode = localStorage.getItem(PRACTICE_MODE_KEY) || "scrambleClick"; } catch (e) {}
-    setPracticeMode(savedMode);
     // 自动从系统推荐位置开始（第一个未掌握的可练习词）
     startFromLatest();
-    cliInput.placeholder = `回车开始 / 输入数字 3 直接进入第 3 周 / 复习 / 全部`;
   })();
 </script>
 

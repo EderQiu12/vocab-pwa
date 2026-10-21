@@ -1,4 +1,4 @@
-const CACHE = 'vocab-pwa-v3';
+const CACHE = 'vocab-pwa-v4';
 const ASSETS = [
   './',
   './index.html',
