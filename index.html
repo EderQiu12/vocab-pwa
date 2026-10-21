@@ -1003,6 +1003,65 @@
     filter: blur(5px); user-select: none; transition: filter .2s;
   }
   .example-list.masked-list .example-item.done .ex-new { filter: none; }
+
+  /* ========== 练习子页面（App 式全屏，从底部滑入） ========== */
+  .practice-screen {
+    position: fixed; inset: 0; z-index: 150;
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+    transform: translateY(100%); visibility: hidden;
+    transition: transform .28s ease, visibility .28s;
+  }
+  .practice-screen.open { transform: translateY(0); visibility: visible; }
+  body.practice-open { overflow: hidden; }
+
+  .practice-screen .practice-panel {
+    background: none; border: none; border-radius: 0; padding: 0; margin: 0 auto;
+    backdrop-filter: none; max-width: 1080px; width: 100%; height: 100%;
+    display: flex; flex-direction: column;
+  }
+
+  /* 顶栏：返回 + 当前词 + 复习操作 */
+  .ps-topbar {
+    flex: none; display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+    padding: 10px 14px; padding-top: calc(10px + env(safe-area-inset-top));
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    background: rgba(26, 26, 46, 0.85); backdrop-filter: blur(10px);
+  }
+  .ps-back {
+    background: rgba(255, 255, 255, 0.08); color: #d8dce8; flex: none;
+    border: 1px solid rgba(255, 255, 255, 0.15); border-radius: 10px;
+    padding: 9px 14px; font-size: 14px; cursor: pointer; font-family: inherit;
+  }
+  .ps-back:active { background: rgba(255, 255, 255, 0.18); }
+  .ps-topbar .practice-target { flex: 1; min-width: 0; }
+  .ps-progress { font-size: 12px; color: #8a8fa3; flex: none; font-variant-numeric: tabular-nums; }
+  .ps-topbar .review-action-btn {
+    background: rgba(255, 255, 255, 0.08); color: #d8dce8; flex: none;
+    border: 1px solid rgba(255, 255, 255, 0.15); border-radius: 10px;
+    padding: 8px 12px; font-size: 13px; cursor: pointer; font-family: inherit;
+  }
+  .ps-topbar .review-action-btn.danger { color: #ff6b6b; border-color: rgba(255, 107, 107, 0.35); }
+
+  /* 中部可滚动区：语音控制 + 统计 + 例句 */
+  .ps-scroll { flex: 1; overflow-y: auto; padding: 14px; -webkit-overflow-scrolling: touch; }
+  .ps-voice-row { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-bottom: 14px; }
+
+  /* 底部固定区：chips + 输入框 + 切换按钮（更大触控面积） */
+  .ps-bottom {
+    flex: none; max-height: 48vh; overflow-y: auto;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    background: rgba(22, 33, 62, 0.94); backdrop-filter: blur(10px);
+    padding: 10px 14px; padding-bottom: calc(12px + env(safe-area-inset-bottom));
+  }
+  .ps-bottom .scramble-bar { margin-bottom: 10px; }
+  .ps-bottom .input-wrapper { margin-bottom: 10px; }
+  .ps-bottom .controls { margin-top: 0; }
+  #practiceScreen .word-chips { gap: 10px; }
+  #practiceScreen .chip {
+    font-size: 18px; padding: 12px 16px; min-height: 48px;
+    display: inline-flex; align-items: center;
+  }
+  #practiceScreen #typingInput { padding: 14px 16px; font-size: 18px; }
 </style>
 </head>
 <body>
@@ -1081,17 +1140,45 @@
     <div class="arsenal" id="arsenal"></div>
   </div>
 
-  <!-- 打字练习区 -->
+  <!-- 当前替代词的例句列表（主页面保留，可上下滑动浏览，点击任一句进入练习子页面） -->
+  <div class="panel" id="exampleListPanel" style="display:none;">
+    <div class="example-list-header">
+      <span class="example-list-title">📋 例句练习（点击任一句开始练习）</span>
+    </div>
+    <div class="example-list" id="exampleList"></div>
+  </div>
+
+  <!-- 空状态（未选择周时显示） -->
+  <div class="panel" id="emptyPanel" style="display:none;">
+    <div class="empty-state">
+      <div class="icon">📝</div>
+      <h3>欢迎来到词汇进化训练</h3>
+      <p>本程序帮你每周消灭 50 个"舒适词"（comfort word），用更精确、更有画面感的替代词升级你的表达。每个替代词配有真实例句供打字练习。</p>
+      <div class="cmd-hint">点击上方「🚀 开始练习」按钮开始第一周</div>
+    </div>
+  </div>
+</div>
+
+<!-- 练习子页面：全屏独立页（App 式），单词块固定底部加大触控面积 -->
+<div class="practice-screen" id="practiceScreen">
   <div class="practice-panel" id="practicePanel">
-    <div class="practice-header">
+    <!-- 顶栏：返回 + 当前词 + 复习操作 -->
+    <div class="ps-topbar">
+      <button class="ps-back" id="btnPracticeBack">← 返回</button>
       <div class="practice-target">
-        <span class="label">当前练习：</span>
         <span class="word" id="practiceWord">-</span>
         <span class="phonetic" id="practicePhonetic"></span>
         <span class="meaning" id="practiceMeaning"></span>
         <button class="speak-btn" id="speakWordBtn" title="朗读单词">🔊</button>
       </div>
-      <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
+      <span class="ps-progress" id="practiceProgress"></span>
+      <button class="review-action-btn" id="btnPracticeSkip" style="display:none;">⏭ 跳过</button>
+      <button class="review-action-btn danger" id="btnPracticeExit" style="display:none;">✖ 退出复习</button>
+    </div>
+
+    <!-- 可滚动区：语音控制 + 统计 + 例句 + 选项 -->
+    <div class="ps-scroll">
+      <div class="ps-voice-row">
         <div class="auto-speak-toggle" id="autoSpeakToggle" title="每刷新一个例句自动播放">
           <span class="switch"></span><span>自动朗读</span>
         </div>
@@ -1104,68 +1191,53 @@
           </div>
         </div>
       </div>
-    </div>
 
-    <!-- 统计栏 -->
-    <div class="stats-bar">
-      <div class="stat-card"><div class="stat-label">⏱ 用时</div><div class="stat-value timer" id="timerValue">0s</div></div>
-      <div class="stat-card"><div class="stat-label">⭐ 得分</div><div class="stat-value score" id="scoreValue">0</div></div>
-      <div class="stat-card"><div class="stat-label">🔥 连击</div><div class="stat-value combo" id="comboValue">0</div></div>
-      <div class="stat-card"><div class="stat-label">🎯 正确率</div><div class="stat-value accuracy" id="accuracyValue">100%</div></div>
-      <div class="stat-card"><div class="stat-label">❌ 错误</div><div class="stat-value wrong" id="wrongCharsValue">0</div></div>
-      <div class="stat-card"><div class="stat-label">📊 本词进度</div><div class="stat-value progress" id="wordProgress">0/0</div></div>
-    </div>
-
-    <!-- 例句展示 -->
-    <div class="example-box" id="exampleBox">
-      <div class="example-old" id="exampleOld">~~ 旧表达 ~~</div>
-      <div class="example-arrow" id="exampleArrow">↓ 用新词替换</div>
-      <div class="example-new" id="exampleNew"></div>
-      <div class="ex-speak-row">
-        <button class="speak-btn" id="speakOldBtn" title="朗读旧句">🔊 旧句</button>
-        <button class="speak-btn" id="speakNewBtn" title="朗读新句">🔊 新句</button>
+      <!-- 统计栏 -->
+      <div class="stats-bar">
+        <div class="stat-card"><div class="stat-label">⏱ 用时</div><div class="stat-value timer" id="timerValue">0s</div></div>
+        <div class="stat-card"><div class="stat-label">⭐ 得分</div><div class="stat-value score" id="scoreValue">0</div></div>
+        <div class="stat-card"><div class="stat-label">🔥 连击</div><div class="stat-value combo" id="comboValue">0</div></div>
+        <div class="stat-card"><div class="stat-label">🎯 正确率</div><div class="stat-value accuracy" id="accuracyValue">100%</div></div>
+        <div class="stat-card"><div class="stat-label">❌ 错误</div><div class="stat-value wrong" id="wrongCharsValue">0</div></div>
+        <div class="stat-card"><div class="stat-label">📊 本词进度</div><div class="stat-value progress" id="wordProgress">0/0</div></div>
       </div>
-      <div class="example-cn" id="exampleCn"></div>
-    </div>
 
-    <!-- 练习选项：两遍模式 -->
-    <div class="practice-options">
-      <div class="auto-speak-toggle on" id="twoPassToggle" title="开启后：每条例句先拼一遍旧句，再拼一遍对应的新句">
-        <span class="switch"></span><span>两遍模式（旧→新）</span>
+      <!-- 例句展示 -->
+      <div class="example-box" id="exampleBox">
+        <div class="example-old" id="exampleOld">~~ 旧表达 ~~</div>
+        <div class="example-arrow" id="exampleArrow">↓ 用新词替换</div>
+        <div class="example-new" id="exampleNew"></div>
+        <div class="ex-speak-row">
+          <button class="speak-btn" id="speakOldBtn" title="朗读旧句">🔊 旧句</button>
+          <button class="speak-btn" id="speakNewBtn" title="朗读新句">🔊 新句</button>
+        </div>
+        <div class="example-cn" id="exampleCn"></div>
+      </div>
+
+      <!-- 练习选项：两遍模式 -->
+      <div class="practice-options">
+        <div class="auto-speak-toggle on" id="twoPassToggle" title="开启后：每条例句先拼一遍旧句，再拼一遍对应的新句">
+          <span class="switch"></span><span>两遍模式（旧→新）</span>
+        </div>
       </div>
     </div>
 
-    <!-- 乱序单词提示 -->
-    <div class="scramble-bar" id="scrambleBar">
-      <div class="scramble-title">🧩 <b>单词提示（顺序已打乱）</b>：按正确语序依次<b>点击</b>它们，拼出完整句子（大小写 / 标点已保留）</div>
-      <div class="word-chips" id="wordChips"></div>
-    </div>
+    <!-- 底部固定区：单词块 + 输入框 + 切换按钮 -->
+    <div class="ps-bottom">
+      <div class="scramble-bar" id="scrambleBar">
+        <div class="scramble-title">🧩 <b>单词提示（顺序已打乱）</b>：按正确语序依次<b>点击</b>它们，拼出完整句子（大小写 / 标点已保留）</div>
+        <div class="word-chips" id="wordChips"></div>
+      </div>
 
-    <!-- 输入框 -->
-    <div class="input-wrapper">
-      <input type="text" id="typingInput" placeholder="逐字输入新表达（高亮紫色为本周替代词）..." autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" disabled />
-      <div class="hint">💡 按正确语序点击上方单词拼出整句 · 点对的词变绿，点错抖动提示 · 完成一句自动加载下一句</div>
-    </div>
+      <div class="input-wrapper">
+        <input type="text" id="typingInput" placeholder="逐字输入新表达（高亮紫色为本周替代词）..." autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" disabled />
+        <div class="hint">💡 按正确语序点击上方单词拼出整句 · 点对的词变绿，点错抖动提示 · 完成一句自动加载下一句</div>
+      </div>
 
-    <!-- 该替代词的所有例句列表 -->
-    <div class="example-list-header">
-      <span class="example-list-title">📋 例句练习</span>
-    </div>
-    <div class="example-list" id="exampleList"></div>
-
-    <div class="controls" style="margin-top: 18px;">
-      <button class="btn btn-secondary" id="prevWordBtn">← 上一个替代词</button>
-      <button class="btn btn-secondary" id="nextWordBtn">下一个替代词 →</button>
-    </div>
-  </div>
-
-  <!-- 空状态（未选择周时显示） -->
-  <div class="panel" id="emptyPanel" style="display:none;">
-    <div class="empty-state">
-      <div class="icon">📝</div>
-      <h3>欢迎来到词汇进化训练</h3>
-      <p>本程序帮你每周消灭 50 个"舒适词"（comfort word），用更精确、更有画面感的替代词升级你的表达。每个替代词配有真实例句供打字练习。</p>
-      <div class="cmd-hint">点击上方「🚀 开始练习」按钮开始第一周</div>
+      <div class="controls">
+        <button class="btn btn-secondary" id="prevWordBtn">← 上一个替代词</button>
+        <button class="btn btn-secondary" id="nextWordBtn">下一个替代词 →</button>
+      </div>
     </div>
   </div>
 </div>
@@ -1268,6 +1340,14 @@
   const btnExitReview = $("btnExitReview");
   const prevWordBtn = $("prevWordBtn");
   const nextWordBtn = $("nextWordBtn");
+
+  // 练习子页面（App 式全屏）
+  const practiceScreen = $("practiceScreen");
+  const btnPracticeBack = $("btnPracticeBack");
+  const btnPracticeSkip = $("btnPracticeSkip");
+  const btnPracticeExit = $("btnPracticeExit");
+  const practiceProgress = $("practiceProgress");
+  const exampleListPanel = $("exampleListPanel");
 
   const practiceWord = $("practiceWord");
   const practicePhonetic = $("practicePhonetic");
@@ -1535,6 +1615,18 @@
   }
 
   // ============================================================
+  //  练习子页面（全屏覆盖，打开时锁定主页面滚动）
+  // ============================================================
+  function openPractice() {
+    practiceScreen.classList.add("open");
+    document.body.classList.add("practice-open");
+  }
+  function closePractice() {
+    practiceScreen.classList.remove("open");
+    document.body.classList.remove("practice-open");
+  }
+
+  // ============================================================
   //  复习模式
   // ============================================================
   function enterReviewMode(mode, scope) {
@@ -1581,11 +1673,13 @@
       reviewBannerText.textContent = `${scopeName} · 没有可复习的例句`;
       typingInput.disabled = true;
       btnSkipReview.style.display = "none";
+      btnPracticeSkip.style.display = "none";
       return;
     }
 
     reviewBannerText.textContent = `${scopeName} · 共 ${queue.length} 条例句 · 当前进度 1/${queue.length}`;
     btnSkipReview.style.display = "";
+    btnPracticeSkip.style.display = "";
 
     if (scope !== "all") {
       state.currentWeek = scope;
@@ -1599,10 +1693,13 @@
       stopTimer();
       typingInput.disabled = true;
       btnSkipReview.style.display = "none";
+      btnPracticeSkip.style.display = "none";
       const elapsedMin = Math.max(0.1, (Date.now() - state.roundStartTime) / 60000);
       const acc = state.totalTyped > 0 ? Math.round((state.correctChars / state.totalTyped) * 100) : 0;
       reviewBannerText.textContent =
         `🎉 复习完成！共 ${state.reviewQueue.length} 句 · 用时 ${elapsedMin.toFixed(1)} 分钟 · 正确率 ${acc}% · 得分 ${state.score}`;
+      // 复习完成：回到主页面看总结横幅
+      closePractice();
       return;
     }
     state.reviewIndex = idx;
@@ -1626,6 +1723,8 @@
     updateReviewBanner();
     resetTypingForNewSentence();
     renderExampleList();
+    // 复习逐句推进：保持练习子页面打开
+    openPractice();
   }
 
   function updateReviewBanner() {
@@ -1634,6 +1733,8 @@
     const scopeName = state.reviewScope === "all" ? "全部已学词汇" : state.reviewScope;
     reviewModeTag.textContent = `复习 · ${modeName}`;
     reviewBannerText.textContent = `${scopeName} · 当前进度 ${state.reviewIndex + 1}/${state.reviewQueue.length}`;
+    // 练习子页面顶栏同步显示进度
+    practiceProgress.textContent = `${state.reviewIndex + 1}/${state.reviewQueue.length}`;
   }
 
   // 复习界面的显隐（进入复习时隐藏词卡切换/两遍模式开关，退出时恢复）
@@ -1643,6 +1744,9 @@
     twoPassToggle.style.display = on ? "none" : "";
     btnExitReview.style.display = on ? "" : "none";
     btnSkipReview.style.display = on ? "" : "none";
+    btnPracticeExit.style.display = on ? "" : "none";
+    btnPracticeSkip.style.display = on ? "" : "none";
+    if (!on) practiceProgress.textContent = "";
   }
 
   function exitReviewMode() {
@@ -1682,7 +1786,7 @@
 
     emptyPanel.style.display = "none";
     weekPanel.style.display = "block";
-    practicePanel.style.display = "block";
+    practicePanel.style.display = "flex";
     wordDetailPanel.style.display = "block";
 
     const weekNum = state.currentWeek.replace("week-", "");
@@ -1743,6 +1847,7 @@
           return;
         }
         startWord(i, 0, 0);
+        openPractice();
       });
       wordList.appendChild(card);
     });
@@ -1791,6 +1896,7 @@
       card.addEventListener("click", () => {
         if (state.reviewMode) return;
         startRep(i, 0);
+        openPractice();
       });
       arsenal.appendChild(card);
     });
@@ -1836,6 +1942,8 @@
   function renderExampleList() {
     const wd = getCurrentWord();
     const rep = wd?.replacements?.[state.currentRepIndex];
+    // 主页面例句列表面板：有替代词才显示
+    exampleListPanel.style.display = rep ? "block" : "none";
     // 乱序模式下先遮住例句原文，练完（done）后自动揭开
     exampleList.classList.toggle("masked-list", isScrambleMode());
     if (!rep) { exampleList.innerHTML = ""; return; }
@@ -1862,6 +1970,7 @@
         renderExample(ex, rep.word);
         resetTypingForNewSentence();
         autoSpeakIfOn();
+        openPractice();
       });
       exampleList.appendChild(item);
     });
@@ -2281,6 +2390,7 @@
           resetRoundState();
           renderWeek();
           startWord(i, 0, 0);
+          openPractice();
         });
         roundPickList.appendChild(span);
         count++;
@@ -2314,6 +2424,7 @@
     resetRoundState();
     renderWeek();
     startWord(idx, 0, 0);
+    openPractice();
   });
 
   roundRetryBtn.addEventListener("click", () => {
@@ -2333,6 +2444,7 @@
     }
     resetRoundState();
     startWord(state.currentWordIndex, 0, 0);
+    openPractice();
   });
 
   roundPickBtn.addEventListener("click", () => {
@@ -2341,7 +2453,11 @@
     if (!visible) renderPickList();
   });
 
-  roundCloseBtn.addEventListener("click", hideRoundModal);
+  // 「结束」：关闭弹窗并回到主页面
+  roundCloseBtn.addEventListener("click", () => {
+    hideRoundModal();
+    closePractice();
+  });
 
   // ============================================================
   //  语音合成（Web Speech API）
@@ -2649,7 +2765,7 @@
   //  事件绑定
   // ============================================================
   // 快捷按钮
-  if (btnStart)    btnStart.addEventListener("click", () => startFromLatest());
+  if (btnStart)    btnStart.addEventListener("click", () => { startFromLatest(); openPractice(); });
   if (btnPrevWeek) btnPrevWeek.addEventListener("click", () => {
     if (!state.currentWeek) { startFromLatest(); return; }
     const idx = WEEK_KEYS.indexOf(state.currentWeek);
@@ -2688,6 +2804,20 @@
     loadReviewItem(state.reviewIndex + 1);
   });
   btnExitReview.addEventListener("click", exitReviewMode);
+
+  // 练习子页面顶栏：返回（复习中先退出复习）/ 跳过 / 退出复习
+  btnPracticeBack.addEventListener("click", () => {
+    if (state.reviewMode) exitReviewMode();
+    closePractice();
+  });
+  btnPracticeSkip.addEventListener("click", () => {
+    if (!state.reviewMode) return;
+    loadReviewItem(state.reviewIndex + 1);
+  });
+  btnPracticeExit.addEventListener("click", () => {
+    exitReviewMode();
+    closePractice();
+  });
 
   prevWordBtn.addEventListener("click", () => {
     if (state.reviewMode) { showCliHint("复习模式下无法切换替代词"); return; }
