@@ -2128,37 +2128,46 @@
   }
 
   // ============================================================
-  //  ⚠ 核心修复：相同单词点击逻辑
+  //  相同单词点击逻辑（修复版）
   //  - 放行条件：文本相同（多个相同词互认）+ 该芯片未使用过（防重复点）
-  //  - 填充内容：语序上 expected 的内容（因文本相同，与用户点的那枚芯片一致）
+  //  - 填充内容：从「当前光标位置」到 expected 词尾（保留词间空格）
   //  - 已用标记：按用户点击的芯片索引记录 → 点哪枚哪枚置灰
   // ============================================================
   function clickChip(tokenIndex) {
-    const expected = nextScrambleToken();
-    const token = state.scrambleTokens[tokenIndex];
-    if (!expected || !token || token.text !== expected.text
-        || state.usedTokenIndices.has(tokenIndex)) {
-      state.combo = 0;
-      state.score = Math.max(0, state.score - 3);
-      state.totalTyped++;
-      recordError();
-      shakeChip(tokenIndex);
-      return;
-    }
-    if (state.currentIndex > expected.start) {
-      typingInput.value = typingInput.value.slice(0, expected.start);
-      state.currentIndex = expected.start;
-    }
-    typingInput.value += state.currentSentence.slice(expected.start, expected.end);
+      const expected = nextScrambleToken();
+      const token = state.scrambleTokens[tokenIndex];
 
-    state.usedTokenIndices.add(tokenIndex);
-    state.totalTyped++;
-    state.correctChars += expected.text.length;
-    state.combo++;
-    state.maxCombo = Math.max(state.maxCombo, state.combo);
-    state.score += 10 + Math.floor(state.combo / 5) * 3;
-    if (state.combo > 0 && state.combo % 10 === 0) showComboPopup(state.combo);
-    handleInput();
+      // 放行条件：文本相同 且 该芯片未使用过
+      if (!expected || !token || token.text !== expected.text
+          || state.usedTokenIndices.has(tokenIndex)) {
+        state.combo = 0;
+        state.score = Math.max(0, state.score - 3);
+        state.totalTyped++;
+        recordError();
+        shakeChip(tokenIndex);
+        return;
+      }
+
+      // 若光标已进入该词内部，退回到词首重新填入
+      if (state.currentIndex > expected.start) {
+        typingInput.value = typingInput.value.slice(0, expected.start);
+        state.currentIndex = expected.start;
+      }
+
+      // ★ 关键修复：从 currentIndex 到 expected.end（包含词前空格）
+      typingInput.value += state.currentSentence.slice(state.currentIndex, expected.end);
+
+      // 按用户点击的那枚芯片标记已用（不是按 expected 的位置）
+      state.usedTokenIndices.add(tokenIndex);
+
+      state.totalTyped++;
+      state.correctChars += expected.text.length;
+      state.combo++;
+      state.maxCombo = Math.max(state.maxCombo, state.combo);
+      state.score += 10 + Math.floor(state.combo / 5) * 3;
+      if (state.combo > 0 && state.combo % 10 === 0) showComboPopup(state.combo);
+
+      handleInput();
   }
 
   function shakeChip(tokenIndex) {
