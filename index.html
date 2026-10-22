@@ -1211,9 +1211,12 @@
       <button class="quick-btn secondary" id="btnPrevWeek">◀ 上一周</button>
       <button class="quick-btn secondary" id="btnNextWeek">下一周 ▶</button>
     </div>
-    <!-- 第 3 行：练习入口 -->
+    <!-- 第 3 行：开始练习（独占一行） -->
     <div class="quick-row">
       <button class="quick-btn primary" id="btnStart">🚀 开始练习</button>
+    </div>
+    <!-- 第 4 行：复习入口 -->
+    <div class="quick-row">
       <button class="quick-btn purple" id="btnReview">🔁 复习本周</button>
       <button class="quick-btn purple" id="btnReviewAll">🗂 全部复习</button>
     </div>
@@ -1447,6 +1450,7 @@
   const nextWordBtn = $("nextWordBtn");
 
   const practiceScreen = $("practiceScreen");
+  const practicePanel = $("practicePanel");   // ← 建议补上
   const btnPracticeBack = $("btnPracticeBack");
   const btnPracticeSkip = $("btnPracticeSkip");
   const btnPracticeExit = $("btnPracticeExit");
