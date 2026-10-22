@@ -1314,7 +1314,7 @@
             <span id="rateValue" style="font-size:11px;min-width:32px;text-align:center;font-variant-numeric: tabular-nums;">0.75x</span>
           </div>
         </div>
-        <div class="practice-mode-controls">
+        <div class="practice-mode-controls" id="practiceModeControls">
           <div class="auto-speak-toggle on" id="twoPassToggle" title="开启后：每条例句先拼一遍旧句，再拼一遍对应的新句">
             <span class="switch"></span><span>两遍模式（旧→新）</span>
           </div>
@@ -1452,6 +1452,7 @@
   const scrambleBar = $("scrambleBar");
   const wordChips = $("wordChips");
   const twoPassToggle = $("twoPassToggle");
+  const practiceModeControls = $("practiceModeControls");   // ← 新增
   const exampleArrow = $("exampleArrow");
 
   const timerValue = $("timerValue");
@@ -1899,7 +1900,7 @@
   function setReviewUI(on) {
     prevWordBtn.style.display = on ? "none" : "";
     nextWordBtn.style.display = on ? "none" : "";
-    twoPassToggle.style.display = on ? "none" : "";
+    practiceModeControls.style.display = on ? "none" : "";   // ← 改这一行
     btnExitReview.style.display = on ? "" : "none";
     btnSkipReview.style.display = on ? "" : "none";
     btnPracticeExit.style.display = on ? "" : "none";
@@ -2246,7 +2247,9 @@
 
   const TWO_PASS_KEY = "vocab_two_pass";
 
-  function resetExamplePass() { state.currentPass = state.twoPass ? "old" : "new"; }
+  function resetExamplePass() {
+    state.currentPass = (state.twoPass && !state.reviewMode) ? "old" : "new";
+  }
 
   function setTwoPass(on) {
     state.twoPass = !!on;
