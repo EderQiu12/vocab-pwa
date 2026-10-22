@@ -96,6 +96,73 @@
     width: 100%;
   }
 
+      /* 顶部信息栏：日期 | 周信息 ▾ 的合成胶囊 */
+  .top-info-row {
+    width: auto;
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 12px;
+    padding: 0 4px 0 16px;
+    gap: 0;
+    cursor: pointer;
+    transition: all .15s;
+    min-height: 44px;
+  }
+  .top-info-row:hover {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: rgba(0, 229, 255, 0.4);
+  }
+  .top-date {
+    font-size: 14px;
+    color: #d8dce8;
+    font-weight: 600;
+    white-space: nowrap;
+  }
+  .top-sep {
+    color: rgba(255, 255, 255, 0.3);
+    margin: 0 8px;
+    font-size: 14px;
+  }
+  .top-week-select {
+    position: relative;
+    display: flex;
+    align-items: center;
+  }
+  .top-week-select select {
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    background: transparent;
+    border: none;
+    color: #00e5ff;
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 700;
+    padding: 10px 24px 10px 4px;
+    cursor: pointer;
+    outline: none;
+    max-width: 260px;
+  }
+  .top-week-select select option { background: #0a1628; color: #d8dce8; }
+  .top-week-select::after {
+    content: "▾";
+    position: absolute;
+    right: 6px; top: 50%;
+    transform: translateY(-50%);
+    color: #00e5ff;
+    pointer-events: none;
+    font-size: 12px;
+  }
+
+  /* 核心主按钮：加大、独占一行 */
+  .quick-btn.hero {
+    padding: 16px 64px;
+    font-size: 18px;
+    font-weight: 800;
+    min-width: 260px;
+    border-radius: 14px;
+    letter-spacing: 1px;
+  }
 
   .quick-btn {
     display: inline-flex;
@@ -130,19 +197,7 @@
     border: 1px solid rgba(142,68,173,0.4);
   }
   .quick-btn.purple:hover { background: rgba(142,68,173,0.28); transform: translateY(-1px); }
-  .quick-btn select {
-    background: rgba(0,0,0,0.3);
-    border: 1px solid rgba(255,255,255,0.15);
-    color: #d8dce8;
-    border-radius: 8px;
-    padding: 4px 10px;
-    font-size: 13px;
-    font-family: inherit;
-    font-weight: 600;
-    outline: none;
-    cursor: pointer;
-  }
-  .quick-btn select option { background: #0a1628; }
+
 
   /* ========== 主面板 ========== */
   .panel {
@@ -1198,27 +1253,30 @@
 
   <!-- 快捷按钮栏 -->
   <div class="quick-bar" id="quickBar">
-    <!-- 第 1 行：当前周 -->
-    <div class="quick-row">
-      <span class="quick-btn secondary" style="cursor:default;padding:10px 18px;">
-        📅
-        <select id="weekSelect" title="选择周">
-        </select>
-      </span>
+    <!-- 顶部信息栏：📅 日期｜第01周（36/50 已掌握） ▾ -->
+    <div class="quick-row top-info-row" id="topInfoRow" title="点击切换周">
+      <span class="top-date" id="topDate">📅 Oct 23</span>
+      <span class="top-sep">｜</span>
+      <div class="top-week-select">
+        <select id="weekSelect" title="选择周"></select>
+      </div>
     </div>
-    <!-- 第 2 行：周导航 -->
+
+    <!-- 周导航（一行两个） -->
     <div class="quick-row">
       <button class="quick-btn secondary" id="btnPrevWeek">◀ 上一周</button>
       <button class="quick-btn secondary" id="btnNextWeek">下一周 ▶</button>
     </div>
-    <!-- 第 3 行：开始练习（独占一行） -->
+
+    <!-- 核心主按钮（独占一行，最大、高亮） -->
     <div class="quick-row">
-      <button class="quick-btn primary" id="btnStart">🚀 开始练习</button>
+      <button class="quick-btn primary hero" id="btnStart">🚀 开始练习</button>
     </div>
-    <!-- 第 4 行：复习入口 -->
+
+    <!-- 复习次级按钮（一行两个，同等次要权重） -->
     <div class="quick-row">
       <button class="quick-btn purple" id="btnReview">🔁 复习本周</button>
-      <button class="quick-btn purple" id="btnReviewAll">🗂 全部复习</button>
+      <button class="quick-btn purple" id="btnReviewAll">📂 全部复习</button>
     </div>
   </div>
 
@@ -2813,13 +2871,31 @@
       const mastered = (progress.mastered[wk] || []).length;
       const opt = document.createElement("option");
       opt.value = wk;
-      opt.textContent = `第 ${String(idx + 1).padStart(2, "0")} 周  (${mastered}/${total} 已掌握)`;
+      opt.textContent = `第${String(idx + 1).padStart(2, "0")}周（${mastered}/${total} 已掌握）`;
       weekSelect.appendChild(opt);
     });
   }
   function updateWeekSelect() {
     if (!weekSelect) return;
     if (state.currentWeek && VOCAB_DATA[state.currentWeek]) weekSelect.value = state.currentWeek;
+  }
+    // 顶部日期（今天的日期，Oct 23 风格）
+  function updateTopDate() {
+    const el = document.getElementById("topDate");
+    if (!el) return;
+    const now = new Date();
+    const months = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+    el.textContent = `📅 ${months[now.getMonth()]} ${now.getDate()}`;
+  }
+
+  // 点击整行 → 聚焦下拉（移动端会直接弹出选择器）
+  const topInfoRow = document.getElementById("topInfoRow");
+  if (topInfoRow) {
+    topInfoRow.addEventListener("click", (e) => {
+      if (e.target.id !== "weekSelect") {
+        document.getElementById("weekSelect").focus();
+      }
+    });
   }
 
   // ============================================================
@@ -2944,6 +3020,7 @@
       return;
     }
     populateWeekSelect();
+    updateTopDate();
     let savedTwoPass = true;
     try { savedTwoPass = localStorage.getItem(TWO_PASS_KEY) !== "0"; } catch (e) {}
     setTwoPass(savedTwoPass);
