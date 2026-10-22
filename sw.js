@@ -1,7 +1,10 @@
-const CACHE = 'vocab-pwa-v6';
+const CACHE = 'vocab-pwa-v7';
 const ASSETS = [
   './',
   './index.html',
+  './vocab.html',
+  './chat.html',
+  './nav.js',
   './manifest.json',
   './icons/icon-192.png',
   './icons/icon-512.png',
@@ -28,21 +31,30 @@ self.addEventListener('fetch', e => {
   const req = e.request;
   if (req.method !== 'GET') return;
 
-  // 页面导航：网络优先（联网时打开即最新版），离线回退到缓存
+  // 页面导航：网络优先，离线时回退到缓存
   if (req.mode === 'navigate') {
     e.respondWith(
       fetch(req)
         .then(res => {
           const copy = res.clone();
-          caches.open(CACHE).then(c => c.put(req, copy));   // 保持离线后备为最新
+          caches.open(CACHE).then(c => c.put(req, copy));
           return res;
         })
-        .catch(() => caches.match('./index.html', { ignoreSearch: true }))
+        .catch(async () => {
+          // ① 先匹配请求的真实 URL
+          const direct = await caches.match(req, { ignoreSearch: true });
+          if (direct) return direct;
+          // ② 再回退到 vocab.html（主页面，不会重定向）
+          const vocab = await caches.match('./vocab.html', { ignoreSearch: true });
+          if (vocab) return vocab;
+          // ③ 最后才回退到 index.html
+          return caches.match('./index.html', { ignoreSearch: true });
+        })
     );
     return;
   }
 
-  // 其余静态资源（图标 / manifest 等，更新需升级 CACHE 版本号）：缓存优先
+  // 其余静态资源：缓存优先
   e.respondWith(
     caches.match(req, { ignoreSearch: true }).then(hit =>
       hit ||
