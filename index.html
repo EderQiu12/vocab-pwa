@@ -1271,6 +1271,7 @@
   </div>
 </div>
 
+
 <script>
   // ============================================================
   //  数据：从 vocab-data.json 加载
@@ -1400,38 +1401,33 @@
   //  状态
   // ============================================================
   let state = {
-    currentWeek: null,             // "week-01"
-    currentWordIndex: 0,          // 当前舒适词索引（0..49）
-    currentRepIndex: 0,           // 当前替代词索引
-    currentExampleIndex: 0,       // 当前例句索引
-    currentSentence: "",          // 当前正在输入的句子
-    currentIndex: 0,              // 当前光标位置
+    currentWeek: null,
+    currentWordIndex: 0,
+    currentRepIndex: 0,
+    currentExampleIndex: 0,
+    currentSentence: "",
+    currentIndex: 0,
     correctChars: 0,
     totalTyped: 0,
-    wrongChars: 0,                // 本轮错误次数（打错字 / 点错词）
+    wrongChars: 0,
     score: 0,
     combo: 0,
     maxCombo: 0,
     startTime: 0,
     timerId: null,
-    // 复习模式
-    reviewMode: null,             // null | 'reverse' | 'shuffle' | 'all'
-    reviewScope: null,            // null | weekKey | 'all'
+    reviewMode: null,
+    reviewScope: null,
     reviewQueue: [],
     reviewIndex: 0,
-    // 练习模式：固定为点击拼接
-    scrambleTokens: [],           // 当前句子的单词（按原语序，记录在原句中的位置）
-    scrambleOrder: [],            // 打乱后的 token 索引顺序
-    // 两遍模式：每条例句先练一遍旧句，再练一遍新句
+    scrambleTokens: [],
+    scrambleOrder: [],
+    usedTokenIndices: new Set(),   // ← 关键新增：被用户点击过的芯片索引集合（按芯片区分已用，而非按词位置）
     twoPass: true,
-    currentPass: "new",           // "old" | "new"
+    currentPass: "new",
   };
 
   // ============================================================
-  //  进度持久化（localStorage）
-  //  - progress.doneExamples: { "week-01#say#express#0": true, ... }
-  //  - progress.mastered:    { "week-01": ["say", "get", ...] }
-  //  - progress.errors:      { "week-01#say#express#0": 3, ... } 每条例句累计错误次数
+  //  进度持久化
   // ============================================================
   const PROGRESS_KEY = "vocab_progress_v2";
 
@@ -1469,7 +1465,6 @@
   function markExampleDone(weekKey, word, repWord, exIdx) {
     const key = exampleKey(weekKey, word, repWord, exIdx);
     progress.doneExamples[key] = true;
-    // 检查该 word 是否全部完成
     const w = VOCAB_DATA[weekKey];
     const wordData = w?.words?.find(x => x.word === word);
     if (wordData && wordData.replacements.length > 0) {
@@ -1482,7 +1477,7 @@
         if (!progress.mastered[weekKey].includes(word)) {
           progress.mastered[weekKey].push(word);
           if (!state.reviewMode) showMasterPopup(word);
-          populateWeekSelect();      // 更新下拉框中的已掌握数
+          populateWeekSelect();
           updateWeekSelect();
         }
       }
@@ -1508,13 +1503,11 @@
     return { done, total };
   }
 
-  // 该词是否可练习（有替代词和例句）
   function isPracticable(wordData) {
     return !!(wordData?.replacements && wordData.replacements.length > 0 &&
               wordData.replacements.some(r => r.examples && r.examples.length > 0));
   }
 
-  // 取当前词 / 当前替代词
   function getCurrentWord() {
     return VOCAB_DATA[state.currentWeek]?.words?.[state.currentWordIndex];
   }
@@ -1522,9 +1515,7 @@
     return getCurrentWord()?.replacements?.[state.currentRepIndex];
   }
 
-  // 系统按 tier→rank 顺序挑选下一个未掌握的可练习词
   function pickNextWord(fromWeekKey, fromWordIdx) {
-    // 当前周内向后找
     const w = VOCAB_DATA[fromWeekKey];
     if (w?.words) {
       for (let i = fromWordIdx + 1; i < w.words.length; i++) {
@@ -1534,7 +1525,6 @@
         }
       }
     }
-    // 跨周向后找
     const wkIdx = WEEK_KEYS.indexOf(fromWeekKey);
     for (let j = wkIdx + 1; j < WEEK_KEYS.length; j++) {
       const wk = WEEK_KEYS[j];
@@ -1547,7 +1537,6 @@
         }
       }
     }
-    // 找不到未掌握的 → 退而求其次：找任意可练习词（让用户重练）
     for (let j = wkIdx; j < WEEK_KEYS.length; j++) {
       const wk = WEEK_KEYS[j];
       const nw = VOCAB_DATA[wk];
@@ -1562,7 +1551,6 @@
     return null;
   }
 
-  // 在指定周内找第一个可练习词
   function firstPracticableInWeek(weekKey) {
     const w = VOCAB_DATA[weekKey];
     if (!w?.words) return -1;
@@ -1615,7 +1603,7 @@
   }
 
   // ============================================================
-  //  练习子页面（全屏覆盖，打开时锁定主页面滚动）
+  //  练习子页面
   // ============================================================
   function openPractice() {
     practiceScreen.classList.add("open");
@@ -1628,12 +1616,12 @@
 
   // ============================================================
   //  复习模式
+  //  ⚠ 修复：只复习「已练完」的例句（含新句 pass 完成），不再把未学习例句拉进来
   // ============================================================
   function enterReviewMode(mode, scope) {
     state.reviewMode = mode;
     state.reviewScope = scope;
 
-    // 复习开始：重置本轮统计与计时
     resetRoundState();
     setReviewUI(true);
 
@@ -1646,6 +1634,8 @@
         if (!isPracticable(wd)) return;
         wd.replacements.forEach((rep, ri) => {
           rep.examples.forEach((ex, ei) => {
+            // ← 关键过滤：只纳入已经完成的例句
+            if (!isExampleDone(wk, wd.word, rep.word, ei)) return;
             queue.push({ week: wk, wordIdx: wi, repIndex: ri, exIndex: ei });
           });
         });
@@ -1655,7 +1645,6 @@
     if (mode === "reverse") {
       queue.reverse();
     } else {
-      // 乱序复习：错得多的优先，同错误数随机
       queue = shuffle(queue);
       queue.sort((a, b) => errCountOf(b) - errCountOf(a));
     }
@@ -1670,7 +1659,7 @@
     reviewModeTag.textContent = `复习 · ${modeName}`;
 
     if (queue.length === 0) {
-      reviewBannerText.textContent = `${scopeName} · 没有可复习的例句`;
+      reviewBannerText.textContent = `${scopeName} · 暂无已学例句可复习，请先完成练习`;
       typingInput.disabled = true;
       btnSkipReview.style.display = "none";
       btnPracticeSkip.style.display = "none";
@@ -1698,7 +1687,6 @@
       const acc = state.totalTyped > 0 ? Math.round((state.correctChars / state.totalTyped) * 100) : 0;
       reviewBannerText.textContent =
         `🎉 复习完成！共 ${state.reviewQueue.length} 句 · 用时 ${elapsedMin.toFixed(1)} 分钟 · 正确率 ${acc}% · 得分 ${state.score}`;
-      // 复习完成：回到主页面看总结横幅
       closePractice();
       return;
     }
@@ -1723,7 +1711,6 @@
     updateReviewBanner();
     resetTypingForNewSentence();
     renderExampleList();
-    // 复习逐句推进：保持练习子页面打开
     openPractice();
   }
 
@@ -1733,11 +1720,9 @@
     const scopeName = state.reviewScope === "all" ? "全部已学词汇" : state.reviewScope;
     reviewModeTag.textContent = `复习 · ${modeName}`;
     reviewBannerText.textContent = `${scopeName} · 当前进度 ${state.reviewIndex + 1}/${state.reviewQueue.length}`;
-    // 练习子页面顶栏同步显示进度
     practiceProgress.textContent = `${state.reviewIndex + 1}/${state.reviewQueue.length}`;
   }
 
-  // 复习界面的显隐（进入复习时隐藏词卡切换/两遍模式开关，退出时恢复）
   function setReviewUI(on) {
     prevWordBtn.style.display = on ? "none" : "";
     nextWordBtn.style.display = on ? "none" : "";
@@ -1763,18 +1748,16 @@
     startFromLatest();
   }
 
-  // 某条例句的历史错误数（复习排序用）
   function errCountOf(item) {
     const key = exampleKey(item.week, VOCAB_DATA[item.week].words[item.wordIdx].word,
       VOCAB_DATA[item.week].words[item.wordIdx].replacements[item.repIndex].word, item.exIndex);
     return progress.errors[key] || 0;
   }
 
-  // 单条错误徽章的精准更新（避免整列表重渲染）
   function updateExampleErrorBadge(exIdx, count) {
     const el = exampleList.querySelector(`.example-item[data-ex-index="${exIdx}"] .ex-err`);
     if (el) el.textContent = `错 ${count}`;
-    else renderExampleList();   // 首次报错时徽章尚未渲染
+    else renderExampleList();
   }
 
   // ============================================================
@@ -1866,7 +1849,6 @@
     currentReason.textContent = wd.reason || `"${wd.word}" 是常见舒适词，用更精确的替代词能提升表达层次。`;
     currentTip.textContent = wd.tip || "先把第一个替代词练熟，再尝试下一个。";
 
-    // arsenal
     arsenal.innerHTML = "";
     if (!isPracticable(wd)) {
       arsenal.innerHTML = `<div style="grid-column:1/-1;padding:18px;text-align:center;color:#6a7090;font-size:13px;">此词暂无替代词例句（数据待生成）</div>`;
@@ -1942,9 +1924,7 @@
   function renderExampleList() {
     const wd = getCurrentWord();
     const rep = wd?.replacements?.[state.currentRepIndex];
-    // 主页面例句列表面板：有替代词才显示
     exampleListPanel.style.display = rep ? "block" : "none";
-    // 乱序模式下先遮住例句原文，练完（done）后自动揭开
     exampleList.classList.toggle("masked-list", isScrambleMode());
     if (!rep) { exampleList.innerHTML = ""; return; }
 
@@ -1977,7 +1957,6 @@
   }
 
   function renderExample(ex, repWord) {
-    // 两遍模式：第一遍的目标句是旧句，第二遍是新句
     const pass = state.currentPass;
     const target = pass === "old" ? ex.old : ex.new;
     exampleOld.textContent = ex.old;
@@ -1987,12 +1966,11 @@
     exampleCn.textContent = `中文：${ex.cn}`;
     speakNewBtn.textContent = pass === "old" ? "🔊 本句" : "🔊 新句";
     speakNewBtn.title = pass === "old" ? "朗读当前练习的旧句" : "朗读新句";
-    buildScramble(target);              // 打乱本句单词，作为拼装提示
+    buildScramble(target);
     renderSentenceChars(target, repWord);
     state.currentSentence = target;
   }
 
-  // 在同一条例句内切换第一遍（旧句）/ 第二遍（新句）
   function startExamplePass(pass) {
     const ex = getCurrentRep()?.examples?.[state.currentExampleIndex];
     if (!ex) return;
@@ -2015,7 +1993,6 @@
       if (i === state.currentIndex) cls += " current";
       if (ranges.some(r => i >= r.start && i < r.end)) cls += " highlight-word";
       if (!typed) cls += " masked";
-      // 始终渲染真实字符（未拼出的用 CSS 透明隐藏），占位宽度与字母完全一致，避免页面跳动
       const display = ch === " " ? "&nbsp;" : escapeHtml(ch);
       return `<span class="${cls}">${display}</span>`;
     }).join("");
@@ -2023,16 +2000,15 @@
     refreshChipsUsage();
   }
 
-  // 只刷新提示词的"已用/未用"状态，避免每次敲键都重建 DOM
+  // ⚠ 已用状态改为按「芯片索引」查集合
   function refreshChipsUsage() {
     if (!wordChips || !isScrambleMode()) return;
     wordChips.querySelectorAll(".chip").forEach(chip => {
-      const token = state.scrambleTokens[parseInt(chip.dataset.index, 10)];
-      chip.classList.toggle("used", !!token && isTokenUsed(token));
+      const ti = parseInt(chip.dataset.index, 10);
+      chip.classList.toggle("used", state.usedTokenIndices.has(ti));
     });
   }
 
-  // 查找替代词在句子中的所有匹配区间（支持时态/尾缀变化）
   function findWordRanges(sentence, repWord) {
     const ranges = [];
     if (!repWord) return ranges;
@@ -2069,6 +2045,7 @@
   //  打字逻辑
   // ============================================================
   function resetTypingForNewSentence() {
+    state.usedTokenIndices = new Set();   // ← 新句清空已用集合
     state.currentIndex = 0;
     typingInput.value = "";
     typingInput.disabled = false;
@@ -2082,9 +2059,6 @@
     return getCurrentRep()?.word || "";
   }
 
-  // ============================================================
-  //  练习模式：固定为"点击拼接"（点击打乱单词，按语序拼出整句）
-  // ============================================================
   function isScrambleMode() {
     return true;
   }
@@ -2093,7 +2067,6 @@
     return true;
   }
 
-  // 两遍模式：每条例句先练一遍旧句，再练一遍对应的新句
   const TWO_PASS_KEY = "vocab_two_pass";
 
   function resetExamplePass() {
@@ -2104,20 +2077,17 @@
     state.twoPass = !!on;
     try { localStorage.setItem(TWO_PASS_KEY, state.twoPass ? "1" : "0"); } catch (e) {}
     twoPassToggle.classList.toggle("on", state.twoPass);
-    // 当前句还没开始输入时立即生效，否则从下一句起生效
     if (!typingInput.disabled && state.currentIndex === 0 && state.currentSentence) {
       startExamplePass(state.twoPass ? "old" : "new");
     }
   }
 
-  // 输入框只读（键盘输入禁用，句子只靠点击单词拼出）
   function updateTypingInputLock() {
     typingInput.readOnly = true;
     typingInput.classList.add("click-only");
     typingInput.placeholder = "点击上方单词，按正确语序拼出整句";
   }
 
-  // 把句子切成单词（保留大小写与标点），并记录其在原句中的位置
   function buildSentenceTokens(sentence) {
     const tokens = [];
     const re = /\S+/g;
@@ -2133,7 +2103,6 @@
     state.scrambleOrder = shuffle(state.scrambleTokens.map((_, i) => i));
   }
 
-  // 当前待拼的单词（覆盖光标所在位置的那个词）
   function nextScrambleToken() {
     return state.scrambleTokens.find(t => t.end > state.currentIndex) || null;
   }
@@ -2146,44 +2115,45 @@
       const token = state.scrambleTokens[ti];
       if (!token) return;
       const chip = document.createElement("span");
-      chip.className = "chip clickable" + (isTokenUsed(token) ? " used" : "");
+      chip.className = "chip clickable" + (state.usedTokenIndices.has(ti) ? " used" : "");
       chip.textContent = token.text;
       chip.dataset.index = String(ti);
       wordChips.appendChild(chip);
     });
   }
 
-  // 仅当该词已完整且逐字输入正确时，才算"已拼出"
-  function isTokenUsed(token) {
-    if (state.currentIndex < token.end) return false;
-    for (let i = token.start; i < token.end; i++) {
-      if (typingInput.value[i] !== state.currentSentence[i]) return false;
-    }
-    return true;
+  // ⚠ 已用状态改为按「芯片索引」判断
+  function isTokenUsed(tokenIndex) {
+    return state.usedTokenIndices.has(tokenIndex);
   }
 
-  // 点击单词 → 直接把该词（含前面的空格）填入输入框
+  // ============================================================
+  //  ⚠ 核心修复：相同单词点击逻辑
+  //  - 放行条件：文本相同（多个相同词互认）+ 该芯片未使用过（防重复点）
+  //  - 填充内容：语序上 expected 的内容（因文本相同，与用户点的那枚芯片一致）
+  //  - 已用标记：按用户点击的芯片索引记录 → 点哪枚哪枚置灰
+  // ============================================================
   function clickChip(tokenIndex) {
     const expected = nextScrambleToken();
     const token = state.scrambleTokens[tokenIndex];
-    if (!expected || !token || token.text !== expected.text) {
-      // 语序错误：扣分、计入错误次数与正确率，并抖动提示
+    if (!expected || !token || token.text !== expected.text
+        || state.usedTokenIndices.has(tokenIndex)) {
       state.combo = 0;
       state.score = Math.max(0, state.score - 3);
-      state.totalTyped++;          // 误点也算一次输入尝试，纳入正确率
+      state.totalTyped++;
       recordError();
       shakeChip(tokenIndex);
       return;
     }
-    // 若光标已进入该词内部（此前手动敲了半截），退回到词首重新填入，保证整词正确
     if (state.currentIndex > expected.start) {
       typingInput.value = typingInput.value.slice(0, expected.start);
       state.currentIndex = expected.start;
     }
-    typingInput.value += state.currentSentence.slice(state.currentIndex, expected.end);
-    // 正确：整词计分（一次点击 = 一个词）
+    typingInput.value += state.currentSentence.slice(expected.start, expected.end);
+
+    state.usedTokenIndices.add(tokenIndex);
     state.totalTyped++;
-    state.correctChars += token.text.length;
+    state.correctChars += expected.text.length;
     state.combo++;
     state.maxCombo = Math.max(state.maxCombo, state.combo);
     state.score += 10 + Math.floor(state.combo / 5) * 3;
@@ -2201,7 +2171,6 @@
     setTimeout(() => chip.classList.remove("wrong"), 320);
   }
 
-  // 记录一次错误：本轮计数 + 当前例句的累计错误（持久化）
   function recordError() {
     state.wrongChars++;
     const wd = getCurrentWord();
@@ -2216,7 +2185,6 @@
   }
 
   function handleInput() {
-    // 点击拼接模式：输入框只读，点击单词时整词填入，这里只负责同步光标位置
     const value = typingInput.value;
     if (value.length < state.currentIndex) {
       state.currentIndex = value.length;
@@ -2238,7 +2206,6 @@
     if (!wd) return;
     const rep = wd.replacements[state.currentRepIndex];
 
-    // 两遍模式：旧句完成 → 不结算进度，接着练对应的新句
     if (state.twoPass && state.currentPass === "old") {
       state.score += 30;
       updateStats();
@@ -2257,17 +2224,14 @@
       if (state.reviewMode) {
         loadReviewItem(state.reviewIndex + 1);
       } else {
-        // 顺序模式：当前替代词的下一例句，没有了进下一个替代词
         if (state.currentExampleIndex + 1 < rep.examples.length) {
           startRep(state.currentRepIndex, state.currentExampleIndex + 1);
         } else if (state.currentRepIndex + 1 < wd.replacements.length) {
           startRep(state.currentRepIndex + 1, 0);
         } else {
-          // 当前词全部完成
           stopTimer();
           typingInput.disabled = true;
           showMasterPopup(`🎉 "${wd.word}" 全部完成！`);
-          // 延迟弹出选择弹窗
           setTimeout(() => showRoundCompleteModal(), 1200);
         }
       }
@@ -2309,7 +2273,6 @@
     const totalEx = (wd.replacements || []).reduce((s, r) => s + (r.examples?.length || 0), 0);
     const weekNum = state.currentWeek.replace("week-", "");
 
-    // 检查本周所有可练习词是否已掌握
     const allMasteredThisWeek = (w.words || []).every(x => !isPracticable(x) || isWordMastered(state.currentWeek, x.word));
 
     if (allMasteredThisWeek) {
@@ -2334,7 +2297,6 @@
       <div class="stat"><div class="stat-val" style="color:${state.wrongChars ? '#ff6b6b' : '#50e3c2'}">${state.wrongChars}</div><div class="stat-lbl">错误次数</div></div>
     `;
 
-    // 推荐下一词（系统按 tier→rank 顺序挑选）
     const next = pickNextWord(state.currentWeek, state.currentWordIndex);
     if (next) {
       const nextWord = VOCAB_DATA[next.weekKey].words[next.wordIdx];
@@ -2369,7 +2331,6 @@
     roundPickPanel.style.display = "none";
   }
 
-  // 渲染选词面板（按 week→tier→rank 排序，所有可练习词都列出）
   function renderPickList() {
     roundPickList.innerHTML = "";
     let count = 0;
@@ -2413,7 +2374,6 @@
     updateStats();
   }
 
-  // 按钮事件
   roundAutoNextBtn.addEventListener("click", () => {
     const wk = roundAutoNextBtn.dataset.week;
     const idx = parseInt(roundAutoNextBtn.dataset.idx, 10);
@@ -2453,14 +2413,13 @@
     if (!visible) renderPickList();
   });
 
-  // 「结束」：关闭弹窗并回到主页面
   roundCloseBtn.addEventListener("click", () => {
     hideRoundModal();
     closePractice();
   });
 
   // ============================================================
-  //  语音合成（Web Speech API）
+  //  语音合成
   // ============================================================
   let AUTO_SPEAK_ON = false;
   let speakingBtn = null;
@@ -2664,10 +2623,9 @@
   }
 
   // ============================================================
-  //  数据加载：vocab-data.json（Python 脚本生成）
+  //  数据加载
   // ============================================================
   async function loadVocabData() {
-    // 方案0（PWA 单文件模式优先）：内联数据，零网络请求，离线可用
     if (typeof window.VOCAB_DATA_RAW === "object" && window.VOCAB_DATA_RAW) {
       const data = window.VOCAB_DATA_RAW;
       if (data && typeof data === "object" && Object.keys(data).length > 0) {
@@ -2678,7 +2636,6 @@
       }
     }
 
-    // 方案1：fetch 分周 JSON 文件（需要 http:// 服务，按周独立加载）
     try {
       const weekFiles = [];
       for (let i = 1; i <= 7; i++) {
@@ -2702,7 +2659,6 @@
       console.warn("[Vocab] 分周 JSON 加载失败,尝试其他方式:", e.message);
     }
 
-    // 方案2：fetch 单个 vocab-data.json（需要 http:// 服务）
     try {
       const res = await fetch("vocab-data.json", { cache: "no-store" });
       if (res.ok) {
@@ -2718,7 +2674,6 @@
       console.warn("[Vocab] vocab-data.json 加载失败:", e.message);
     }
 
-    // 方案3：回退到内联数据（支持 file:// 协议双击直接打开）
     if (typeof window.VOCAB_DATA_RAW === "object" && window.VOCAB_DATA_RAW) {
       try {
         const data = window.VOCAB_DATA_RAW;
@@ -2764,7 +2719,6 @@
   // ============================================================
   //  事件绑定
   // ============================================================
-  // 快捷按钮
   if (btnStart)    btnStart.addEventListener("click", () => { startFromLatest(); openPractice(); });
   if (btnPrevWeek) btnPrevWeek.addEventListener("click", () => {
     if (!state.currentWeek) { startFromLatest(); return; }
@@ -2789,23 +2743,19 @@
   typingInput.addEventListener("paste", (e) => e.preventDefault());
   typingInput.addEventListener("contextmenu", (e) => e.preventDefault());
 
-  // 点击单词直接填入
   wordChips.addEventListener("click", (e) => {
     const chip = e.target.closest(".chip");
     if (chip) clickChip(parseInt(chip.dataset.index, 10));
   });
 
-  // 两遍模式开关（旧句 → 新句）
   twoPassToggle.addEventListener("click", () => setTwoPass(!state.twoPass));
 
-  // 复习横幅：跳过本句 / 退出复习
   btnSkipReview.addEventListener("click", () => {
     if (!state.reviewMode) return;
     loadReviewItem(state.reviewIndex + 1);
   });
   btnExitReview.addEventListener("click", exitReviewMode);
 
-  // 练习子页面顶栏：返回（复习中先退出复习）/ 跳过 / 退出复习
   btnPracticeBack.addEventListener("click", () => {
     if (state.reviewMode) exitReviewMode();
     closePractice();
@@ -2837,7 +2787,6 @@
     startRep((state.currentRepIndex + 1) % len, 0);
   });
 
-  // 语音播放按钮
   speakWordBtn.addEventListener("click", speakWord);
   speakOldBtn.addEventListener("click", () => {
     const ex = getCurrentRep()?.examples?.[state.currentExampleIndex];
@@ -2883,16 +2832,15 @@
       wordDetailPanel.style.display = "none";
       return;
     }
-    // 初始化周选择下拉框
     populateWeekSelect();
-    // 恢复两遍模式设置（默认开启）
     let savedTwoPass = true;
     try { savedTwoPass = localStorage.getItem(TWO_PASS_KEY) !== "0"; } catch (e) {}
     setTwoPass(savedTwoPass);
-    // 自动从系统推荐位置开始（第一个未掌握的可练习词）
     startFromLatest();
   })();
 </script>
+
+
 
 <script>
 if ('serviceWorker' in navigator) {
