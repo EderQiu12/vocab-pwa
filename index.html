@@ -528,6 +528,20 @@
     max-width: 200px;
   }
   .voice-controls select option { background: #0a1628; }
+      /* 语音控制组内：自动朗读作为左侧第一项，去掉自身边框/背景，融入大胶囊 */
+  .voice-controls .auto-speak-toggle {
+    padding: 2px 6px;
+    border: none;
+    background: transparent;
+    border-radius: 8px;
+  }
+  .voice-controls .auto-speak-toggle:hover {
+    background: rgba(255, 255, 255, 0.07);
+  }
+  .voice-controls .auto-speak-toggle.on {
+    background: rgba(0, 229, 255, 0.1);
+    color: #00e5ff;
+  }
   .rate-control { display: flex; align-items: center; gap: 4px; }
   .rate-control input[type=range] {
     -webkit-appearance: none; appearance: none;
@@ -1020,20 +1034,29 @@
     display: flex; flex-direction: column;
   }
 
-  /* 顶栏：返回 + 当前词 + 复习操作 */
+  /* 顶栏：两行结构 —— 第一行操作条，第二行单词条 */
   .ps-topbar {
-    flex: none; display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+    flex: none; display: flex; flex-direction: column; gap: 8px;
     padding: 10px 14px; padding-top: calc(10px + env(safe-area-inset-top));
     border-bottom: 1px solid rgba(255, 255, 255, 0.08);
     background: rgba(26, 26, 46, 0.85); backdrop-filter: blur(10px);
   }
+  /* 第一行：操作条（返回 / 进度 / 跳过 / 退出复习） */
+  .ps-topbar-actions {
+    display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
+  }
+  .ps-topbar-actions .ps-progress { margin-left: auto; }
   .ps-back {
     background: rgba(255, 255, 255, 0.08); color: #d8dce8; flex: none;
     border: 1px solid rgba(255, 255, 255, 0.15); border-radius: 10px;
     padding: 9px 14px; font-size: 14px; cursor: pointer; font-family: inherit;
   }
   .ps-back:active { background: rgba(255, 255, 255, 0.18); }
-  .ps-topbar .practice-target { flex: 1; min-width: 0; }
+  /* 第二行：单词条（单词 / 音标 / 意思 / 朗读） */
+  .ps-topbar .practice-target {
+    display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap;
+    width: 100%; min-width: 0;
+  }
   .ps-progress { font-size: 12px; color: #8a8fa3; flex: none; font-variant-numeric: tabular-nums; }
   .ps-topbar .review-action-btn {
     background: rgba(255, 255, 255, 0.08); color: #d8dce8; flex: none;
@@ -1160,29 +1183,34 @@
 </div>
 
 <!-- 练习子页面：全屏独立页（App 式），单词块固定底部加大触控面积 -->
+
+
+    <!-- 练习子页面：全屏独立页（App 式），单词块固定底部加大触控面积 -->
 <div class="practice-screen" id="practiceScreen">
   <div class="practice-panel" id="practicePanel">
-    <!-- 顶栏：返回 + 当前词 + 复习操作 -->
+    <!-- 顶栏（两行）：第一行操作条，第二行单词条 -->
     <div class="ps-topbar">
-      <button class="ps-back" id="btnPracticeBack">← 返回</button>
+      <div class="ps-topbar-actions">
+        <button class="ps-back" id="btnPracticeBack">← 返回</button>
+        <span class="ps-progress" id="practiceProgress"></span>
+        <button class="review-action-btn" id="btnPracticeSkip" style="display:none;">⏭ 跳过</button>
+        <button class="review-action-btn danger" id="btnPracticeExit" style="display:none;">✖ 退出复习</button>
+      </div>
       <div class="practice-target">
         <span class="word" id="practiceWord">-</span>
         <span class="phonetic" id="practicePhonetic"></span>
         <span class="meaning" id="practiceMeaning"></span>
         <button class="speak-btn" id="speakWordBtn" title="朗读单词">🔊</button>
       </div>
-      <span class="ps-progress" id="practiceProgress"></span>
-      <button class="review-action-btn" id="btnPracticeSkip" style="display:none;">⏭ 跳过</button>
-      <button class="review-action-btn danger" id="btnPracticeExit" style="display:none;">✖ 退出复习</button>
     </div>
 
     <!-- 可滚动区：语音控制 + 统计 + 例句 + 选项 -->
     <div class="ps-scroll">
       <div class="ps-voice-row">
-        <div class="auto-speak-toggle" id="autoSpeakToggle" title="每刷新一个例句自动播放">
-          <span class="switch"></span><span>自动朗读</span>
-        </div>
         <div class="voice-controls">
+          <div class="auto-speak-toggle" id="autoSpeakToggle" title="每刷新一个例句自动播放">
+            <span class="switch"></span><span>自动朗读</span>
+          </div>
           <select id="voiceSelect" title="选择英文嗓音"></select>
           <div class="rate-control" title="朗读语速">
             <span style="font-size:11px;color:#888;">语速</span>
@@ -1241,7 +1269,6 @@
     </div>
   </div>
 </div>
-
 <!-- 弹出提示 -->
 <div class="popup combo" id="comboPopup"></div>
 <div class="popup master" id="masterPopup"></div>
