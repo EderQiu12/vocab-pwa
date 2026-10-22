@@ -78,16 +78,25 @@
   /* ========== 快捷按钮栏 ========== */
   .quick-bar {
     display: flex;
+    flex-direction: column;
     align-items: center;
-    justify-content: center;
-    flex-wrap: wrap;
-    gap: 12px;
+    gap: 8px;
     margin-bottom: 12px;
-    padding: 10px 14px;
+    padding: 12px 14px;
     background: rgba(255,255,255,0.03);
     border: 1px solid rgba(0,229,255,0.15);
     border-radius: 12px;
   }
+  .quick-row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 10px;
+    width: 100%;
+  }
+
+
   .quick-btn {
     display: inline-flex;
     align-items: center;
@@ -1189,16 +1198,25 @@
 
   <!-- 快捷按钮栏 -->
   <div class="quick-bar" id="quickBar">
-    <button class="quick-btn primary" id="btnStart">🚀 开始练习</button>
-    <button class="quick-btn secondary" id="btnPrevWeek">◀ 上一周</button>
-    <span class="quick-btn secondary" style="cursor:default;padding:8px 12px;">
-      📅
-      <select id="weekSelect" title="选择周">
-      </select>
-    </span>
-    <button class="quick-btn secondary" id="btnNextWeek">下一周 ▶</button>
-    <button class="quick-btn purple" id="btnReview">🔁 复习本周</button>
-    <button class="quick-btn purple" id="btnReviewAll">🗂 全部复习</button>
+    <!-- 第 1 行：当前周 -->
+    <div class="quick-row">
+      <span class="quick-btn secondary" style="cursor:default;padding:10px 18px;">
+        📅
+        <select id="weekSelect" title="选择周">
+        </select>
+      </span>
+    </div>
+    <!-- 第 2 行：周导航 -->
+    <div class="quick-row">
+      <button class="quick-btn secondary" id="btnPrevWeek">◀ 上一周</button>
+      <button class="quick-btn secondary" id="btnNextWeek">下一周 ▶</button>
+    </div>
+    <!-- 第 3 行：练习入口 -->
+    <div class="quick-row">
+      <button class="quick-btn primary" id="btnStart">🚀 开始练习</button>
+      <button class="quick-btn purple" id="btnReview">🔁 复习本周</button>
+      <button class="quick-btn purple" id="btnReviewAll">🗂 全部复习</button>
+    </div>
   </div>
 
   <!-- 复习模式横幅 -->
