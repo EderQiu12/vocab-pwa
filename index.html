@@ -514,34 +514,57 @@
   }
   .auto-speak-toggle.on .switch { background: rgba(0, 229, 255, 0.5); }
   .auto-speak-toggle.on .switch::after { left: 14px; }
-  .ex-speak-row { display: flex; gap: 6px; align-items: center; margin-top: 6px; flex-wrap: wrap; }
 
   /* 嗓音/语速控制 */
-  .voice-controls {
-    display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
+  /* 语音控制组 + 练习模式组：共享胶囊基础样式 */
+  .voice-controls,
+  .practice-mode-controls {
+    display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
     padding: 4px 10px; border-radius: 14px;
-    background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.1);
   }
+  /* 语音组：青色系 */
+  .voice-controls {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+  }
+  /* 练习模式组：紫色系，与语音组明确区分 */
+  .practice-mode-controls {
+    background: rgba(142, 68, 173, 0.08);
+    border: 1px solid rgba(142, 68, 173, 0.3);
+  }
+
   .voice-controls select {
     background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.1);
     color: #fff; border-radius: 8px; padding: 3px 8px; font-size: 11.5px;
     max-width: 200px;
   }
   .voice-controls select option { background: #0a1628; }
-      /* 语音控制组内：自动朗读作为左侧第一项，去掉自身边框/背景，融入大胶囊 */
-  .voice-controls .auto-speak-toggle {
+
+   /* 组内 auto-speak-toggle：去掉自身边框/背景，融入大胶囊 */
+  .voice-controls .auto-speak-toggle,
+  .practice-mode-controls .auto-speak-toggle {
     padding: 2px 6px;
     border: none;
     background: transparent;
     border-radius: 8px;
   }
-  .voice-controls .auto-speak-toggle:hover {
+  .voice-controls .auto-speak-toggle:hover,
+  .practice-mode-controls .auto-speak-toggle:hover {
     background: rgba(255, 255, 255, 0.07);
   }
   .voice-controls .auto-speak-toggle.on {
     background: rgba(0, 229, 255, 0.1);
     color: #00e5ff;
   }
+  .practice-mode-controls .auto-speak-toggle.on {
+    background: rgba(142, 68, 173, 0.2);
+    color: #bb8fce;
+  }
+  .practice-mode-controls .auto-speak-toggle.on .switch {
+    background: rgba(142, 68, 173, 0.6);
+  }   
+
+
   .rate-control { display: flex; align-items: center; gap: 4px; }
   .rate-control input[type=range] {
     -webkit-appearance: none; appearance: none;
@@ -964,12 +987,6 @@
     .word-list { grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); }
   }
 
-  /* ========== 练习模式切换 ========== */
-  .practice-options {
-    display: flex; align-items: center; gap: 12px; flex-wrap: wrap;
-    margin-bottom: 14px;
-  }
-
   /* ========== 乱序拼接提示区 ========== */
   .scramble-bar {
     background: rgba(0, 229, 255, 0.04); border: 1px dashed rgba(0, 229, 255, 0.28);
@@ -1085,6 +1102,67 @@
     display: inline-flex; align-items: center;
   }
   #practiceScreen #typingInput { padding: 14px 16px; font-size: 18px; }
+
+
+    /* ========== 点击文本发声 ========== */
+  .speakable {
+    cursor: pointer;
+    user-select: none;
+    -webkit-user-select: none;
+    -webkit-tap-highlight-color: transparent;
+    transition: opacity .15s, color .15s, text-shadow .15s;
+  }
+  #practiceWord.speakable:hover {
+    opacity: 0.85;
+    text-shadow: 0 0 12px rgba(0, 229, 255, 0.5);
+  }
+  #exampleOld.speakable:hover { color: #9aa0b5; }
+
+  /* ========== 词卡右上角：退出/加入复习按钮 ========== */
+  .word-card-exclude-btn {
+    position: absolute;
+    top: 6px; right: 6px;
+    width: 22px; height: 22px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    color: rgba(255, 255, 255, 0.55);
+    font-size: 11px;
+    line-height: 1;
+    cursor: pointer;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    z-index: 3;
+    transition: all .15s;
+  }
+  .word-card.mastered .word-card-exclude-btn { display: flex; }
+  .word-card-exclude-btn:hover {
+    background: rgba(0, 229, 255, 0.2);
+    border-color: rgba(0, 229, 255, 0.5);
+    color: #00e5ff;
+    transform: scale(1.1);
+  }
+  .word-card.excluded {
+    opacity: 0.5;
+    border-color: rgba(255, 107, 107, 0.4) !important;
+  }
+  .word-card.excluded::before {
+    background: rgba(255, 107, 107, 0.4) !important;
+  }
+  .word-card.excluded .word-card-exclude-btn {
+    background: rgba(255, 107, 107, 0.18);
+    border-color: rgba(255, 107, 107, 0.45);
+    color: #ff6b6b;
+  }
+  .word-card.excluded .word-card-exclude-btn:hover {
+    background: rgba(255, 107, 107, 0.3);
+    color: #fff;
+  }
+  .word-card.excluded .word-card-word {
+    text-decoration-color: rgba(255, 107, 107, 0.7);
+  }  
 </style>
 </head>
 <body>
@@ -1117,9 +1195,11 @@
   </div>
 
   <!-- 复习模式横幅 -->
+
   <div class="review-banner" id="reviewBanner">
     <span class="mode-tag" id="reviewModeTag">复习</span>
     <span id="reviewBannerText" style="flex:1;">复习模式：所有替代词例句已乱序排列</span>
+    <button class="review-action-btn" id="btnForceReview" style="display:none;">🔓 强制复习全部已学</button>
     <button class="review-action-btn" id="btnSkipReview" style="display:none;">⏭ 跳过本句</button>
     <button class="review-action-btn danger" id="btnExitReview">✖ 退出复习</button>
   </div>
@@ -1183,9 +1263,6 @@
 </div>
 
 <!-- 练习子页面：全屏独立页（App 式），单词块固定底部加大触控面积 -->
-
-
-    <!-- 练习子页面：全屏独立页（App 式），单词块固定底部加大触控面积 -->
 <div class="practice-screen" id="practiceScreen">
   <div class="practice-panel" id="practicePanel">
     <!-- 顶栏（两行）：第一行操作条，第二行单词条 -->
@@ -1197,11 +1274,10 @@
         <button class="review-action-btn danger" id="btnPracticeExit" style="display:none;">✖ 退出复习</button>
       </div>
       <div class="practice-target">
-        <span class="word" id="practiceWord">-</span>
+        <span class="word speakable" id="practiceWord" title="点击朗读单词">-</span>
         <span class="phonetic" id="practicePhonetic"></span>
         <span class="meaning" id="practiceMeaning"></span>
-        <button class="speak-btn" id="speakWordBtn" title="朗读单词">🔊</button>
-      </div>
+       </div>
     </div>
 
     <!-- 可滚动区：语音控制 + 统计 + 例句 + 选项 -->
@@ -1218,6 +1294,11 @@
             <span id="rateValue" style="font-size:11px;min-width:32px;text-align:center;font-variant-numeric: tabular-nums;">0.75x</span>
           </div>
         </div>
+        <div class="practice-mode-controls">
+          <div class="auto-speak-toggle on" id="twoPassToggle" title="开启后：每条例句先拼一遍旧句，再拼一遍对应的新句">
+            <span class="switch"></span><span>两遍模式（旧→新）</span>
+          </div>
+        </div>
       </div>
 
       <!-- 统计栏 -->
@@ -1231,23 +1312,14 @@
       </div>
 
       <!-- 例句展示 -->
+
       <div class="example-box" id="exampleBox">
-        <div class="example-old" id="exampleOld">~~ 旧表达 ~~</div>
+        <div class="example-old speakable" id="exampleOld" title="点击朗读旧句">~~ 旧表达 ~~</div>
         <div class="example-arrow" id="exampleArrow">↓ 用新词替换</div>
-        <div class="example-new" id="exampleNew"></div>
-        <div class="ex-speak-row">
-          <button class="speak-btn" id="speakOldBtn" title="朗读旧句">🔊 旧句</button>
-          <button class="speak-btn" id="speakNewBtn" title="朗读新句">🔊 新句</button>
-        </div>
+        <div class="example-new speakable" id="exampleNew" title="点击朗读当前句子"></div>
         <div class="example-cn" id="exampleCn"></div>
       </div>
 
-      <!-- 练习选项：两遍模式 -->
-      <div class="practice-options">
-        <div class="auto-speak-toggle on" id="twoPassToggle" title="开启后：每条例句先拼一遍旧句，再拼一遍对应的新句">
-          <span class="switch"></span><span>两遍模式（旧→新）</span>
-        </div>
-      </div>
     </div>
 
     <!-- 底部固定区：单词块 + 输入框 + 切换按钮 -->
@@ -1308,12 +1380,12 @@
 
   const LEVEL_NAMES = { 2: "CET-4", 3: "CET-6", 4: "雅思/托福", 5: "GRE/专八" };
   const TIER_NAMES = {
-    T1: "1-100 超高频",
-    T2: "101-200 高频",
-    T3: "201-300 中频",
-    T4: "301-400 中低频",
-    T5: "401-500 低频",
+    T1: "1-100 超高频", T2: "101-200 高频", T3: "201-300 中频",
+    T4: "301-400 中低频", T5: "401-500 低频",
   };
+
+  // 间隔复习阶梯（天）
+  const REVIEW_INTERVALS = [0, 1, 2, 4, 7, 15, 30, 60, 120];
 
   // ============================================================
   //  DOM
@@ -1333,7 +1405,6 @@
   const weekDesc = $("weekDesc");
   const weekDesc2 = $("weekDesc2");
   const wordList = $("wordList");
-  const wordBadge = $("wordBadge");
   const currentWord = $("currentWord");
   const currentPhonetic = $("currentPhonetic");
   const currentRank = $("currentRank");
@@ -1345,6 +1416,7 @@
   const reviewBanner = $("reviewBanner");
   const reviewModeTag = $("reviewModeTag");
   const reviewBannerText = $("reviewBannerText");
+  const btnForceReview = $("btnForceReview");
   const btnSkipReview = $("btnSkipReview");
   const btnExitReview = $("btnExitReview");
   const prevWordBtn = $("prevWordBtn");
@@ -1360,9 +1432,6 @@
   const practiceWord = $("practiceWord");
   const practicePhonetic = $("practicePhonetic");
   const practiceMeaning = $("practiceMeaning");
-  const speakWordBtn = $("speakWordBtn");
-  const speakOldBtn = $("speakOldBtn");
-  const speakNewBtn = $("speakNewBtn");
   const autoSpeakToggle = $("autoSpeakToggle");
   const voiceSelect = $("voiceSelect");
   const rateRange = $("rateRange");
@@ -1412,7 +1481,7 @@
     currentExampleIndex: 0,
     currentSentence: "",
     currentIndex: 0,
-    correctChars: 0,
+    correctClicks: 0,
     totalTyped: 0,
     wrongChars: 0,
     score: 0,
@@ -1420,8 +1489,8 @@
     maxCombo: 0,
     startTime: 0,
     timerId: null,
-    reviewMode: null,
-    reviewScope: null,
+    reviewMode: null,        // null | "spaced" | "force"
+    reviewScope: null,       // null | weekKey | "all"
     reviewQueue: [],
     reviewIndex: 0,
     scrambleTokens: [],
@@ -1439,13 +1508,15 @@
   function loadProgress() {
     try {
       const raw = localStorage.getItem(PROGRESS_KEY);
-      const p = raw ? JSON.parse(raw) : { mastered: {}, doneExamples: {}, errors: {} };
+      const p = raw ? JSON.parse(raw) : {};
       if (!p.mastered) p.mastered = {};
       if (!p.doneExamples) p.doneExamples = {};
       if (!p.errors) p.errors = {};
+      if (!p.reviews) p.reviews = {};
+      if (!p.excluded) p.excluded = {};
       return p;
     } catch (e) {
-      return { mastered: {}, doneExamples: {}, errors: {} };
+      return { mastered: {}, doneExamples: {}, errors: {}, reviews: {}, excluded: {} };
     }
   }
 
@@ -1467,9 +1538,67 @@
     return progress.errors[exampleKey(weekKey, word, repWord, exIdx)] || 0;
   }
 
+  // ============================================================
+  //  记忆曲线
+  // ============================================================
+  function getReviewInfo(key) {
+    return progress.reviews[key] || { reviews: 0, interval: 0, due: 0, lastError: 0 };
+  }
+
+  function updateReviewAfterComplete(key) {
+    const info = { ...getReviewInfo(key) };
+    const curErrors = progress.errors[key] || 0;
+    const hadNewError = curErrors > info.lastError;
+    if (hadNewError) info.reviews = Math.max(0, info.reviews - 2);
+    else info.reviews = Math.min(info.reviews + 1, REVIEW_INTERVALS.length - 1);
+    info.interval = REVIEW_INTERVALS[info.reviews];
+    info.due = Date.now() + info.interval * 86400000;
+    info.lastError = curErrors;
+    progress.reviews[key] = info;
+  }
+
+  function formatDue(ts) {
+    const diff = ts - Date.now();
+    if (diff <= 0) return "已到期";
+    const hours = Math.ceil(diff / 3600000);
+    if (hours < 24) return `${hours} 小时后`;
+    return `${Math.ceil(diff / 86400000)} 天后`;
+  }
+
+  // ============================================================
+  //  手动退出/加入复习（词级）
+  // ============================================================
+  function excludedKey(weekKey, word) {
+    return `${weekKey}#${word}`;
+  }
+  function isWordExcluded(weekKey, word) {
+    return !!progress.excluded[excludedKey(weekKey, word)];
+  }
+  function toggleWordExcluded(weekKey, word) {
+    const k = excludedKey(weekKey, word);
+    if (progress.excluded[k]) delete progress.excluded[k];
+    else progress.excluded[k] = true;
+    saveProgress();
+  }
+
+  // ============================================================
+  //  完成例句 / 掌握词
+  // ============================================================
   function markExampleDone(weekKey, word, repWord, exIdx) {
     const key = exampleKey(weekKey, word, repWord, exIdx);
     progress.doneExamples[key] = true;
+
+    // 记忆曲线：仅正式复习推进间隔；强制复习不推进
+    if (state.reviewMode === "spaced") {
+      updateReviewAfterComplete(key);
+    } else if (!progress.reviews[key]) {
+      progress.reviews[key] = {
+        reviews: 1, interval: 1,
+        due: Date.now() + 86400000,
+        lastError: progress.errors[key] || 0
+      };
+    }
+
     const w = VOCAB_DATA[weekKey];
     const wordData = w?.words?.find(x => x.word === word);
     if (wordData && wordData.replacements.length > 0) {
@@ -1525,9 +1654,7 @@
     if (w?.words) {
       for (let i = fromWordIdx + 1; i < w.words.length; i++) {
         const wd = w.words[i];
-        if (isPracticable(wd) && !isWordMastered(fromWeekKey, wd.word)) {
-          return { weekKey: fromWeekKey, wordIdx: i };
-        }
+        if (isPracticable(wd) && !isWordMastered(fromWeekKey, wd.word)) return { weekKey: fromWeekKey, wordIdx: i };
       }
     }
     const wkIdx = WEEK_KEYS.indexOf(fromWeekKey);
@@ -1537,9 +1664,7 @@
       if (!nw?.words) continue;
       for (let i = 0; i < nw.words.length; i++) {
         const wd = nw.words[i];
-        if (isPracticable(wd) && !isWordMastered(wk, wd.word)) {
-          return { weekKey: wk, wordIdx: i };
-        }
+        if (isPracticable(wd) && !isWordMastered(wk, wd.word)) return { weekKey: wk, wordIdx: i };
       }
     }
     for (let j = wkIdx; j < WEEK_KEYS.length; j++) {
@@ -1548,9 +1673,7 @@
       if (!nw?.words) continue;
       const startI = (j === wkIdx) ? fromWordIdx + 1 : 0;
       for (let i = startI; i < nw.words.length; i++) {
-        if (isPracticable(nw.words[i])) {
-          return { weekKey: wk, wordIdx: i };
-        }
+        if (isPracticable(nw.words[i])) return { weekKey: wk, wordIdx: i };
       }
     }
     return null;
@@ -1566,8 +1689,7 @@
   }
 
   function startFromLatest() {
-    state.reviewMode = null;
-    state.reviewScope = null;
+    state.reviewMode = null; state.reviewScope = null;
     setReviewUI(false);
     const next = pickNextWord(WEEK_KEYS[0], -1);
     if (next) {
@@ -1587,8 +1709,7 @@
       showCliHint(`找不到 ${weekKey}，目前共有 ${WEEK_KEYS.length} 周`);
       return;
     }
-    state.reviewMode = null;
-    state.reviewScope = null;
+    state.reviewMode = null; state.reviewScope = null;
     setReviewUI(false);
     state.currentWeek = weekKey;
     state.currentWordIndex = Math.max(0, firstPracticableInWeek(weekKey));
@@ -1620,62 +1741,102 @@
   }
 
   // ============================================================
-  //  复习模式
+  //  复习模式（记忆曲线 + 手动退出 + 强制兜底）
   // ============================================================
-  function enterReviewMode(mode, scope) {
-    state.reviewMode = mode;
+  function enterReviewMode(scope, force = false) {
+    state.reviewMode = force ? "force" : "spaced";
     state.reviewScope = scope;
 
     resetRoundState();
     setReviewUI(true);
 
-    let weeks = scope === "all" ? WEEK_KEYS : [scope];
+    const now = Date.now();
+    const weeks = scope === "all" ? WEEK_KEYS : [scope];
     let queue = [];
+    let totalDone = 0;
+    let excludedCount = 0;
+
     weeks.forEach(wk => {
       const w = VOCAB_DATA[wk];
       if (!w?.words) return;
       w.words.forEach((wd, wi) => {
         if (!isPracticable(wd)) return;
+        const wordExcluded = isWordExcluded(wk, wd.word);
         wd.replacements.forEach((rep, ri) => {
           rep.examples.forEach((ex, ei) => {
             if (!isExampleDone(wk, wd.word, rep.word, ei)) return;
-            queue.push({ week: wk, wordIdx: wi, repIndex: ri, exIndex: ei });
+            totalDone++;
+            if (wordExcluded) { excludedCount++; return; }
+            const key = exampleKey(wk, wd.word, rep.word, ei);
+            const info = getReviewInfo(key);
+            if (!force && info.due > now) return;   // ★ 未到期不入队
+            queue.push({
+              week: wk, wordIdx: wi, repIndex: ri, exIndex: ei,
+              due: info.due, reviews: info.reviews
+            });
           });
         });
       });
     });
 
-    if (mode === "reverse") {
-      queue.reverse();
-    } else {
-      queue = shuffle(queue);
-      queue.sort((a, b) => errCountOf(b) - errCountOf(a));
-    }
+    queue.sort((a, b) => (a.due !== b.due) ? (a.due - b.due) : (errCountOf(b) - errCountOf(a)));
 
     state.reviewQueue = queue;
     state.reviewIndex = 0;
 
     reviewBanner.classList.add("show");
-    reviewModeTag.style.background = "#8e44ad";
-    const modeName = mode === "reverse" ? "逆序" : "乱序·错题优先";
+    reviewModeTag.style.background = force ? "#c0392b" : "#8e44ad";
     const scopeName = scope === "all" ? "全部已学词汇" : scope;
-    reviewModeTag.textContent = `复习 · ${modeName}`;
+    reviewModeTag.textContent = force
+      ? (scope === "all" ? "复习 · 全部(强制)" : "复习 · 本周(强制)")
+      : (scope === "all" ? "复习 · 全部" : "复习 · 本周");
 
+    // ---- 空队列：区分三种原因 ----
     if (queue.length === 0) {
-      reviewBannerText.textContent = `${scopeName} · 暂无已学例句可复习，请先完成练习`;
       typingInput.disabled = true;
       btnSkipReview.style.display = "none";
       btnPracticeSkip.style.display = "none";
+      hideForceReviewButton();
+
+      if (totalDone === 0) {
+        reviewBannerText.textContent = `${scopeName} · 暂无已学例句，请先完成练习`;
+        return;
+      }
+      if (excludedCount === totalDone) {
+        reviewBannerText.textContent = `${scopeName} · 所有已学例句已手动退出复习（在词卡列表点 🔁 可加回）`;
+        return;
+      }
+      // 剩下的都是未到期
+      let nextDue = null;
+      weeks.forEach(wk => {
+        const w = VOCAB_DATA[wk];
+        if (!w?.words) return;
+        w.words.forEach(wd => {
+          if (!isPracticable(wd) || isWordExcluded(wk, wd.word)) return;
+          wd.replacements.forEach(rep => {
+            rep.examples.forEach((ex, ei) => {
+              if (!isExampleDone(wk, wd.word, rep.word, ei)) return;
+              const info = getReviewInfo(exampleKey(wk, wd.word, rep.word, ei));
+              if (info.due > now && (nextDue === null || info.due < nextDue)) nextDue = info.due;
+            });
+          });
+        });
+      });
+      const hint = nextDue ? `最近一条将于 ${formatDue(nextDue)} 到期` : "";
+      const excludedHint = excludedCount > 0 ? `，已手动退出 ${excludedCount} 条` : "";
+      reviewBannerText.textContent = `${scopeName} · 暂无到期例句（${hint}${excludedHint}）`;
+      if (!force) showForceReviewButton(scope);
       return;
     }
 
-    reviewBannerText.textContent = `${scopeName} · 共 ${queue.length} 条例句 · 当前进度 1/${queue.length}`;
+    hideForceReviewButton();
+    const excludedHint = excludedCount > 0 ? `（已手动退出 ${excludedCount} 条）` : "";
+    reviewBannerText.textContent =
+      `${scopeName} · 共 ${queue.length} 条到期例句${excludedHint} · 按记忆曲线排序 · 当前进度 1/${queue.length}`;
     btnSkipReview.style.display = "";
     btnPracticeSkip.style.display = "";
 
-    if (scope !== "all") {
-      state.currentWeek = scope;
-    }
+    if (scope !== "all") state.currentWeek = scope;
     renderWeek();
     loadReviewItem(0);
   }
@@ -1687,7 +1848,7 @@
       btnSkipReview.style.display = "none";
       btnPracticeSkip.style.display = "none";
       const elapsedMin = Math.max(0.1, (Date.now() - state.roundStartTime) / 60000);
-      const acc = state.totalTyped > 0 ? Math.round((state.correctChars / state.totalTyped) * 100) : 0;
+      const acc = state.totalTyped > 0 ? Math.round((state.correctClicks / state.totalTyped) * 100) : 0;
       reviewBannerText.textContent =
         `🎉 复习完成！共 ${state.reviewQueue.length} 句 · 用时 ${elapsedMin.toFixed(1)} 分钟 · 正确率 ${acc}% · 得分 ${state.score}`;
       closePractice();
@@ -1719,10 +1880,13 @@
 
   function updateReviewBanner() {
     if (!state.reviewMode) return;
-    const modeName = state.reviewMode === "reverse" ? "逆序" : "乱序·错题优先";
+    const isForce = state.reviewMode === "force";
     const scopeName = state.reviewScope === "all" ? "全部已学词汇" : state.reviewScope;
-    reviewModeTag.textContent = `复习 · ${modeName}`;
-    reviewBannerText.textContent = `${scopeName} · 当前进度 ${state.reviewIndex + 1}/${state.reviewQueue.length}`;
+    reviewModeTag.textContent = isForce
+      ? (state.reviewScope === "all" ? "复习 · 全部(强制)" : "复习 · 本周(强制)")
+      : (state.reviewScope === "all" ? "复习 · 全部" : "复习 · 本周");
+    reviewBannerText.textContent =
+      `${scopeName} · 当前进度 ${state.reviewIndex + 1}/${state.reviewQueue.length}`;
     practiceProgress.textContent = `${state.reviewIndex + 1}/${state.reviewQueue.length}`;
   }
 
@@ -1734,22 +1898,29 @@
     btnSkipReview.style.display = on ? "" : "none";
     btnPracticeExit.style.display = on ? "" : "none";
     btnPracticeSkip.style.display = on ? "" : "none";
+    hideForceReviewButton();
     if (!on) practiceProgress.textContent = "";
   }
 
   function exitReviewMode() {
     if (!state.reviewMode) return;
-    state.reviewMode = null;
-    state.reviewScope = null;
-    state.reviewQueue = [];
-    state.reviewIndex = 0;
+    state.reviewMode = null; state.reviewScope = null;
+    state.reviewQueue = []; state.reviewIndex = 0;
     reviewBanner.classList.remove("show");
+    hideForceReviewButton();
     setReviewUI(false);
     renderWeek();
     renderExampleList();
     updateWordProgress();
     startFromLatest();
   }
+
+  function showForceReviewButton(scope) {
+    btnForceReview.style.display = "";
+    btnForceReview.dataset.scope = scope;
+    btnForceReview.textContent = scope === "all" ? "🔓 强制复习全部已学" : "🔓 强制复习本周已学";
+  }
+  function hideForceReviewButton() { btnForceReview.style.display = "none"; }
 
   function errCountOf(item) {
     const key = exampleKey(item.week, VOCAB_DATA[item.week].words[item.wordIdx].word,
@@ -1769,7 +1940,6 @@
   function renderWeek() {
     const w = VOCAB_DATA[state.currentWeek];
     if (!w) return;
-
     emptyPanel.style.display = "none";
     weekPanel.style.display = "block";
     practicePanel.style.display = "flex";
@@ -1779,7 +1949,6 @@
     weekBadge.textContent = `📅 WEEK ${weekNum}`;
     weekBadge.className = "week-badge" + (state.reviewMode ? " review" : "");
     currentWeekPill.textContent = `📅 第 ${weekNum} 周`;
-
     weekTitle.textContent = w.title || state.currentWeek;
     weekDesc.textContent = w.desc || "";
     weekDesc2.textContent = `本周共 ${w.words?.length || 0} 个消灭词，按 tier→rank 排序`;
@@ -1799,8 +1968,11 @@
     w.words.forEach((wd, i) => {
       const card = document.createElement("div");
       card.className = "word-card";
+      const mastered = isWordMastered(state.currentWeek, wd.word);
+      const excluded = isWordExcluded(state.currentWeek, wd.word);
       if (i === state.currentWordIndex && !state.reviewMode) card.classList.add("active");
-      if (isWordMastered(state.currentWeek, wd.word)) card.classList.add("mastered");
+      if (mastered) card.classList.add("mastered");
+      if (excluded) card.classList.add("excluded");
       if (!isPracticable(wd)) card.classList.add("locked");
 
       const totalReps = wd.replacements?.length || 0;
@@ -1811,8 +1983,7 @@
           r.examples.every((_, ei) => isExampleDone(state.currentWeek, wd.word, r.word, ei))
         ).length;
       }
-      const progClass = !isPracticable(wd)
-        ? "zero"
+      const progClass = !isPracticable(wd) ? "zero"
         : (doneReps === 0 ? "zero" : (doneReps === totalReps ? "" : "partial"));
 
       card.innerHTML = `
@@ -1822,7 +1993,21 @@
           <span class="word-card-tier">${wd.tier || "T?"}</span>
           <span class="word-card-progress ${progClass}">${doneReps}/${totalReps}</span>
         </div>
+        <button class="word-card-exclude-btn" title="${excluded ? "点击重新加入复习" : "点击退出复习（已完全掌握）"}">${excluded ? "🚫" : "🔁"}</button>
       `;
+
+      // 词卡右上角：退出/加入复习
+      const excludeBtn = card.querySelector(".word-card-exclude-btn");
+      if (excludeBtn) {
+        excludeBtn.addEventListener("click", (ev) => {
+          ev.stopPropagation();
+          const wasExcluded = isWordExcluded(state.currentWeek, wd.word);
+          toggleWordExcluded(state.currentWeek, wd.word);
+          renderWordList();
+          showCliHint(wasExcluded ? `"${wd.word}" 已重新加入复习` : `"${wd.word}" 已退出复习`);
+        });
+      }
+
       card.addEventListener("click", () => {
         if (state.reviewMode) {
           showCliHint("复习模式下点击单词无效，请点右上角「退出复习」");
@@ -1841,10 +2026,7 @@
 
   function renderWordDetail() {
     const wd = getCurrentWord();
-    if (!wd) {
-      wordDetailPanel.style.display = "none";
-      return;
-    }
+    if (!wd) { wordDetailPanel.style.display = "none"; return; }
     wordDetailPanel.style.display = "block";
     currentWord.textContent = wd.word;
     currentPhonetic.textContent = wd.phonetic || "";
@@ -1920,7 +2102,6 @@
     arsenal.querySelectorAll(".weapon-card").forEach((c, i) => {
       c.classList.toggle("active", i === repIdx);
     });
-
     autoSpeakIfOn();
   }
 
@@ -1967,8 +2148,6 @@
       ? "↓ 第一遍：先拼旧句，第二遍再换成新词"
       : "↓ 用新词替换";
     exampleCn.textContent = `中文：${ex.cn}`;
-    speakNewBtn.textContent = pass === "old" ? "🔊 本句" : "🔊 新句";
-    speakNewBtn.title = pass === "old" ? "朗读当前练习的旧句" : "朗读新句";
     buildScramble(target);
     renderSentenceChars(target, repWord);
     state.currentSentence = target;
@@ -2019,9 +2198,7 @@
     const stem = wordLower.length >= 4 ? wordLower.slice(0, Math.max(4, wordLower.length - 1)) : wordLower;
     const regex = new RegExp(`\\b${escapeRegExp(stem)}[a-z]*`, "gi");
     let m;
-    while ((m = regex.exec(lower)) !== null) {
-      ranges.push({ start: m.index, end: m.index + m[0].length });
-    }
+    while ((m = regex.exec(lower)) !== null) ranges.push({ start: m.index, end: m.index + m[0].length });
     return ranges;
   }
 
@@ -2057,23 +2234,13 @@
     if (!state.timerId) startTimer();
   }
 
-  function currentRepWord() {
-    return getCurrentRep()?.word || "";
-  }
-
-  function isScrambleMode() {
-    return true;
-  }
-
-  function isClickMode() {
-    return true;
-  }
+  function currentRepWord() { return getCurrentRep()?.word || ""; }
+  function isScrambleMode() { return true; }
+  function isClickMode() { return true; }
 
   const TWO_PASS_KEY = "vocab_two_pass";
 
-  function resetExamplePass() {
-    state.currentPass = state.twoPass ? "old" : "new";
-  }
+  function resetExamplePass() { state.currentPass = state.twoPass ? "old" : "new"; }
 
   function setTwoPass(on) {
     state.twoPass = !!on;
@@ -2094,9 +2261,7 @@
     const tokens = [];
     const re = /\S+/g;
     let m;
-    while ((m = re.exec(sentence)) !== null) {
-      tokens.push({ text: m[0], start: m.index, end: m.index + m[0].length });
-    }
+    while ((m = re.exec(sentence)) !== null) tokens.push({ text: m[0], start: m.index, end: m.index + m[0].length });
     return tokens;
   }
 
@@ -2124,28 +2289,14 @@
     });
   }
 
-  function isTokenUsed(tokenIndex) {
-    return state.usedTokenIndices.has(tokenIndex);
-  }
+  function isTokenUsed(tokenIndex) { return state.usedTokenIndices.has(tokenIndex); }
 
-  // ============================================================
-  //  ★★★ 核心修复：clickChip ★★★
-  //  修复要点（相对上一版）：
-  //   1) 函数开头强制同步 currentIndex = typingInput.value.length，
-  //      彻底杜绝 value 与 currentIndex 失步导致的错位
-  //   2) 放行条件增加 state.usedTokenIndices.has(tokenIndex) 拦截
-  //   3) 填充成功后 state.usedTokenIndices.add(tokenIndex) 记录已用
-  //  这样：相同单词互认（按文本匹配放行）+ 按芯片索引置灰，
-  //  彻底解决 "I foun" 卡死 / a 点不了 的问题。
-  // ============================================================
+  // ★ 核心：相同单词互认 + 按芯片索引置灰 + 强制同步 currentIndex
   function clickChip(tokenIndex) {
-    // ★ 修复 1：强制同步，杜绝 value 与 currentIndex 失步
     state.currentIndex = typingInput.value.length;
-
     const expected = nextScrambleToken();
     const token = state.scrambleTokens[tokenIndex];
 
-    // ★ 修复 2：放行条件增加"该芯片未使用过"拦截
     if (!expected || !token || token.text !== expected.text
         || state.usedTokenIndices.has(tokenIndex)) {
       state.combo = 0;
@@ -2156,20 +2307,15 @@
       return;
     }
 
-    // 若光标已进入该词内部，退回到词首重新填入
     if (state.currentIndex > expected.start) {
       typingInput.value = typingInput.value.slice(0, expected.start);
       state.currentIndex = expected.start;
     }
-
-    // 从 currentIndex 到 expected.end（包含词前空格）
     typingInput.value += state.currentSentence.slice(state.currentIndex, expected.end);
-
-    // ★ 修复 3：按用户点击的芯片索引标记已用
     state.usedTokenIndices.add(tokenIndex);
 
     state.totalTyped++;
-    state.correctChars += expected.text.length;
+    state.correctClicks++;
     state.combo++;
     state.maxCombo = Math.max(state.maxCombo, state.combo);
     state.score += 10 + Math.floor(state.combo / 5) * 3;
@@ -2202,21 +2348,15 @@
 
   function handleInput() {
     const value = typingInput.value;
-    // 光标回退（点击回退后同步）
     if (value.length < state.currentIndex) {
       state.currentIndex = value.length;
       renderSentenceChars(state.currentSentence, currentRepWord());
       return;
     }
-    // ★ 这里以 value.length 为准，且不超过句子长度
     state.currentIndex = Math.min(value.length, state.currentSentence.length);
-
     renderSentenceChars(state.currentSentence, currentRepWord());
     updateStats();
-
-    if (state.currentIndex >= state.currentSentence.length) {
-      onSentenceComplete();
-    }
+    if (state.currentIndex >= state.currentSentence.length) onSentenceComplete();
   }
 
   function onSentenceComplete() {
@@ -2259,7 +2399,7 @@
   function updateStats() {
     scoreValue.textContent = state.score;
     comboValue.textContent = state.combo;
-    const acc = state.totalTyped === 0 ? 100 : Math.round((state.correctChars / state.totalTyped) * 100);
+    const acc = state.totalTyped === 0 ? 100 : Math.round((state.correctClicks / state.totalTyped) * 100);
     accuracyValue.textContent = acc + "%";
     wrongCharsValue.textContent = state.wrongChars;
     wrongCharsValue.classList.toggle("zero", state.wrongChars === 0);
@@ -2290,7 +2430,6 @@
     const totalReps = (wd.replacements || []).filter(r => r.examples?.length > 0).length;
     const totalEx = (wd.replacements || []).reduce((s, r) => s + (r.examples?.length || 0), 0);
     const weekNum = state.currentWeek.replace("week-", "");
-
     const allMasteredThisWeek = (w.words || []).every(x => !isPracticable(x) || isWordMastered(state.currentWeek, x.word));
 
     if (allMasteredThisWeek) {
@@ -2302,10 +2441,9 @@
     }
 
     const elapsed = state.startTime ? Math.floor((Date.now() - state.startTime) / 1000) : 0;
-    const m = Math.floor(elapsed / 60);
-    const s = elapsed % 60;
+    const m = Math.floor(elapsed / 60), s = elapsed % 60;
     const timeStr = m > 0 ? `${m}m${s}s` : `${s}s`;
-    const acc = state.totalTyped === 0 ? 100 : Math.round((state.correctChars / state.totalTyped) * 100);
+    const acc = state.totalTyped === 0 ? 100 : Math.round((state.correctClicks / state.totalTyped) * 100);
 
     roundModalStats.innerHTML = `
       <div class="stat"><div class="stat-val">${state.score}</div><div class="stat-lbl">得分</div></div>
@@ -2324,8 +2462,7 @@
       roundAutoNextStatus.innerHTML =
         `${label}：<b style="color:#50e3c2;font-size:14px;">${nextWord.word}</b>` +
         `（第 ${nextWeekNum} 周 · rank ${nextWord.rank} · ${nextWord.tier}` +
-        (nextMastered ? " · 已掌握，可重练" : "") +
-        `）`;
+        (nextMastered ? " · 已掌握，可重练" : "") + `）`;
       roundAutoNextBtn.disabled = false;
       roundAutoNextBtn.textContent = `${label}：${nextWord.word}`;
       roundAutoNextBtn.dataset.week = next.weekKey;
@@ -2375,18 +2512,12 @@
         count++;
       });
     });
-    if (count === 0) {
-      roundPickList.innerHTML = `<div class="pick-empty">暂无可练习词，请先用 generate_examples.py 生成例句</div>`;
-    }
+    if (count === 0) roundPickList.innerHTML = `<div class="pick-empty">暂无可练习词</div>`;
   }
 
   function resetRoundState() {
-    state.score = 0;
-    state.combo = 0;
-    state.maxCombo = 0;
-    state.correctChars = 0;
-    state.totalTyped = 0;
-    state.wrongChars = 0;
+    state.score = 0; state.combo = 0; state.maxCombo = 0;
+    state.correctClicks = 0; state.totalTyped = 0; state.wrongChars = 0;
     state.roundStartTime = Date.now();
     stopTimer();
     updateStats();
@@ -2397,8 +2528,7 @@
     const idx = parseInt(roundAutoNextBtn.dataset.idx, 10);
     if (!wk || isNaN(idx)) return;
     hideRoundModal();
-    state.currentWeek = wk;
-    state.currentWordIndex = idx;
+    state.currentWeek = wk; state.currentWordIndex = idx;
     resetRoundState();
     renderWeek();
     startWord(idx, 0, 0);
@@ -2413,11 +2543,13 @@
         r.examples.forEach((_, ei) => {
           delete progress.doneExamples[exampleKey(state.currentWeek, wd.word, r.word, ei)];
           delete progress.errors[exampleKey(state.currentWeek, wd.word, r.word, ei)];
+          delete progress.reviews[exampleKey(state.currentWeek, wd.word, r.word, ei)];
         });
       });
       if (progress.mastered[state.currentWeek]) {
         progress.mastered[state.currentWeek] = progress.mastered[state.currentWeek].filter(x => x !== wd.word);
       }
+      delete progress.excluded[excludedKey(state.currentWeek, wd.word)];   // 重练时清排除标记
       saveProgress();
     }
     resetRoundState();
@@ -2440,14 +2572,11 @@
   //  语音合成
   // ============================================================
   let AUTO_SPEAK_ON = false;
-  let speakingBtn = null;
   let voicesReady = false;
   let SPEAK_RATE = 0.75;
   let SELECTED_VOICE_NAME = null;
 
-  function getVoices() {
-    return window.speechSynthesis ? window.speechSynthesis.getVoices() : [];
-  }
+  function getVoices() { return window.speechSynthesis ? window.speechSynthesis.getVoices() : []; }
 
   function pickEnVoice() {
     const voices = getVoices();
@@ -2475,8 +2604,7 @@
     if (all.length === 0) {
       const o = document.createElement("option");
       o.value = ""; o.textContent = "（系统无可用英文嗓音，将用默认）";
-      sel.appendChild(o);
-      sel.disabled = true;
+      sel.appendChild(o); sel.disabled = true;
       return;
     }
     sel.disabled = false;
@@ -2493,16 +2621,15 @@
   }
 
   let pendingSpeakText = null;
-  let pendingSpeakBtn = null;
 
   if (window.speechSynthesis) {
     const onReady = () => {
       voicesReady = true;
       refreshVoiceSelect();
       if (pendingSpeakText) {
-        const t = pendingSpeakText, b = pendingSpeakBtn;
-        pendingSpeakText = null; pendingSpeakBtn = null;
-        doSpeak(t, b);
+        const t = pendingSpeakText;
+        pendingSpeakText = null;
+        doSpeak(t);
       }
     };
     window.speechSynthesis.onvoiceschanged = onReady;
@@ -2511,54 +2638,30 @@
 
   let lastCancelTime = 0;
 
-  function doSpeak(text, btn) {
+  function doSpeak(text) {
     const synth = window.speechSynthesis;
     if (!synth || !text) return;
-
     const now = Date.now();
     if (synth.speaking && now - lastCancelTime > 300) {
       synth.cancel();
       lastCancelTime = now;
-      setTimeout(() => actuallySpeak(text, btn), 60);
-    } else {
-      actuallySpeak(text, btn);
-    }
+      setTimeout(() => actuallySpeak(text), 60);
+    } else actuallySpeak(text);
   }
 
-  function actuallySpeak(text, btn) {
+  function actuallySpeak(text) {
     const synth = window.speechSynthesis;
     try {
       const u = new SpeechSynthesisUtterance(text);
-      u.volume = 1.0;
-      u.rate = SPEAK_RATE;
-      u.pitch = 1;
+      u.volume = 1.0; u.rate = SPEAK_RATE; u.pitch = 1;
       const v = pickEnVoice();
-      if (v) {
-        u.voice = v;
-        u.lang = v.lang;
-      } else {
-        u.lang = "en-US";
-      }
-      if (btn) {
-        btn.classList.add("playing");
-        speakingBtn = btn;
-        u.onend = () => { btn.classList.remove("playing"); if (speakingBtn === btn) speakingBtn = null; };
-        u.onerror = (e) => {
-          console.warn("TTS error:", e);
-          btn.classList.remove("playing");
-          if (speakingBtn === btn) speakingBtn = null;
-        };
-      }
+      if (v) { u.voice = v; u.lang = v.lang; } else u.lang = "en-US";
       synth.speak(u);
-      setTimeout(() => {
-        if (synth.paused) synth.resume();
-      }, 150);
-    } catch (e) {
-      console.warn("TTS speak exception:", e);
-    }
+      setTimeout(() => { if (synth.paused) synth.resume(); }, 150);
+    } catch (e) { console.warn("TTS speak exception:", e); }
   }
 
-  function speak(text, btn) {
+  function speak(text) {
     if (!text) return;
     if (!window.speechSynthesis) {
       alert("你的浏览器不支持语音合成 (Web Speech API)。");
@@ -2566,28 +2669,25 @@
     }
     if (!voicesReady) {
       pendingSpeakText = text;
-      pendingSpeakBtn = btn;
       setTimeout(() => {
         if (pendingSpeakText) {
-          const t = pendingSpeakText, b = pendingSpeakBtn;
-          pendingSpeakText = null; pendingSpeakBtn = null;
+          const t = pendingSpeakText;
+          pendingSpeakText = null;
           voicesReady = true;
-          doSpeak(t, b);
+          doSpeak(t);
         }
       }, 2000);
       return;
     }
-    doSpeak(text, btn);
+    doSpeak(text);
   }
 
-  function speakWord() {
-    const rep = getCurrentRep();
-    if (rep) speak(rep.word, speakWordBtn);
+  function speakWord() { const rep = getCurrentRep(); if (rep) speak(rep.word); }
+  function speakOldSentence() {
+    const ex = getCurrentRep()?.examples?.[state.currentExampleIndex];
+    if (ex) speak(ex.old);
   }
-
-  function speakCurrentSentence() {
-    if (state.currentSentence) speak(state.currentSentence, speakNewBtn);
-  }
+  function speakCurrentSentence() { if (state.currentSentence) speak(state.currentSentence); }
 
   function autoSpeakIfOn() {
     if (!AUTO_SPEAK_ON) return;
@@ -2601,21 +2701,14 @@
     state.startTime = Date.now();
     state.timerId = setInterval(() => {
       const sec = Math.floor((Date.now() - state.startTime) / 1000);
-      const m = Math.floor(sec / 60);
-      const s = sec % 60;
+      const m = Math.floor(sec / 60), s = sec % 60;
       timerValue.textContent = m > 0 ? `${m}m${s}s` : `${s}s`;
     }, 500);
   }
-
-  function stopTimer() {
-    if (state.timerId) {
-      clearInterval(state.timerId);
-      state.timerId = null;
-    }
-  }
+  function stopTimer() { if (state.timerId) { clearInterval(state.timerId); state.timerId = null; } }
 
   // ============================================================
-  //  工具函数
+  //  工具
   // ============================================================
   function shuffle(arr) {
     const a = [...arr];
@@ -2625,19 +2718,10 @@
     }
     return a;
   }
-
-  function escapeRegExp(s) {
-    return s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-  }
-
+  function escapeRegExp(s) { return s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"); }
   function escapeHtml(s) {
     if (s == null) return "";
-    return String(s)
-      .replace(/&/g, "&amp;")
-      .replace(/</g, "&lt;")
-      .replace(/>/g, "&gt;")
-      .replace(/"/g, "&quot;")
-      .replace(/'/g, "&#39;");
+    return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#39;");
   }
 
   // ============================================================
@@ -2653,29 +2737,23 @@
         return true;
       }
     }
-
     try {
       const weekFiles = [];
       for (let i = 1; i <= 7; i++) {
         const num = String(i).padStart(2, "0");
         weekFiles.push({ key: `week-${num}`, file: `vocab-week-${num}.json` });
       }
-      const results = await Promise.all(
-        weekFiles.map(async ({ key, file }) => {
-          const res = await fetch(file, { cache: "no-store" });
-          if (!res.ok) throw new Error(`${file}: HTTP ${res.status}`);
-          return { key, data: await res.json() };
-        })
-      );
+      const results = await Promise.all(weekFiles.map(async ({ key, file }) => {
+        const res = await fetch(file, { cache: "no-store" });
+        if (!res.ok) throw new Error(`${file}: HTTP ${res.status}`);
+        return { key, data: await res.json() };
+      }));
       const data = {};
       results.forEach(({ key, data: d }) => { data[key] = d; });
       VOCAB_DATA = data;
       WEEK_KEYS = Object.keys(VOCAB_DATA).sort();
-      console.log(`[Vocab] ✅ 通过 fetch 分周 JSON 加载 ${WEEK_KEYS.length} 周词汇数据`);
       return true;
-    } catch (e) {
-      console.warn("[Vocab] 分周 JSON 加载失败,尝试其他方式:", e.message);
-    }
+    } catch (e) { console.warn("[Vocab] 分周 JSON 加载失败:", e.message); }
 
     try {
       const res = await fetch("vocab-data.json", { cache: "no-store" });
@@ -2684,34 +2762,16 @@
         if (data && typeof data === "object") {
           VOCAB_DATA = data;
           WEEK_KEYS = Object.keys(VOCAB_DATA).sort();
-          console.log(`[Vocab] ✅ 通过 vocab-data.json 加载 ${WEEK_KEYS.length} 周词汇数据`);
           return true;
         }
       }
-    } catch (e) {
-      console.warn("[Vocab] vocab-data.json 加载失败:", e.message);
-    }
+    } catch (e) { console.warn("[Vocab] vocab-data.json 加载失败:", e.message); }
 
-    if (typeof window.VOCAB_DATA_RAW === "object" && window.VOCAB_DATA_RAW) {
-      try {
-        const data = window.VOCAB_DATA_RAW;
-        if (data && typeof data === "object") {
-          VOCAB_DATA = data;
-          WEEK_KEYS = Object.keys(VOCAB_DATA).sort();
-          console.log(`[Vocab] ✅ 从内联数据加载 ${WEEK_KEYS.length} 周词汇数据 (file:// 模式)`);
-          return true;
-        }
-      } catch (e) {
-        console.warn("[Vocab] 内联数据解析失败:", e);
-      }
-    }
-
-    console.warn("[Vocab] 所有数据加载方式均失败");
     return false;
   }
 
   // ============================================================
-  //  周选择器辅助函数
+  //  周选择器
   // ============================================================
   function populateWeekSelect() {
     if (!weekSelect) return;
@@ -2726,18 +2786,15 @@
       weekSelect.appendChild(opt);
     });
   }
-
   function updateWeekSelect() {
     if (!weekSelect) return;
-    if (state.currentWeek && VOCAB_DATA[state.currentWeek]) {
-      weekSelect.value = state.currentWeek;
-    }
+    if (state.currentWeek && VOCAB_DATA[state.currentWeek]) weekSelect.value = state.currentWeek;
   }
 
   // ============================================================
   //  事件绑定
   // ============================================================
-  if (btnStart)    btnStart.addEventListener("click", () => { startFromLatest(); openPractice(); });
+  if (btnStart) btnStart.addEventListener("click", () => { startFromLatest(); openPractice(); });
   if (btnPrevWeek) btnPrevWeek.addEventListener("click", () => {
     if (!state.currentWeek) { startFromLatest(); return; }
     const idx = WEEK_KEYS.indexOf(state.currentWeek);
@@ -2750,12 +2807,18 @@
     if (idx >= WEEK_KEYS.length - 1) { showCliHint("已经是最后一周了"); return; }
     gotoWeek(WEEK_KEYS[idx + 1]);
   });
-  if (weekSelect)  weekSelect.addEventListener("change", (e) => gotoWeek(e.target.value));
-  if (btnReview)   btnReview.addEventListener("click", () => {
+  if (weekSelect) weekSelect.addEventListener("change", (e) => gotoWeek(e.target.value));
+  if (btnReview) btnReview.addEventListener("click", () => {
     state.reviewMode = null; state.reviewScope = null; reviewBanner.classList.remove("show");
-    enterReviewMode("reverse", state.currentWeek || WEEK_KEYS[0]);
+    enterReviewMode(state.currentWeek || WEEK_KEYS[0], false);
   });
-  if (btnReviewAll) btnReviewAll.addEventListener("click", () => enterReviewMode("shuffle", "all"));
+  if (btnReviewAll) btnReviewAll.addEventListener("click", () => enterReviewMode("all", false));
+
+  btnForceReview.addEventListener("click", () => {
+    const scope = btnForceReview.dataset.scope || state.reviewScope;
+    hideForceReviewButton();
+    enterReviewMode(scope, true);
+  });
 
   typingInput.addEventListener("input", handleInput);
   typingInput.addEventListener("paste", (e) => e.preventDefault());
@@ -2805,12 +2868,11 @@
     startRep((state.currentRepIndex + 1) % len, 0);
   });
 
-  speakWordBtn.addEventListener("click", speakWord);
-  speakOldBtn.addEventListener("click", () => {
-    const ex = getCurrentRep()?.examples?.[state.currentExampleIndex];
-    if (ex) speak(ex.old, speakOldBtn);
-  });
-  speakNewBtn.addEventListener("click", speakCurrentSentence);
+  // 点击文本直接发声
+  practiceWord.addEventListener("click", speakWord);
+  exampleOld.addEventListener("click", speakOldSentence);
+  exampleNew.addEventListener("click", speakCurrentSentence);
+
   autoSpeakToggle.addEventListener("click", () => {
     AUTO_SPEAK_ON = !AUTO_SPEAK_ON;
     autoSpeakToggle.classList.toggle("on", AUTO_SPEAK_ON);
@@ -2857,7 +2919,6 @@
     startFromLatest();
   })();
 </script>
-
 
 <script>
 if ('serviceWorker' in navigator) {
