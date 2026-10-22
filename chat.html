@@ -1,0 +1,3317 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<meta name="theme-color" content="#4F46E5" />
+<meta name="mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+<title>Daily Chat · 日常对话跟读训练</title>
+<script id="chat-data-inline">window.DAILY_CHAT_DATA = {
+  "scene-01": {
+    title: "问候 & 寒暄",
+    icon: "👋",
+    dialogues: [
+      { id: 1, turns: [
+        ["A","How are you doing today?","你今天过得怎么样？"],
+        ["B","Pretty good, thanks. How about you?","挺好的，谢谢。你呢？"],
+        ["A","I'm doing alright, a little busy with work.","我还行，就是工作上有点忙。"],
+        ["B","Oh, I know how that feels. Work has been nonstop for me too.","哦，我懂那种感觉。我的工作也一直没停过。"],
+        ["A","Yeah, it never really slows down. Have you eaten lunch yet?","是啊，根本闲不下来。你吃午饭了吗？"],
+        ["B","Not yet. I'm planning to grab something soon.","还没呢，我打算一会儿随便买点吃的。"]
+      ]},
+      { id: 2, turns: [
+        ["A","What's up? Haven't seen you around lately.","最近怎么样？最近都没怎么看到你。"],
+        ["B","Not much. I've just been chilling at home most days.","没什么特别的。这几天大多在家待着。"],
+        ["A","That sounds nice. I've been running errands all week.","听起来不错。我这一整周都在跑腿办事。"],
+        ["B","Ugh, errands are so tiring. Did you get everything done?","唉，跑腿太累了。都办完了吗？"],
+        ["A","Most of it. I still have a few things left to pick up.","大部分办完了，还剩几样东西要取。"]
+      ]},
+      { id: 3, turns: [
+        ["A","Long time no see! It's great to run into you here.","好久不见！在这儿碰到你太好了。"],
+        ["B","Yeah, it's been ages. How have you been keeping?","是啊，都好久没见了。你最近怎么样？"],
+        ["A","I've been okay. Just trying to keep up with daily stuff.","我还行，就是在忙着应付日常琐事。"],
+        ["B","Same here. Time flies so fast these days.","我也是。日子过得真快。"],
+        ["A","Definitely. Are you shopping here often?","确实。你常来这儿逛吗？"],
+        ["B","Sometimes, I come here for coffee after work.","偶尔来，下班后过来喝杯咖啡。"]
+      ]},
+      { id: 4, turns: [
+        ["A","How's it going?","最近怎么样？"],
+        ["B","All good, no complaints. How about your weekend?","一切都好，没什么可抱怨的。你周末过得怎么样？"],
+        ["A","It was nice. I went for a hike on Saturday morning.","挺好的，周六早上去爬山了。"],
+        ["B","Wow, that sounds lovely. Was the weather nice?","哇，听起来不错。天气好吗？"],
+        ["A","It was perfect, cool and sunny.","特别完美，凉爽又晴朗。"],
+        ["B","I should get out more often myself.","我自己也该多出去走走。"]
+      ]},
+      { id: 5, turns: [
+        ["A","Good morning! Did you sleep well last night?","早上好！昨晚睡得好吗？"],
+        ["B","Morning! I slept pretty well, actually. How about you?","早！我睡得还挺好的。你呢？"],
+        ["A","Not really. I woke up a couple of times.","不太好，醒了好几次。"],
+        ["B","That sucks. Are you feeling tired now?","那真糟糕。现在觉得累吗？"],
+        ["A","A little bit. A cup of coffee should fix it.","有一点，喝杯咖啡应该就好了。"],
+        ["B","Tell me about it. I need my morning coffee too.","可不是嘛，我也需要早晨那杯咖啡。"]
+      ]},
+      { id: 6, turns: [
+        ["A","Good afternoon. Are you waiting for someone?","下午好。你在等人吗？"],
+        ["B","Hi there! Yeah, I'm waiting for my friend.","你好！是啊，我在等我朋友。"],
+        ["A","I see. Is she running late?","这样啊。她迟到了吗？"],
+        ["B","A little. She texted me five minutes ago.","有一点，她五分钟前刚给我发消息。"],
+        ["A","No rush. Waiting is never fun though.","不急。不过等人从来都不好玩。"],
+        ["B","True. I'll just look around while I wait.","确实。等的时候就随便逛逛吧。"]
+      ]},
+      { id: 7, turns: [
+        ["A","Good evening. It's nice to meet you finally.","晚上好。终于见到你了，很高兴。"],
+        ["B","Evening! Nice meeting you too. My friend has told me about you.","晚上好！我也很高兴见到你。我朋友跟我提起过你。"],
+        ["A","Really? Only good things, I hope.","是吗？希望都是好话。"],
+        ["B","Of course. He said you like travelling a lot.","当然啦。他说你很喜欢旅行。"],
+        ["A","Yeah, I try to travel whenever I get time off.","是啊，只要有假期我就尽量去旅行。"],
+        ["B","That's awesome. I love travelling as well.","太棒了，我也很喜欢旅行。"]
+      ]},
+      { id: 8, turns: [
+        ["A","How have you been these past few months?","这几个月你过得怎么样？"],
+        ["B","I've been okay, just really busy with a new project.","还行，就是忙着做一个新项目。"],
+        ["A","That sounds stressful. Is the project going smoothly?","听起来压力挺大。项目进展顺利吗？"],
+        ["B","Mostly. There are a few small problems now and then.","大体顺利，偶尔会出点小问题。"],
+        ["A","I hope it gets easier soon. Don't burn yourself out.","希望很快能轻松点。别把自己累垮了。"],
+        ["B","Thanks, I'll try to take breaks when I can.","谢谢，我会尽量抽空休息的。"]
+      ]},
+      { id: 9, turns: [
+        ["A","You look fantastic today! I love your shirt.","你今天看起来棒极了！我喜欢你这件衬衫。"],
+        ["B","Thanks so much! You look great too.","太谢谢了！你看起来也很棒。"],
+        ["A","Where did you get that shirt? It looks really nice.","你这衬衫在哪儿买的？看起来真不错。"],
+        ["B","I bought it online last week. It was on sale.","上周在网上买的，正在打折。"],
+        ["A","I might check the site later. I need some new tops.","我晚点也去看看那个网站，我需要买几件新上衣。"],
+        ["B","Sure, I can send you the link later.","没问题，回头我把链接发给你。"]
+      ]},
+      { id: 10, turns: [
+        ["A","How's your day going so far?","今天过得怎么样？"],
+        ["B","Not bad. The morning meeting was shorter than I expected.","还不错，早会比我预期的短。"],
+        ["A","Lucky you. My morning meeting dragged on forever.","你真幸运。我的早会拖了老半天。"],
+        ["B","Oh no, that must have been boring.","天哪，那一定很无聊。"],
+        ["A","It was. I could barely stay awake at one point.","是啊，有一阵我差点睡着。"],
+        ["B","I've been there. Long meetings are the worst.","我经历过，长会最讨厌了。"]
+      ]},
+      { id: 11, turns: [
+        ["A","What are you up to this afternoon?","你今天下午打算做什么？"],
+        ["B","Nothing special. I plan to read a book at home.","没什么特别的，打算在家看看书。"],
+        ["A","That sounds relaxing. What book are you reading?","听起来很放松。你在看什么书？"],
+        ["B","It's a light novel, not too heavy.","一本轻松的小说，不太深奥。"],
+        ["A","Nice. I haven't had time to read for weeks.","不错，我好几个星期都没时间看书了。"],
+        ["B","You should set aside some time for it. It helps me unwind.","你应该留点时间看看书，它帮我放松。"]
+      ]},
+      { id: 12, turns: [
+        ["A","How's work these days?","最近工作怎么样？"],
+        ["B","Same old, same old. Nothing exciting is happening.","老样子，老样子。没什么新鲜事。"],
+        ["A","Oh, I get that. Some days feel repetitive.","哦，我懂。有些日子确实很重复。"],
+        ["B","Exactly. I do the same tasks day after day.","没错，我日复一日地做同样的事。"],
+        ["A","Do you plan to look for something different later?","你打算以后换个不同的工作吗？"],
+        ["B","Maybe someday. Right now it's stable at least.","也许有一天吧。至少现在这份工作还算稳定。"]
+      ]},
+      { id: 13, turns: [
+        ["A","How's your family doing?","你家人最近怎么样？"],
+        ["B","They're all fine, thanks. My sister just started college.","他们都挺好的，谢谢。我妹妹刚上大学。"],
+        ["A","That's big news! Is she excited?","这可是大事！她兴奋吗？"],
+        ["B","She is, but also a little nervous about living away.","挺兴奋的，但也对离家住校有点紧张。"],
+        ["A","Totally normal. It takes time to get used to it.","太正常了，适应需要时间。"],
+        ["B","Yeah, we talk on the phone every other day.","是啊，我们隔一天就打一次电话。"]
+      ]},
+      { id: 14, turns: [
+        ["A","Nice weather today, right?","今天天气真好，是吧？"],
+        ["B","Sure is. The wind feels really comfortable.","是啊，风也很舒服。"],
+        ["A","I wish every day could be like this.","真希望每天都这样。"],
+        ["B","Me too. Tomorrow it's supposed to rain.","我也是。听说明天要下雨。"],
+        ["A","Oh no, I didn't check the weather forecast.","不是吧，我都没看天气预报。"],
+        ["B","Yeah, remember to bring an umbrella tomorrow.","对，记得明天带把伞。"]
+      ]},
+      { id: 15, turns: [
+        ["A","It's freezing out there!","外面冷死了！"],
+        ["B","Tell me about it. My hands are already numb.","可不是嘛，我的手都冻麻了。"],
+        ["A","Why didn't you wear a thicker coat?","你怎么没穿厚一点的外套？"],
+        ["B","I forgot it at home. I rushed out this morning.","忘在家里了，早上出门太急。"],
+        ["A","That's rough. Let's hurry inside to get warm.","真够受的。我们赶紧进屋暖和一下吧。"],
+        ["B","Good idea. I need a hot drink right now.","好主意，我现在就想要杯热饮。"]
+      ]},
+      { id: 16, turns: [
+        ["A","It's so hot today. I'm sweating already.","今天太热了，我已经在出汗了。"],
+        ["B","I know, right? The sun is way too strong.","可不是嘛，太阳太毒了。"],
+        ["A","I shouldn't have walked here.","我真不该走路过来。"],
+        ["B","Next time take the bus. It has air conditioning.","下次坐公交吧，车上有空调。"],
+        ["A","Good call. Let's buy some cold water first.","好主意。我们先买点冰水吧。"],
+        ["B","Perfect, I'm thirsty too.","太好了，我也渴了。"]
+      ]},
+      { id: 17, turns: [
+        ["A","Did you have a good weekend?","周末过得好吗？"],
+        ["B","Yeah, it was really nice. I visited my parents.","挺好的，我去看了我父母。"],
+        ["A","That's lovely. Did you have dinner with them?","真温馨。和他们一起吃饭了吗？"],
+        ["B","Yes, my mom cooked my favourite food.","吃了，我妈做了我最爱吃的菜。"],
+        ["A","Wow, home cooking is always the best.","哇，家里的饭菜永远是最好的。"],
+        ["B","Definitely. I ate way too much.","绝对，我吃太多了。"]
+      ]},
+      { id: 18, turns: [
+        ["A","How was your holiday trip?","假期旅行怎么样？"],
+        ["B","It was awesome. The scenery was breathtaking.","太棒了，风景美得令人惊叹。"],
+        ["A","Did you take lots of photos?","拍了很多照片吗？"],
+        ["B","Tons. I'll share them with you later.","一大堆，回头分享给你。"],
+        ["A","I can't wait to see them. Was it crowded?","我等不及要看了。人多吗？"],
+        ["B","A little busy, but still worth it.","有点挤，但还是很值得。"]
+      ]},
+      { id: 19, turns: [
+        ["A","I haven't seen you around for a while.","好一阵子没见到你了。"],
+        ["B","I was out of town visiting my relatives.","我出城走亲戚去了。"],
+        ["A","Oh, that explains it. How was the trip?","哦，难怪。路上怎么样？"],
+        ["B","It was good, but the drive was really long.","还不错，就是开车开得特别久。"],
+        ["A","Long drives can be tiring. Are you rested now?","长途开车很累人。现在休息过来了吗？"],
+        ["B","A little. I still need more sleep.","缓过来一点，还需要多睡会儿。"]
+      ]},
+      { id: 20, turns: [
+        ["A","What's new with you?","你最近有什么新鲜事吗？"],
+        ["B","Nothing really new. My life is pretty routine.","没什么新鲜的，我的生活挺规律的。"],
+        ["A","Same for me. Every day feels similar.","我也一样，每天感觉都差不多。"],
+        ["B","Maybe we should plan a small trip soon.","也许我们该计划一次小旅行了。"],
+        ["A","That's a great idea. We can talk about it later.","好主意，我们回头聊聊。"],
+        ["B","Sounds good to me.","我觉得挺好。"]
+      ]},
+      { id: 21, turns: [
+        ["A","Are you alright? You look quiet today.","你没事吧？你今天看起来很安静。"],
+        ["B","Yeah, I'm fine. Just thinking about some things.","没事，我挺好的，就是在想些事情。"],
+        ["A","Okay. If you want to talk, I'm here.","好。如果你想聊聊，我在这儿。"],
+        ["B","Thanks, I appreciate that. It's nothing serious.","谢谢，我很感激。不是什么大事。"],
+        ["A","Alright. Let's grab a snack if you want.","好吧。要是你想的话，我们去弄点零食吃。"],
+        ["B","Sure, why not.","好啊，为什么不呢。"]
+      ]},
+      { id: 22, turns: [
+        ["A","You seem tired today. Did you stay up late?","你今天看起来好累，熬夜了吗？"],
+        ["B","I didn't get much sleep last night.","昨晚没怎么睡。"],
+        ["A","What kept you awake?","什么让你睡不着？"],
+        ["B","I was finishing some work until midnight.","我在赶工作，一直忙到半夜。"],
+        ["A","That's not good for you. Try to rest early tonight.","这样对你不好，今晚早点休息吧。"],
+        ["B","I will. I'm planning to go to bed by ten.","会的，我打算十点前上床睡觉。"]
+      ]},
+      { id: 23, turns: [
+        ["A","How do you feel today after being sick?","生病之后今天感觉怎么样？"],
+        ["B","Much better, thank you. The fever is gone.","好多了，谢谢。烧已经退了。"],
+        ["A","That's such a relief. Don't push yourself too hard.","那就放心了。别太勉强自己。"],
+        ["B","I won't. I'm taking it slow today.","不会的，我今天慢慢来。"],
+        ["A","Have you had enough water and fruit?","水喝够了吗？水果有吃吗？"],
+        ["B","Yep, I've been drinking water all morning.","有，我整个上午都在喝水。"]
+      ]},
+      { id: 24, turns: [
+        ["A","Fancy meeting you here! I didn't expect to see you.","真巧在这儿碰到你！没想到会遇见你。"],
+        ["B","Hey, small world! I come here to buy fruit.","嘿，世界真小！我来这儿买水果。"],
+        ["A","I come here after gym class.","我上完健身课来这儿。"],
+        ["B","No wonder you look energetic.","难怪你看上去精力充沛。"],
+        ["A","Haha, the workout wakes me up.","哈哈，锻炼让我精神起来。"],
+        ["B","I need to start exercising more.","我也得开始多锻炼了。"]
+      ]},
+      { id: 25, turns: [
+        ["A","How's everything going on your side?","你那边一切怎么样？"],
+        ["B","Everything's going well. No big troubles lately.","一切都好，最近没什么大麻烦。"],
+        ["A","That's wonderful. I'm glad to hear it.","太好了，听你这么说我很开心。"],
+        ["B","How about you? Any updates?","你呢？有什么新情况吗？"],
+        ["A","Not really. Just taking things one day at a time.","没什么，就是走一步看一步吧。"],
+        ["B","That's the best way to live.","那是生活的最好方式。"]
+      ]}
+    ]
+  },
+  "scene-02": {
+    title: "告别 & 道别",
+    icon: "👋",
+    dialogues: [
+      { id: 26, turns: [
+        ["A","I gotta go now. My bus is arriving soon.","我得走了，公交车快到了。"],
+        ["B","Alright, take care! Don't miss your bus.","好的，保重！别错过你的公交。"],
+        ["A","I won't. Thanks for chatting with me.","不会的。谢谢你陪我聊天。"],
+        ["B","It was fun. We should talk again soon.","聊得很开心，我们改天再聊。"],
+        ["A","Absolutely. I'll text you later.","当然，我晚点给你发消息。"],
+        ["B","Sounds good. Bye!","好的，再见！"]
+      ]},
+      { id: 27, turns: [
+        ["A","See you later. I need to head back to the office.","回头见，我得回办公室了。"],
+        ["B","See ya! Have a smooth rest of your workday.","回头见！祝你接下来工作顺利。"],
+        ["A","Thanks. Hopefully there won't be extra tasks.","谢谢，希望别再有什么额外任务。"],
+        ["B","Fingers crossed. Catch you later.","祈祷吧。回头见。"],
+        ["A","Yep, talk soon.","嗯，回头聊。"]
+      ]},
+      { id: 28, turns: [
+        ["A","See you tomorrow at the meeting.","明天开会见。"],
+        ["B","Sounds good, tomorrow then. Don't be late.","好，那就明天。别迟到啊。"],
+        ["A","I won't. I set two alarms just in case.","不会的，我设了两个闹钟以防万一。"],
+        ["B","Smart move. I'm always worried about oversleeping.","明智之举。我总是担心睡过头。"],
+        ["A","Me too. Okay, I'm leaving now.","我也是。好了，我走啦。"],
+        ["B","Alright, bye.","好的，拜拜。"]
+      ]},
+      { id: 29, turns: [
+        ["A","Catch you later! I'm off to pick up my kid.","回头见！我得去接孩子了。"],
+        ["B","Yep, catch you later. Hope the traffic is light.","嗯，回头见。希望路上不堵。"],
+        ["A","I hope so too. Rush hour can be terrible.","我也希望。高峰时段太可怕了。"],
+        ["B","It sure can. Drive carefully.","确实，开车小心。"],
+        ["A","Thanks, I will.","谢谢，我会的。"]
+      ]},
+      { id: 30, turns: [
+        ["A","I'm heading home now. It's getting dark.","我现在回家了，天快黑了。"],
+        ["B","Drive safely on the way home.","路上开车小心。"],
+        ["A","I will. The road is a little slippery today.","我会的，今天路面有点滑。"],
+        ["B","Take your time, no need to hurry.","慢慢开，不用着急。"],
+        ["A","Got it. I'll message you once I get home.","好的，到家我就给你发消息。"],
+        ["B","Perfect, I'll wait for your message.","太好了，我等你消息。"]
+      ]},
+      { id: 31, turns: [
+        ["A","Have a good one!","祝你今天开心！"],
+        ["B","You too! Enjoy the rest of your afternoon.","你也是！下午剩下的时间好好享受。"],
+        ["A","I plan to relax and watch a show.","我打算放松一下，看个剧。"],
+        ["B","That sounds amazing. What show are you watching?","听起来太棒了，你在看什么剧？"],
+        ["A","A comedy series. Super light and funny.","一部喜剧，特别轻松好笑。"],
+        ["B","Nice, I love comedies.","不错，我爱看喜剧。"]
+      ]},
+      { id: 32, turns: [
+        ["A","Have a nice weekend!","周末愉快！"],
+        ["B","Thanks, you too. Do you have any plans?","谢谢，你也是。你有什么安排吗？"],
+        ["A","I'm going hiking with my friends tomorrow.","明天和朋友去爬山。"],
+        ["B","That sounds great. Watch your step on the trail.","听起来很棒，路上小心脚下。"],
+        ["A","I will. Have a wonderful weekend yourself.","我会的，你也周末愉快。"],
+        ["B","Thank you.","谢谢。"]
+      ]},
+      { id: 33, turns: [
+        ["A","Good night. I'm really sleepy now.","晚安，我现在真的很困。"],
+        ["B","Night, sleep tight. Don't stay up scrolling.","晚安，睡个好觉。别熬夜刷手机。"],
+        ["A","I won't. I'm putting my phone away right away.","不会的，我马上就把手机收起来。"],
+        ["B","Good idea. Sleep helps a lot.","好主意，睡觉好处很多。"],
+        ["A","Exactly. Talk to you tomorrow morning.","没错，明早再聊。"],
+        ["B","Sure. Sweet dreams.","好的，做个好梦。"]
+      ]},
+      { id: 34, turns: [
+        ["A","I'm off. My dinner is ready at home.","我走啦，家里晚饭做好了。"],
+        ["B","Bye for now. Hope your dinner tastes great.","先拜拜，希望你晚饭好吃。"],
+        ["A","Thank you. My roommate cooked tonight.","谢谢，今晚是我室友做的。"],
+        ["B","Lucky you! I still need to cook for myself.","你真幸运！我还得自己做饭。"],
+        ["A","Good luck cooking. See you.","做饭顺利，再见。"],
+        ["B","Bye!","拜拜！"]
+      ]},
+      { id: 35, turns: [
+        ["A","Talk to you soon. I need to answer a call.","回头聊，我得接个电话。"],
+        ["B","Sure, talk soon. No problem at all.","好，回头聊。完全没问题。"],
+        ["A","I'll call you back within an hour.","我一小时内给你回电话。"],
+        ["B","Take your time. I'm not in a rush.","不急，我不赶时间。"],
+        ["A","Great. See you.","好，再见。"],
+        ["B","Okay.","好的。"]
+      ]},
+      { id: 36, turns: [
+        ["A","Keep in touch! Don't disappear again.","保持联系！别再玩消失了。"],
+        ["B","I will. I'll send you messages often.","我会的，我会经常给你发消息。"],
+        ["A","Promise? I hate losing contact with friends.","真的吗？我讨厌和朋友断了联系。"],
+        ["B","I promise. We can have video calls sometimes.","我保证，我们偶尔可以视频通话。"],
+        ["A","That would be awesome.","那就太棒了。"],
+        ["B","Definitely.","肯定的。"]
+      ]},
+      { id: 37, turns: [
+        ["A","It was nice talking to you today.","今天和你聊天很开心。"],
+        ["B","Same here. Time went by so fast.","我也是，时间过得太快了。"],
+        ["A","Right! I didn't notice how long we chatted.","是啊！我都没注意到聊了这么久。"],
+        ["B","We should meet up and chat more often.","我们应该多聚聚、多聊聊。"],
+        ["A","I totally agree. Let's arrange it.","我完全同意，我们来安排吧。"],
+        ["B","Perfect.","太好了。"]
+      ]},
+      { id: 38, turns: [
+        ["A","I'll see you around the neighbourhood.","咱们小区里再碰头吧。"],
+        ["B","Okay, see you. I usually walk here after dinner.","好的，回头见。我一般晚饭后在这儿散步。"],
+        ["A","Me too. Maybe we can walk together next time.","我也是，也许下次可以一起走。"],
+        ["B","That would be nice. It's boring walking alone.","那挺好的，一个人走很无聊。"],
+        ["A","Exactly. Alright, I'm going home.","就是。好了，我回家啦。"],
+        ["B","Bye.","拜拜。"]
+      ]},
+      { id: 39, turns: [
+        ["A","Time to go. My friend is waiting for me outside.","该走了，我朋友在外面等我。"],
+        ["B","Alright, bye-bye. Have fun with your friend.","好的，拜拜。和你朋友玩得开心。"],
+        ["A","Thank you. We are going to watch a movie.","谢谢，我们打算去看电影。"],
+        ["B","Which movie are you seeing?","你们看哪部电影？"],
+        ["A","The new action film. Everyone says it's good.","那部新动作片，大家都说好看。"],
+        ["B","Enjoy it!","好好享受！"]
+      ]},
+      { id: 40, turns: [
+        ["A","Have fun at the party tonight!","今晚派对玩得开心！"],
+        ["B","Thanks, I will. Are you sure you won't come?","谢谢，我会的。你确定不来吗？"],
+        ["A","I can't, I have to finish homework.","来不了，我得写完作业。"],
+        ["B","That's a shame. I'll take photos for you.","太可惜了，我帮你拍照片。"],
+        ["A","Awesome, send them later.","太好了，回头发给我。"],
+        ["B","No problem.","没问题。"]
+      ]}
+    ]
+  },
+  "scene-03": {
+    title: "感谢 & 道歉",
+    icon: "🙏",
+    dialogues: [
+      { id: 41, turns: [
+        ["A","Thank you so much for helping me carry these boxes.","太谢谢你了，帮我搬这些箱子。"],
+        ["B","No problem. They look pretty heavy.","不客气，这些箱子看起来挺重的。"],
+        ["A","They are. I couldn't move them alone.","确实很重，我一个人搬不动。"],
+        ["B","Glad I ran into you just now.","幸好刚才碰到你了。"],
+        ["A","I really owe you one. Let me buy you a drink.","我真欠你一个人情，让我请你喝杯东西吧。"],
+        ["B","That's not necessary, but thanks.","不用啦，但谢谢你。"]
+      ]},
+      { id: 42, turns: [
+        ["A","Thanks a lot for your help with my computer.","非常感谢你帮我弄电脑。"],
+        ["B","Anytime. I know how annoying computer issues are.","随时可以，我知道电脑出问题有多烦人。"],
+        ["A","It was driving me crazy. I tried everything.","快把我逼疯了，我什么办法都试了。"],
+        ["B","Yeah, this bug is common. I fixed it before.","是啊，这个故障很常见，我以前修过。"],
+        ["A","I'm so relieved it works now.","现在能用了，我总算放心了。"],
+        ["B","Happy to help.","很高兴能帮上忙。"]
+      ]},
+      { id: 43, turns: [
+        ["A","I really appreciate you staying late to help me.","真的很感激你留下来帮我加班。"],
+        ["B","Don't mention it. We're teammates after all.","别客气，毕竟我们是队友。"],
+        ["A","Still, you could have gone home on time.","可你本来可以准时回家的。"],
+        ["B","It's okay. I didn't have plans tonight.","没关系，我今晚也没什么安排。"],
+        ["A","Let me treat you to dinner sometime.","改天我请你吃顿饭吧。"],
+        ["B","That sounds nice.","听起来不错。"]
+      ]},
+      { id: 44, turns: [
+        ["A","That's very kind of you to lend me your umbrella.","你真好，把伞借给我。"],
+        ["B","It's nothing. I live nearby, I can run home.","没什么，我住得近，可以跑回家。"],
+        ["A","Are you sure? I feel bad taking it.","你确定吗？拿你的伞我挺过意不去的。"],
+        ["B","Absolutely. You live much farther away.","当然，你家远多了。"],
+        ["A","I will return it to you tomorrow morning.","我明天早上还给你。"],
+        ["B","No rush at all.","一点也不急。"]
+      ]},
+      { id: 45, turns: [
+        ["A","Cheers! Thank you for inviting me.","干杯！谢谢你邀请我。"],
+        ["B","Cheers! I'm glad you could make it.","干杯！你能来我很高兴。"],
+        ["A","The food and drinks are amazing.","吃的喝的都太棒了。"],
+        ["B","I'm happy you like them.","你喜欢就好。"],
+        ["A","This is such a nice gathering.","这场聚会真不错。"],
+        ["B","Yeah, everyone is having a good time.","是啊，大家都玩得很开心。"]
+      ]},
+      { id: 46, turns: [
+        ["A","Sorry, I stepped on your foot just now.","对不起，刚才踩到你的脚了。"],
+        ["B","It's okay. It didn't hurt much.","没事，不太疼。"],
+        ["A","Are you sure? I was not looking where I walked.","你确定吗？我刚才没看路。"],
+        ["B","Don't worry about it. Accidents happen.","别放心上，意外难免。"],
+        ["A","Alright, I'll be more careful.","好的，我会小心的。"],
+        ["B","No worries.","别担心。"]
+      ]},
+      { id: 47, turns: [
+        ["A","I'm so sorry I spilled water on your notebook.","真对不起，我把水洒在你笔记本上了。"],
+        ["B","Don't worry about it. It's not a big deal.","别担心，不是什么大事。"],
+        ["A","Let me wipe it for you right away.","我马上帮你擦干净。"],
+        ["B","Thanks. I think most pages are still fine.","谢谢，我觉得大部分页面还是好的。"],
+        ["A","If anything gets damaged, I'll buy you a new one.","如果弄坏了，我买个新的赔你。"],
+        ["B","No need, really.","真的不用。"]
+      ]},
+      { id: 48, turns: [
+        ["A","My bad. I forgot to send you the file yesterday.","我的错，昨天忘了给你发文件。"],
+        ["B","All good. I just got it from someone else.","没事，我刚从别人那儿拿到了。"],
+        ["A","That's a relief. I was afraid I messed you up.","那就好，我还担心耽误你的事。"],
+        ["B","It's fine. Things slip our minds sometimes.","没关系，人有时候就是会忘事。"],
+        ["A","I'll set a reminder next time.","下次我设个提醒。"],
+        ["B","That's a good idea.","好主意。"]
+      ]},
+      { id: 49, turns: [
+        ["A","Pardon me, can I get past you?","借过一下，能让我过去吗？"],
+        ["B","Go ahead. There's plenty of space here.","请，这里空间很宽敞。"],
+        ["A","Thank you. I need to get to the exit.","谢谢，我要去出口。"],
+        ["B","No problem. The exit is straight ahead.","不客气，出口直走就是。"],
+        ["A","I see. Have a good day.","明白了，祝你今天愉快。"],
+        ["B","You too.","你也是。"]
+      ]},
+      { id: 50, turns: [
+        ["A","Excuse me. Can I ask you a quick question?","打扰一下，我能问你个小问题吗？"],
+        ["B","Yes? What can I do for you?","嗯？有什么可以帮你的？"],
+        ["A","Do you know when the next train arrives?","你知道下一班火车什么时候到吗？"],
+        ["B","Let me check the screen. It should come in ten minutes.","我看看屏幕，应该十分钟后到。"],
+        ["A","Thank you so much.","太谢谢了。"],
+        ["B","You're welcome.","不客气。"]
+      ]},
+      { id: 51, turns: [
+        ["A","I'm sorry I'm late. There was a traffic jam.","抱歉我迟到了，路上堵车。"],
+        ["B","It's fine, no rush. We just sat down.","没事，不着急，我们刚坐下。"],
+        ["A","I feel terrible. I left home extra early.","我特别过意不去，我明明提前出门了。"],
+        ["B","Traffic is unpredictable these days.","现在路况太难预料了。"],
+        ["A","I'll leave even earlier next time.","下次我再早点出门。"],
+        ["B","Don't stress about it.","别为这个烦心。"]
+      ]},
+      { id: 52, turns: [
+        ["A","Sorry to bother you while you're working.","不好意思，打扰你工作了。"],
+        ["B","No bother at all. What do you need?","一点也不打扰，你需要什么？"],
+        ["A","Could you pass me that stapler on your desk?","能把你桌上的订书机递给我吗？"],
+        ["B","Sure, here you go.","好，给你。"],
+        ["A","Thank you very much.","非常感谢。"],
+        ["B","Anytime.","随时都可以。"]
+      ]},
+      { id: 53, turns: [
+        ["A","I apologize for misunderstanding what you said.","抱歉，我误会了你说的话。"],
+        ["B","No worries. It's easy to mix that up.","别担心，那确实容易搞混。"],
+        ["A","I should have asked for clarification earlier.","我早该问清楚一点的。"],
+        ["B","We all make mistakes. Let's talk it through again.","人人都会犯错，我们再把话说清楚。"],
+        ["A","Okay, that makes sense now.","好，现在明白了。"],
+        ["B","Great.","太好了。"]
+      ]},
+      { id: 54, turns: [
+        ["A","Thanks for waiting for me. I took longer than expected.","谢谢你等我，我比预计的慢了。"],
+        ["B","Not a problem. I enjoyed looking at the shops.","没关系，我正好逛逛商店。"],
+        ["A","Did you see anything you liked?","有看到喜欢的吗？"],
+        ["B","A few nice sweaters, but I didn't buy any.","有几件不错的毛衣，但一件也没买。"],
+        ["A","We can come back another day if you want.","如果你想，我们可以改天再来。"],
+        ["B","Maybe later.","也许以后吧。"]
+      ]},
+      { id: 55, turns: [
+        ["A","Sorry for the trouble. I changed the plan last minute.","抱歉给你添麻烦了，我临时改了计划。"],
+        ["B","It's totally fine. I could adjust my schedule.","完全没问题，我可以调整安排。"],
+        ["A","You are so easygoing. Not everyone would be okay with it.","你真好说话，不是谁都能接受的。"],
+        ["B","Flexibility is important.","灵活变通很重要。"],
+        ["A","I'll confirm plans earlier next time.","下次我会早点确认计划。"],
+        ["B","Sounds good.","好的。"]
+      ]}
+    ]
+  },
+  "scene-04": {
+    title: "邀约 & 计划",
+    icon: "📅",
+    dialogues: [
+      { id: 56, turns: [
+        ["A","Wanna grab some coffee after work?","下班后想一起去喝杯咖啡吗？"],
+        ["B","Sure, why not? I could use a cup.","好啊，为什么不呢？我正好想来一杯。"],
+        ["A","There's a new café around the corner.","街角新开了一家咖啡馆。"],
+        ["B","I've heard about it. Their latte is famous.","我听说了，他们家的拿铁很有名。"],
+        ["A","Perfect. Let's meet there at six.","太好了，我们六点在那儿见。"],
+        ["B","Okay, I'll see you then.","好的，到时候见。"]
+      ]},
+      { id: 57, turns: [
+        ["A","Want to get lunch together today?","今天一起吃午饭吗？"],
+        ["B","I'd love to. Where do you want to eat?","好啊，你想去哪儿吃？"],
+        ["A","How about the sandwich shop downstairs?","楼下的三明治店怎么样？"],
+        ["B","That works for me. Their sandwiches are fresh.","可以，他们的三明治很新鲜。"],
+        ["A","Great. Let's go in ten minutes.","好，十分钟后出发。"],
+        ["B","Alright, I'll finish this email first.","好的，我先把这封邮件发完。"]
+      ]},
+      { id: 58, turns: [
+        ["A","Are you free tonight?","你今晚有空吗？"],
+        ["B","Let me check. I don't have any plans yet.","我看看，目前还没什么安排。"],
+        ["A","Would you like to watch a movie with me?","想和我一起看场电影吗？"],
+        ["B","That sounds fun. What movie are you thinking of?","听起来不错，你想看什么电影？"],
+        ["A","The new comedy that came out this week.","这周新上映的那部喜剧。"],
+        ["B","I've wanted to watch that. Count me in.","我一直想看，算我一个。"]
+      ]},
+      { id: 59, turns: [
+        ["A","What are you doing tonight?","你今晚做什么？"],
+        ["B","Nothing planned. I might just stay home.","没什么安排，可能就待在家。"],
+        ["A","Do you want to come over to my place?","想不想来我家？"],
+        ["B","Sure! What are we going to do?","好啊！我们做什么呢？"],
+        ["A","We can order takeout and play board games.","我们可以点外卖，玩桌游。"],
+        ["B","That sounds really relaxing.","听起来好放松。"]
+      ]},
+      { id: 60, turns: [
+        ["A","How about tomorrow afternoon?","明天下午怎么样？"],
+        ["B","Tomorrow works for me. What do you want to do?","明天可以，你想做什么？"],
+        ["A","I want to go to the bookstore.","我想去书店。"],
+        ["B","Oh nice, I need to buy a notebook too.","哦不错，我也正好要买笔记本。"],
+        ["A","Perfect, we can go together.","太好了，我们可以一起去。"],
+        ["B","Let's meet at two o'clock.","我们两点见吧。"]
+      ]},
+      { id: 61, turns: [
+        ["A","Shall we meet at three at the park gate?","我们三点在公园门口见好吗？"],
+        ["B","Okay, 3 o'clock. Which gate exactly?","好，三点。具体哪个门？"],
+        ["A","The main gate near the big fountain.","大喷泉旁边的正门。"],
+        ["B","Got it. I know that spot well.","知道了，我很熟那个地方。"],
+        ["A","Don't forget to bring water. It's hot outside.","别忘了带水，外面很热。"],
+        ["B","I will bring my bottle.","我会带水瓶的。"]
+      ]},
+      { id: 62, turns: [
+        ["A","Where should we meet for dinner?","我们晚餐在哪儿碰面？"],
+        ["B","How about the café we went to last time?","上次去的那家咖啡馆怎么样？"],
+        ["A","That place is nice, but it gets crowded.","那家不错，但人会很多。"],
+        ["B","Hmm, what about the restaurant across the street?","嗯，街对面的那家餐厅呢？"],
+        ["A","That's a good choice. Less busy.","好选择，没那么挤。"],
+        ["B","Alright, let's pick that one.","好，就选那家。"]
+      ]},
+      { id: 63, turns: [
+        ["A","Can we reschedule our meeting?","我们能改一下会议时间吗？"],
+        ["B","Sure, what time works better for you?","当然，你什么时间更方便？"],
+        ["A","Tomorrow morning would be much better.","明天早上会好很多。"],
+        ["B","I'm free tomorrow morning. Is nine okay?","我明天早上有空，九点行吗？"],
+        ["A","Nine is perfect for me.","九点对我来说很好。"],
+        ["B","Great, I'll mark it down.","好，我记下来。"]
+      ]},
+      { id: 64, turns: [
+        ["A","I can't make it today. Something urgent came up.","我今天来不了了，出了点急事。"],
+        ["B","That's okay. Emergencies come first.","没关系，急事要紧。"],
+        ["A","I feel bad. I was really looking forward to it.","我挺过意不去的，我真的很期待。"],
+        ["B","Don't feel bad. We can arrange another day.","别过意不去，我们可以改天再约。"],
+        ["A","Thank you for understanding.","谢谢你的理解。"],
+        ["B","No problem at all.","完全没问题。"]
+      ]},
+      { id: 65, turns: [
+        ["A","Do you feel like watching a movie tonight?","今晚想看场电影吗？"],
+        ["B","That sounds fun. Should we go to the cinema?","听起来不错，去电影院吗？"],
+        ["A","Or we can stream one at my home.","或者来我家在线看一部。"],
+        ["B","Staying home is more comfortable.","待在家里更舒服。"],
+        ["A","Cool, I'll prepare some snacks.","好，我准备点零食。"],
+        ["B","Awesome, I'll bring some cola.","太好了，我带可乐来。"]
+      ]},
+      { id: 66, turns: [
+        ["A","Want to go for a walk after dinner?","晚饭后想出去走走吗？"],
+        ["B","Yeah, let's go. I ate too much.","好，走吧。我吃太多了。"],
+        ["A","A slow walk will help with digestion.","慢走有助于消化。"],
+        ["B","Exactly. The air is nice this evening.","没错，今晚空气很好。"],
+        ["A","We can walk along the river path.","我们可以沿着河边小路走。"],
+        ["B","That's my favourite route.","那是我最喜欢的路线。"]
+      ]},
+      { id: 67, turns: [
+        ["A","Are you up for dinner this Saturday?","这周六一起吃晚饭怎么样？"],
+        ["B","I'm in. What time are you thinking?","我参加，你想几点？"],
+        ["A","Around six. Does that suit you?","六点左右，你方便吗？"],
+        ["B","Yes, I'm free all evening.","方便，我一晚上都有空。"],
+        ["A","I'll book a table in advance.","我会提前订位。"],
+        ["B","Perfect, thank you.","太好了，谢谢。"]
+      ]},
+      { id: 68, turns: [
+        ["A","I'm busy this weekend. Maybe next time?","我这周末有事，也许下次吧？"],
+        ["B","No problem, next time. When are you free?","没问题，下次。你什么时候有空？"],
+        ["A","Probably next Sunday.","可能下周日。"],
+        ["B","Okay, just message me when you know for sure.","好的，你确定了就给我发消息。"],
+        ["A","I will. Sorry again.","我会的，再次抱歉。"],
+        ["B","Don't worry about it.","别放在心上。"]
+      ]},
+      { id: 69, turns: [
+        ["A","Should we take the bus to the mall?","我们要坐公交去商场吗？"],
+        ["B","Or Uber? The bus might be slow.","还是打优步？公交可能太慢。"],
+        ["A","Uber is faster but more expensive.","优步更快，但更贵。"],
+        ["B","It's not too bad if we split the cost.","如果分摊费用就不算太贵。"],
+        ["A","That's true. Let's take an Uber then.","说得对，那我们就打优步。"],
+        ["B","Alright, I'll order the car.","好，我来叫车。"]
+      ]},
+      { id: 70, turns: [
+        ["A","Is Saturday okay for you to go shopping?","你周六去逛街方便吗？"],
+        ["B","Saturday is perfect. I don't work on weekends.","周六最好，我周末不上班。"],
+        ["A","Great. The mall opens at ten.","好，商场十点开门。"],
+        ["B","Let's meet at ten thirty, so we don't rush.","我们十点半见吧，这样不用赶。"],
+        ["A","Sounds good. I need to buy new shoes.","好，我得买双新鞋。"],
+        ["B","Me too.","我也是。"]
+      ]},
+      { id: 71, turns: [
+        ["A","Let's hang out sometime soon.","我们最近找时间聚聚吧。"],
+        ["B","Definitely. It's been too long since we hung out.","必须的，我们好久没聚了。"],
+        ["A","We can pick a day when both of us are free.","我们可以挑个两个人都空的日子。"],
+        ["B","Right. I'll check my schedule tonight.","对，我今晚看看我的日程。"],
+        ["A","Text me your available time.","把你有空的时间发给我。"],
+        ["B","Will do.","没问题。"]
+      ]},
+      { id: 72, turns: [
+        ["A","Can I join you guys for the picnic?","我能加入你们的野餐吗？"],
+        ["B","Of course! The more the merrier.","当然！人越多越热闹。"],
+        ["A","That's awesome. What should I bring?","太棒了，我带点什么好？"],
+        ["B","You can bring some fruit or chips.","你可以带点水果或薯片。"],
+        ["A","Got it. I'll buy some strawberries.","好的，我去买点草莓。"],
+        ["B","Everyone loves strawberries.","大家都爱吃草莓。"]
+      ]},
+      { id: 73, turns: [
+        ["A","I'm not sure yet if I can come.","我还不确定能不能来。"],
+        ["B","Take your time. Let me know before noon tomorrow.","慢慢想，明天中午前告诉我。"],
+        ["A","Okay, I'll confirm with my family tonight.","好的，我今晚和家人确认一下。"],
+        ["B","No pressure. If you can't come, it's fine.","别有压力，来不了也没关系。"],
+        ["A","Thanks for being flexible.","谢谢你的通融。"],
+        ["B","Anytime.","好说。"]
+      ]},
+      { id: 74, turns: [
+        ["A","What time should I come to your place?","我几点到你家合适？"],
+        ["B","Come around six. Dinner will be ready then.","六点左右来吧，那时晚饭就好了。"],
+        ["A","Should I bring anything?","我需要带点什么吗？"],
+        ["B","Just yourself. We have plenty of food.","带你自己就行，我们吃的很多。"],
+        ["A","Alright, I'll be there on time.","好，我会准时到。"],
+        ["B","Looking forward to it.","很期待。"]
+      ]},
+      { id: 75, turns: [
+        ["A","I have to cancel our plan for tomorrow.","我得取消明天的计划了。"],
+        ["B","It's alright. What happened?","没事，发生什么事了？"],
+        ["A","My mom needs me to help her move things.","我妈需要我帮忙搬东西。"],
+        ["B","Family stuff comes first.","家里的事要紧。"],
+        ["A","I'll make it up to you next week.","下周我一定补偿你。"],
+        ["B","No need, we can plan again.","不用，我们可以再约。"]
+      ]}
+    ]
+  },
+  "scene-05": {
+    title: "餐厅 & 吃喝",
+    icon: "🍽️",
+    dialogues: [
+      { id: 76, turns: [
+        ["A","Can I get a menu, please?","请给我一份菜单好吗？"],
+        ["B","Sure, here you go. Take your time to look.","好，给您。慢慢看。"],
+        ["A","Thank you. What would you recommend here?","谢谢，这里有什么推荐的吗？"],
+        ["B","The beef noodles are really popular.","牛肉面很受欢迎。"],
+        ["A","Okay, I'll consider that.","好的，我考虑一下。"],
+        ["B","Let me know when you are ready to order.","想好点餐了告诉我。"]
+      ]},
+      { id: 77, turns: [
+        ["A","What do you recommend for first-time visitors?","第一次来有什么推荐？"],
+        ["B","The steak is really good. It's tender and juicy.","牛排很棒，又嫩又多汁。"],
+        ["A","Does it come with vegetables?","配蔬菜吗？"],
+        ["B","Yes, it comes with roasted potatoes and salad.","配的，有烤土豆和沙拉。"],
+        ["A","That sounds great. I might try that.","听起来不错，我可能会点这个。"],
+        ["B","You won't regret it.","你不会后悔的。"]
+      ]},
+      { id: 78, turns: [
+        ["A","What would you like to drink with your meal?","用餐想喝点什么？"],
+        ["B","Just water, please. No ice.","只要水，谢谢，不加冰。"],
+        ["A","No ice, got it. And for you, sir?","不加冰，好的。先生您呢？"],
+        ["B","I'll have a glass of lemon tea.","我要一杯柠檬茶。"],
+        ["A","Okay, drinks will be out shortly.","好的，饮品很快就上。"],
+        ["B","Thank you.","谢谢。"]
+      ]},
+      { id: 79, turns: [
+        ["A","Ready to order now?","现在准备点餐了吗？"],
+        ["B","Not yet, give me a minute. I'm still deciding.","还没，给我一分钟，我还在想。"],
+        ["A","No problem. I haven't picked mine either.","没关系，我也还没选好。"],
+        ["B","There are so many tasty choices here.","这里好吃的选择太多了。"],
+        ["A","Right, it's hard to choose.","是啊，很难选。"],
+        ["B","I'll let you know in two minutes.","两分钟后我告诉你。"]
+      ]},
+      { id: 80, turns: [
+        ["A","I'll have a burger and fries.","我要一个汉堡和薯条。"],
+        ["B","Me too. Can I get extra ketchup on the side?","我也一样。能另外多给点番茄酱吗？"],
+        ["A","Sure, noted. Would you like any sauce?","好的，记下了。还要什么酱吗？"],
+        ["B","Barbecue sauce for me, please.","我要烧烤酱，谢谢。"],
+        ["A","Okay, two burgers, fries, ketchup and barbecue sauce.","好的，两个汉堡、薯条、番茄酱和烧烤酱。"],
+        ["B","Thank you.","谢谢。"]
+      ]},
+      { id: 81, turns: [
+        ["A","Any food allergies I should know about?","有什么食物过敏需要我注意的吗？"],
+        ["B","No allergies for me. I can eat everything.","我不过敏，什么都能吃。"],
+        ["A","What about you? Any nuts or seafood allergy?","你呢？对坚果或海鲜过敏吗？"],
+        ["B","I'm allergic to shrimp, so no shrimp dishes.","我对虾过敏，所以不要虾类菜品。"],
+        ["A","Alright, I'll make sure the kitchen knows.","好的，我会让厨房知道。"],
+        ["B","Thanks a lot.","非常感谢。"]
+      ]},
+      { id: 82, turns: [
+        ["A","Can I get this order to go?","这份可以打包带走吗？"],
+        ["B","Sure thing. We'll pack it carefully for you.","当然，我们会仔细给您打包。"],
+        ["A","Please put the sauce in a separate box.","请把酱料单独放一个盒子。"],
+        ["B","No problem. It will prevent the food from getting soggy.","没问题，这样食物不会变软。"],
+        ["A","Exactly. How long will it take?","正是，需要多久？"],
+        ["B","About five minutes.","大概五分钟。"]
+      ]},
+      { id: 83, turns: [
+        ["A","Dine in or take away?","堂食还是外带？"],
+        ["B","Dine in, please. We want to eat here.","堂食，谢谢，我们想在这儿吃。"],
+        ["A","Okay, table for two?","好的，两位吗？"],
+        ["B","Yes, a table for two near the window if possible.","是的，如果可以的话要靠窗的双人桌。"],
+        ["A","Let me check. Follow me, please.","我看看，请跟我来。"],
+        ["B","Thank you.","谢谢。"]
+      ]},
+      { id: 84, turns: [
+        ["A","Can I get extra sauce for my chicken?","能给我的鸡肉多加点酱吗？"],
+        ["B","Coming right up. What kind of sauce would you like?","马上来，您想要什么酱？"],
+        ["A","Garlic sauce, please. I love it.","蒜蓉酱，谢谢，我很喜欢。"],
+        ["B","That's our house special sauce.","那是我们店的招牌酱。"],
+        ["A","I heard it's amazing.","我听说特别好吃。"],
+        ["B","Hope you like it.","希望你喜欢。"]
+      ]},
+      { id: 85, turns: [
+        ["A","How is your food so far?","目前为止菜怎么样？"],
+        ["B","It's delicious! The chicken is perfectly cooked.","太好吃了！鸡肉火候刚好。"],
+        ["A","I'm glad you like it. How about your soup?","你喜欢就好，汤怎么样？"],
+        ["B","The soup is warm and flavourful.","汤暖暖的，很有味道。"],
+        ["A","Great, enjoy your meal.","好，请慢用。"],
+        ["B","Thank you.","谢谢。"]
+      ]},
+      { id: 86, turns: [
+        ["A","This tastes amazing.","这个太好吃了。"],
+        ["B","Right, it's so good. I didn't expect it this nice.","是啊，真好吃，没想到这么棒。"],
+        ["A","The seasoning is just right, not too salty.","调味刚刚好，不会太咸。"],
+        ["B","We should come back again sometime.","我们改天应该再来。"],
+        ["A","Definitely, we can bring our friends next time.","必须的，下次带上朋友。"],
+        ["B","That's a good plan.","好主意。"]
+      ]},
+      { id: 87, turns: [
+        ["A","Can we get the bill when you have a moment?","方便的时候能给我们结账吗？"],
+        ["B","One moment. I'll bring it over right away.","稍等，我马上拿过来。"],
+        ["A","Thank you. Do you accept mobile payment?","谢谢，你们支持移动支付吗？"],
+        ["B","Yes, we accept card and mobile pay.","支持，刷卡和手机支付都可以。"],
+        ["A","Perfect.","太好了。"],
+        ["B","Here's your bill.","这是您的账单。"]
+      ]},
+      { id: 88, turns: [
+        ["A","Let's split the bill evenly.","我们平摊账单吧。"],
+        ["B","Sounds fair. That's the easiest way.","公平，这是最简单的办法。"],
+        ["A","Okay, the total is 48 dollars, so 24 each.","好，总共48美元，每人24。"],
+        ["B","Got it. I'll transfer you the money.","明白，我把钱转给你。"],
+        ["A","No rush. Whenever you can.","不急，你方便的时候。"],
+        ["B","I'll send it now.","我现在就转。"]
+      ]},
+      { id: 89, turns: [
+        ["A","It's on me. Don't worry about paying.","我来买单，别担心付钱的事。"],
+        ["B","Oh, thanks! Are you sure? That's too kind.","哦，谢谢！你确定吗？你太好了。"],
+        ["A","Yeah, it's my treat for helping me last week.","是啊，算我请你的，谢谢你上周帮我。"],
+        ["B","Well, thank you so much. Next time I'll pay.","那真是太谢谢了，下次我请。"],
+        ["A","Deal. Next dinner is yours.","成交，下次晚餐你请。"],
+        ["B","Okay, I'll hold you to that.","好，我可记着了。"]
+      ]},
+      { id: 90, turns: [
+        ["A","Want some dessert after the main course?","主菜之后想来点甜点吗？"],
+        ["B","Maybe ice cream. What flavours do they have?","也许来点冰淇淋，有什么口味？"],
+        ["A","Vanilla, chocolate and mango.","香草、巧克力和芒果。"],
+        ["B","Mango ice cream sounds refreshing.","芒果冰淇淋听起来很清爽。"],
+        ["A","I'll get one too. Let's share.","我也点一份，我们分着吃。"],
+        ["B","Perfect idea.","好主意。"]
+      ]},
+      { id: 91, turns: [
+        ["A","Are you full now?","你现在吃饱了吗？"],
+        ["B","Yeah, I'm stuffed. I can't eat another bite.","饱了，我撑得一口都吃不下了。"],
+        ["A","Haha, me too. The portion is huge.","哈哈，我也是，份量太大了。"],
+        ["B","I ate way more than I planned.","我比计划吃得多多了。"],
+        ["A","We should take a slow walk later.","一会儿我们该慢慢走走。"],
+        ["B","That's a good idea.","好主意。"]
+      ]},
+      { id: 92, turns: [
+        ["A","I'm starving. I skipped breakfast this morning.","我饿死了，今早没吃早饭。"],
+        ["B","Let's get something to eat quickly.","我们快点弄点吃的吧。"],
+        ["A","Is there any fast food place nearby?","附近有快餐店吗？"],
+        ["B","There's a noodle shop just across the road.","马路对面就有一家面馆。"],
+        ["A","Great, noodles sound really good right now.","太好了，现在吃碗面正合适。"],
+        ["B","Let's go.","走吧。"]
+      ]},
+      { id: 93, turns: [
+        ["A","I'm not hungry at all. I ate a big snack earlier.","我一点都不饿，刚才吃了好多零食。"],
+        ["B","Okay, no problem. You can just drink something.","好，没问题，你喝点什么就行。"],
+        ["A","I'll just order a cup of hot tea.","那我就点一杯热茶。"],
+        ["B","Alright, I'll order food for myself then.","好，那我自己点吃的。"],
+        ["A","Go ahead, don't wait for me.","点吧，不用等我。"],
+        ["B","Sure.","好。"]
+      ]},
+      { id: 94, turns: [
+        ["A","More coffee for you?","还要咖啡吗？"],
+        ["B","Yes, please. Just a small refill.","要的，谢谢，一点点续杯就好。"],
+        ["A","Cream or sugar this time?","这次要奶油还是糖？"],
+        ["B","No cream, one spoon of sugar.","不要奶油，一勺糖。"],
+        ["A","Got it. I'll bring it in a second.","好的，马上端来。"],
+        ["B","Thank you.","谢谢。"]
+      ]},
+      { id: 95, turns: [
+        ["A","Can I have a straw for my drink?","能给我的饮料来根吸管吗？"],
+        ["B","Here you are. I brought a few extra.","给你，我多带了几根。"],
+        ["A","Thanks. The cup is a little hot to sip directly.","谢谢，杯子有点烫，没法直接喝。"],
+        ["B","Be careful. The drink is boiling hot.","小心，饮料烫得很。"],
+        ["A","I will. I'll blow on it first.","我会的，先吹吹凉。"],
+        ["B","Good.","好的。"]
+      ]}
+    ]
+  },
+  "scene-06": {
+    title: "购物 & 买单",
+    icon: "🛍️",
+    dialogues: [
+      { id: 96, turns: [
+        ["A","How much is this white T-shirt?","这件白T恤多少钱？"],
+        ["B","It's 15 dollars. It's on sale this week.","15美元，这周在打折。"],
+        ["A","That's pretty cheap. Is it cotton?","挺便宜的，是棉的吗？"],
+        ["B","Yes, 100% cotton, very soft.","是的，100%纯棉，很柔软。"],
+        ["A","Nice. I might take one.","不错，我可能要一件。"],
+        ["B","You can try it on first if you want.","想的话可以先试穿。"]
+      ]},
+      { id: 97, turns: [
+        ["A","Can I try this jacket on?","我能试穿这件夹克吗？"],
+        ["B","The fitting room is over there, around the corner.","试衣间在那边，拐角处。"],
+        ["A","Thank you. How many items can I take in?","谢谢，一次能拿几件进去？"],
+        ["B","Up to three items per fitting room.","每个试衣间最多三件。"],
+        ["A","Perfect, I only have this one.","太好了，我只有这一件。"],
+        ["B","Take your time.","慢慢来。"]
+      ]},
+      { id: 98, turns: [
+        ["A","What size do you wear for tops?","你上衣穿什么码？"],
+        ["B","Medium usually. Sometimes small if the cut is big.","通常中码，版型大的话有时穿小码。"],
+        ["A","This brand runs small, so you might need large.","这个牌子偏小，你可能需要大码。"],
+        ["B","Oh, okay. I'll grab a large to try.","哦，好的，那我拿件大码试试。"],
+        ["A","That's safer.","那更保险。"],
+        ["B","Thanks for telling me.","谢谢你告诉我。"]
+      ]},
+      { id: 99, turns: [
+        ["A","Do you have this same style in blue?","这款有蓝色的吗？"],
+        ["B","Sorry, we're out of blue. We only have black and white left.","抱歉，蓝色卖完了，只剩黑色和白色。"],
+        ["A","That's a shame. I really wanted blue.","太可惜了，我真的很想要蓝色。"],
+        ["B","We will restock blue next Monday.","下周一我们会补蓝色。"],
+        ["A","I can come back then.","那我到时候再来。"],
+        ["B","Alright, welcome back next week.","好的，欢迎下周再来。"]
+      ]},
+      { id: 100, turns: [
+        ["A","Can I get a discount on this bag?","这个包能打折吗？"],
+        ["B","This is already on sale, so we can't lower the price further.","这已经是特价了，不能再降了。"],
+        ["A","I see. Is there any coupon available?","这样啊，有优惠券可以用吗？"],
+        ["B","You can get a coupon if you sign up for our membership.","注册会员可以领一张优惠券。"],
+        ["A","Hmm, I'll think about it.","嗯，我考虑一下。"],
+        ["B","No problem.","没问题。"]
+      ]},
+      { id: 101, turns: [
+        ["A","Cash or card for payment?","现金还是刷卡？"],
+        ["B","Card, please. My card is in my wallet.","刷卡，我的卡在钱包里。"],
+        ["A","Insert your card here, or tap to pay.","在这儿插卡，或者感应支付。"],
+        ["B","Tap to pay is easier.","感应支付更方便。"],
+        ["A","Okay, waiting for your payment.","好的，请支付。"],
+        ["B","Done.","好了。"]
+      ]},
+      { id: 102, turns: [
+        ["A","Can I pay by WeChat?","能用微信支付吗？"],
+        ["B","Sorry, only card and cash are supported here.","抱歉，这里只支持刷卡和现金。"],
+        ["A","Oh no, I didn't bring cash.","糟了，我没带现金。"],
+        ["B","There is an ATM two shops down the street.","沿街过去两家店就有取款机。"],
+        ["A","Okay, I'll go withdraw some cash.","好，我去取点现金。"],
+        ["B","Take your time. I can hold this item for you.","慢慢来，我可以帮你留一下这件商品。"]
+      ]},
+      { id: 103, turns: [
+        ["A","I'll take this pair of sneakers.","我要这双运动鞋。"],
+        ["B","Great, let me ring it up for you.","好，我来给你结账。"],
+        ["A","Does it come with an extra pair of laces?","附带一双备用鞋带吗？"],
+        ["B","Yes, there is an extra pair inside the box.","有的，盒子里有一双备用的。"],
+        ["A","Perfect.","太好了。"],
+        ["B","Your total is 69 dollars.","一共69美元。"]
+      ]},
+      { id: 104, turns: [
+        ["A","Can I return this shirt if it doesn't fit my friend?","如果这件衬衫我朋友穿不合适，能退吗？"],
+        ["B","Yes, you can return it within 7 days with the receipt.","可以，凭小票七天内可退。"],
+        ["A","What if I lose the receipt?","如果小票丢了怎么办？"],
+        ["B","We can't process returns without the receipt.","没有小票我们无法办理退货。"],
+        ["A","Okay, I'll keep the receipt safe.","好的，我会把小票收好。"],
+        ["B","Good.","好的。"]
+      ]},
+      { id: 105, turns: [
+        ["A","Do you have a shopping bag for me?","有购物袋给我吗？"],
+        ["B","Sure, one dollar for a paper bag.","有，纸袋一美元。"],
+        ["A","That's okay, I have my reusable bag in my backpack.","不用了，我背包里有环保袋。"],
+        ["B","That's eco-friendly. Good job.","很环保，做得好。"],
+        ["A","I try to avoid plastic bags.","我尽量不用塑料袋。"],
+        ["B","More people should do that.","更多人应该这样做。"]
+      ]},
+      { id: 106, turns: [
+        ["A","Where is the checkout counter?","收银台在哪儿？"],
+        ["B","At the front of the store, next to the entrance.","在店铺前面，入口旁边。"],
+        ["A","Thank you. I have a few things to pay for.","谢谢，我有点东西要结账。"],
+        ["B","There are two cashiers open right now.","现在有两个收银台开着。"],
+        ["A","Great, so the line won't be too long.","太好了，这样队伍不会太长。"],
+        ["B","Yep.","是啊。"]
+      ]},
+      { id: 107, turns: [
+        ["A","That's too expensive for me. I can't afford it.","对我来说太贵了，买不起。"],
+        ["B","I understand. It's made of high-quality leather.","理解，它是优质皮革做的。"],
+        ["A","I like it, but my budget is tight this month.","我喜欢，但这个月预算紧张。"],
+        ["B","We will have a big sale next month.","下个月我们有大促销。"],
+        ["A","I'll wait for the sale then.","那我就等促销吧。"],
+        ["B","Sounds good.","好的。"]
+      ]},
+      { id: 108, turns: [
+        ["A","Is this backpack still in stock?","这款双肩包还有货吗？"],
+        ["B","Yes, plenty. We just restocked yesterday.","有，还有很多，昨天刚补的货。"],
+        ["A","Wonderful. I was worried it was sold out.","太好了，我还担心卖完了。"],
+        ["B","It's popular, so we keep extra stock.","它很受欢迎，所以我们多备了货。"],
+        ["A","Can I see the grey one?","能让我看看灰色的吗？"],
+        ["B","Sure, here you go.","可以，给你。"]
+      ]},
+      { id: 109, turns: [
+        ["A","I'm just looking around, thanks.","我只是随便看看，谢谢。"],
+        ["B","Take your time. Let me know if you need help.","慢慢逛，需要帮助就叫我。"],
+        ["A","I will. I'm not planning to buy anything today.","好的，我今天不打算买什么。"],
+        ["B","No pressure at all. Feel free to browse.","完全没压力，随便逛。"],
+        ["A","You are very nice.","你人真好。"],
+        ["B","Thank you.","谢谢。"]
+      ]},
+      { id: 110, turns: [
+        ["A","Can I get a receipt after payment?","付款后能给我小票吗？"],
+        ["B","Of course. Would you like a paper one or electronic?","当然，纸质还是电子版？"],
+        ["A","Electronic receipt, please. Send it to my email.","电子版，谢谢，发到我邮箱。"],
+        ["B","Okay, type your email address here.","好的，在这里输入你的邮箱。"],
+        ["A","Alright, I've typed it.","好，我输完了。"],
+        ["B","Sent already, check your inbox.","已经发送了，查收一下。"]
+      ]}
+    ]
+  },
+  "scene-07": {
+    title: "问路 & 交通",
+    icon: "🗺️",
+    dialogues: [
+      { id: 111, turns: [
+        ["A","Excuse me, where is the toilet?","打扰一下，洗手间在哪儿？"],
+        ["B","Down the hall on your left, next to the gift shop.","走廊尽头左手边，礼品店旁边。"],
+        ["A","Thank you. Is it easy to spot?","谢谢，好找吗？"],
+        ["B","Yes, there is a big sign above the door.","好找，门上有个大牌子。"],
+        ["A","Perfect. I really need to go.","太好了，我真的很急。"],
+        ["B","Go ahead.","去吧。"]
+      ]},
+      { id: 112, turns: [
+        ["A","How do I get to the train station from here?","从这里怎么去火车站？"],
+        ["B","Go straight for two blocks and turn right.","直走两个街区然后右转。"],
+        ["A","Will I see the station building after turning right?","右转后能看到火车站大楼吗？"],
+        ["B","Yes, it's a big grey building. You can't miss it.","能，那是一栋灰色的大楼，不会错过的。"],
+        ["A","That's really helpful. Thank you.","太有帮助了，谢谢。"],
+        ["B","You're welcome.","不客气。"]
+      ]},
+      { id: 113, turns: [
+        ["A","Is the library far from here?","图书馆离这里远吗？"],
+        ["B","About 5 minutes' walk. It's super close.","走路大概五分钟，非常近。"],
+        ["A","Wow, that's great. I thought it was much farther.","哇，太好了，我还以为远得多。"],
+        ["B","It's hidden behind the apartment buildings.","它藏在公寓楼后面。"],
+        ["A","I see. I'll follow that direction.","明白了，我往那边走。"],
+        ["B","Enjoy your reading.","祝你阅读愉快。"]
+      ]},
+      { id: 114, turns: [
+        ["A","Which bus goes downtown?","哪路公交去市中心？"],
+        ["B","Bus number 12 will take you there directly.","12路公交可以直达。"],
+        ["A","Where is the bus stop for number 12?","12路的公交站在哪儿？"],
+        ["B","It's across the road, under the big tree.","在马路对面，那棵大树下。"],
+        ["A","Got it. Thank you so much.","明白了，非常感谢。"],
+        ["B","No problem.","不客气。"]
+      ]},
+      { id: 115, turns: [
+        ["A","When does the next bus come?","下一班公交什么时候到？"],
+        ["B","It should be here soon, in about three minutes.","应该快了，大概三分钟。"],
+        ["A","I hope it's not late. I have an appointment.","希望别晚点，我有个约会。"],
+        ["B","Buses here are usually on time.","这里的公交一般都挺准点。"],
+        ["A","That's a relief.","那就放心了。"],
+        ["B","Look, I think it's coming now.","看，我觉得它来了。"]
+      ]},
+      { id: 116, turns: [
+        ["A","Can you drop me off here by the gate?","能让我在大门口下车吗？"],
+        ["B","Sure. Is this the place you need?","好，是你要去的地方吗？"],
+        ["A","Yes, this is exactly the entrance.","是的，这正是入口。"],
+        ["B","Alright. Please watch out for bikes when you get out.","好的，下车时小心自行车。"],
+        ["A","I will. Thanks for the ride.","我会的，谢谢你载我。"],
+        ["B","No trouble at all.","一点也不麻烦。"]
+      ]},
+      { id: 117, turns: [
+        ["A","Where is the elevator in this building?","这栋楼的电梯在哪儿？"],
+        ["B","Around the corner, beside the stairs.","拐角处，楼梯旁边。"],
+        ["A","Is it working right now?","现在能用吗？"],
+        ["B","Yes, I just took it up five minutes ago.","能，五分钟前我刚坐过。"],
+        ["A","Great. My legs hurt, I don't want stairs.","太好了，我腿疼，不想爬楼梯。"],
+        ["B","I get it.","我懂。"]
+      ]},
+      { id: 118, turns: [
+        ["A","Am I going the right way for the city park?","我去城市公园走这条路对吗？"],
+        ["B","Yes, keep going straight. Don't turn.","对，一直往前走，别拐弯。"],
+        ["A","How much longer do I need to walk?","我还要走多久？"],
+        ["B","Around four more minutes.","大概再走四分钟。"],
+        ["A","Okay, thanks for confirming.","好，谢谢你确认。"],
+        ["B","Have fun in the park.","在公园玩得开心。"]
+      ]},
+      { id: 119, turns: [
+        ["A","Sorry, I'm lost. I can't find the museum.","不好意思，我迷路了，找不到博物馆。"],
+        ["B","Let me show you on this map. We are right here.","我在地图上指给你看，我们就在这儿。"],
+        ["A","Oh, I turned left at the wrong crossing.","哦，我在错误的路口左转了。"],
+        ["B","No worries. Walk back and take the second right.","别担心，往回走，在第二个路口右转。"],
+        ["A","I see now. Thank you for helping me.","现在我明白了，谢谢你帮我。"],
+        ["B","Happy to help.","很高兴帮到你。"]
+      ]},
+      { id: 120, turns: [
+        ["A","How long does it take to get to the airport by taxi?","打车去机场要多久？"],
+        ["B","Around half an hour if there's no traffic jam.","不堵车的话大概半小时。"],
+        ["A","What if there is heavy traffic?","如果堵车严重呢？"],
+        ["B","It can take up to an hour.","可能要一个小时。"],
+        ["A","I'd better leave earlier then.","那我最好早点出发。"],
+        ["B","Wise choice.","明智的选择。"]
+      ]},
+      { id: 121, turns: [
+        ["A","Is there a subway station nearby?","附近有地铁站吗？"],
+        ["B","Yes, it's two blocks away from this spot.","有，离这儿两个街区。"],
+        ["A","Which line is it?","是哪条线？"],
+        ["B","Line 3, the green line.","3号线，绿色那条。"],
+        ["A","Perfect, that's the line I need.","太好了，正是我要坐的线。"],
+        ["B","The entrance has a green sign.","入口有个绿色的标志。"]
+      ]},
+      { id: 122, turns: [
+        ["A","Where can I get a taxi quickly?","哪里能很快打到出租车？"],
+        ["B","Right outside the main door. There is a taxi stand.","正门外就有，那里有个出租车站。"],
+        ["A","Are taxis usually waiting there?","那里一般有出租车等着吗？"],
+        ["B","Yes, most of the time. If not, you can use an app.","大部分时间有，没有的话可以用打车软件。"],
+        ["A","Okay, I'll go check there.","好，我去那边看看。"],
+        ["B","Good luck.","祝你好运。"]
+      ]},
+      { id: 123, turns: [
+        ["A","Should I turn left or right at the traffic light?","到了红绿灯该左转还是右转？"],
+        ["B","Turn left, then go straight until you see the river.","左转，然后直走直到看到河。"],
+        ["A","Left, okay. I was confused.","左转，好的。我刚才都搞糊涂了。"],
+        ["B","A lot of people mix up this crossing.","很多人都在这个路口搞混。"],
+        ["A","I'll pay close attention.","我会仔细看的。"],
+        ["B","Safe travels.","一路平安。"]
+      ]},
+      { id: 124, turns: [
+        ["A","Does this train stop at Central Station?","这趟火车在中央车站停吗？"],
+        ["B","Yes, it does. It's the next stop.","停的，下一站就是。"],
+        ["A","How long until we arrive?","还有多久到？"],
+        ["B","About two minutes.","大概两分钟。"],
+        ["A","Great, I need to get off there.","太好了，我就在那下车。"],
+        ["B","Don't forget your bag.","别忘了你的包。"]
+      ]},
+      { id: 125, turns: [
+        ["A","Watch out! There's a bike coming fast.","小心！有辆自行车骑过来了，很快。"],
+        ["B","Thanks for the heads up. I didn't see it.","谢谢提醒，我没看见。"],
+        ["A","Those bikers move really quickly.","那些骑车的人速度真快。"],
+        ["B","I know. I need to look both ways more carefully.","我知道，我得多注意左右看看。"],
+        ["A","Me too. It's easy to get distracted.","我也是，太容易分心了。"],
+        ["B","Definitely.","确实。"]
+      ]}
+    ]
+  },
+  "scene-08": {
+    title: "请求帮助 & 询问",
+    icon: "🤝",
+    dialogues: [
+      { id: 126, turns: [
+        ["A","Can you help me for a second?","你能帮我一下吗，就一会儿？"],
+        ["B","Sure, what's wrong? Tell me what you need.","好，怎么了？告诉我你需要什么。"],
+        ["A","I can't open this jar. The lid is stuck tight.","我打不开这个罐子，盖子卡得太紧了。"],
+        ["B","Let me try. Sometimes tapping the lid helps.","让我试试，有时敲敲盖子有用。"],
+        ["A","I tried tapping, it didn't work.","我敲过了，不管用。"],
+        ["B","Give it here, I'll give it a go.","给我吧，我来试试。"]
+      ]},
+      { id: 127, turns: [
+        ["A","Could you pass me the black pen on your desk?","能把你桌上的黑色笔递给我吗？"],
+        ["B","Here you go. Is this the one you want?","给你，是这支吗？"],
+        ["A","Yes, that's exactly it. Thank you.","对，就是这支，谢谢。"],
+        ["B","No problem. Do you need paper too?","不客气，还需要纸吗？"],
+        ["A","That would be nice, if you have extra.","那就太好了，如果你有多余的话。"],
+        ["B","Sure, take this notebook.","好，拿这个本子去吧。"]
+      ]},
+      { id: 128, turns: [
+        ["A","Can you speak slower? I'm trying to follow you.","你能说慢点吗？我在努力跟上你。"],
+        ["B","No problem. I'll slow down my words.","没问题，我会放慢语速。"],
+        ["A","My listening is still not very good.","我的听力还不太好。"],
+        ["B","Take your time. I can repeat whenever you want.","慢慢来，你什么时候想让我重复都行。"],
+        ["A","I really appreciate your patience.","真的很感谢你的耐心。"],
+        ["B","Don't worry about it.","别客气。"]
+      ]},
+      { id: 129, turns: [
+        ["A","Can you repeat that sentence again?","你能再重复一遍那句话吗？"],
+        ["B","Sure, I said we will meet at seven tomorrow.","好，我说我们明天七点见面。"],
+        ["A","Oh, seven. I thought you said eight.","哦，七点。我还以为你说八点。"],
+        ["B","Easy mistake. Seven, not eight.","很容易听错，是七点，不是八点。"],
+        ["A","Got it now, thanks.","现在明白了，谢谢。"],
+        ["B","Anytime.","随时。"]
+      ]},
+      { id: 130, turns: [
+        ["A","What does that phrase mean in English?","那个短语在英语里是什么意思？"],
+        ["B","It means \"no big deal\", not a serious problem.","意思是\"没什么大不了的\"，不是什么严重问题。"],
+        ["A","Can you give me a simple example?","能给我举个简单的例子吗？"],
+        ["B","Sure. If you are late a little, it's no big deal.","好，比如你稍微迟到一点，那没什么大不了的。"],
+        ["A","I understand now.","我现在懂了。"],
+        ["B","Great.","太好了。"]
+      ]},
+      { id: 131, turns: [
+        ["A","What time is it now?","现在几点了？"],
+        ["B","It's ten past two.","两点十分。"],
+        ["A","Oh, already ten past two? I'm late for class.","哦，已经两点十分了？我上课要迟到了。"],
+        ["B","Hurry up then. Class starts at quarter past.","那就快去吧，课两点一刻开始。"],
+        ["A","I need to run. Thanks for telling me.","我得跑了，谢谢你告诉我。"],
+        ["B","Run safely.","跑慢点，注意安全。"]
+      ]},
+      { id: 132, turns: [
+        ["A","Do you know his phone number?","你知道他的电话号码吗？"],
+        ["B","I don't have it saved in my phone.","我手机里没存他的号码。"],
+        ["A","Hmm, I need to reach him urgently.","嗯，我有急事要联系他。"],
+        ["B","Maybe you can ask Lily, she's his roommate.","也许你可以问问莉莉，她是他的室友。"],
+        ["A","That's a good idea. I'll message Lily right now.","好主意，我现在就给莉莉发消息。"],
+        ["B","Hope you get it quickly.","希望你能快点拿到。"]
+      ]},
+      { id: 133, turns: [
+        ["A","Can I borrow your phone to make a quick call?","能借你手机打个电话吗？"],
+        ["B","Go ahead. The passcode is 1234.","用吧，密码是1234。"],
+        ["A","Thank you. Mine died just now.","谢谢，我的手机刚没电了。"],
+        ["B","No worries. You can use it as long as you need.","别担心，你想用多久都行。"],
+        ["A","It will only take thirty seconds.","只要三十秒。"],
+        ["B","Take your time.","不急。"]
+      ]},
+      { id: 134, turns: [
+        ["A","Can you take a photo for me here?","能在这儿帮我拍张照吗？"],
+        ["B","Sure, smile! Do you want horizontal or vertical?","好，笑一个！要横的还是竖的？"],
+        ["A","Horizontal please. Try to include the lake behind me.","横的吧，尽量把我身后的湖拍进去。"],
+        ["B","Okay, ready. One, two, three.","好，准备好了。一、二、三。"],
+        ["A","Wow, that looks great.","哇，拍得真好。"],
+        ["B","Glad you like it.","你喜欢就好。"]
+      ]},
+      { id: 135, turns: [
+        ["A","Could you hold the door open for me? My hands are full.","能帮我扶一下门吗？我手里拿满了东西。"],
+        ["B","No problem. I'll keep it open for you.","没问题，我帮你扶着。"],
+        ["A","Thank you so much. These boxes are heavy.","太谢谢了，这些箱子很重。"],
+        ["B","Take your time, don't rush.","慢慢来，别急。"],
+        ["A","I'm almost through.","我快过去了。"],
+        ["B","Alright.","好的。"]
+      ]},
+      { id: 136, turns: [
+        ["A","Do you mind if I open the window? It's stuffy.","你介意我开窗吗？这里有点闷。"],
+        ["B","Not at all. Go ahead and open it wide.","完全不介意，打开吧，开大点。"],
+        ["A","Great. Fresh air feels so good.","太好了，新鲜空气真舒服。"],
+        ["B","I was thinking the same thing. It's really warm.","我也这么想，确实很热。"],
+        ["A","The wind is nice outside.","外面的风很舒服。"],
+        ["B","Yeah.","是啊。"]
+      ]},
+      { id: 137, turns: [
+        ["A","Is it okay if I smoke here in this area?","我可以在这个区域抽烟吗？"],
+        ["B","Sorry, no smoking inside the building.","抱歉，楼内禁止吸烟。"],
+        ["A","Oh, I didn't see the sign. Where can I smoke?","哦，我没看到标志。哪里可以抽？"],
+        ["B","There is a smoking area outside the main gate.","大门外面有个吸烟区。"],
+        ["A","Alright, I'll go there.","好的，我去那里。"],
+        ["B","Thank you for following the rule.","谢谢你遵守规定。"]
+      ]},
+      { id: 138, turns: [
+        ["A","Can I use the restroom here?","我能用这里的洗手间吗？"],
+        ["B","Sure, it's down the hallway on your right.","可以，走廊尽头右手边。"],
+        ["A","Do I need a key or password?","需要钥匙或密码吗？"],
+        ["B","No key needed. Just walk in.","不用钥匙，直接进去就行。"],
+        ["A","Perfect, thank you.","太好了，谢谢。"],
+        ["B","You're welcome.","不客气。"]
+      ]},
+      { id: 139, turns: [
+        ["A","Do you know where I can charge my phone?","你知道哪里能给手机充电吗？"],
+        ["B","There's an outlet over there beside the sofa.","那边沙发旁边有个插座。"],
+        ["A","Awesome, my battery is at 3 percent.","太好了，我电量只剩3%了。"],
+        ["B","Do you have your charging cable?","你带充电线了吗？"],
+        ["A","Yes, I have it in my bag.","带了，在我包里。"],
+        ["B","Good, plug it in.","好，插上充电吧。"]
+      ]},
+      { id: 140, turns: [
+        ["A","Can you wake me up at seven tomorrow morning?","明早七点能叫我起床吗？"],
+        ["B","Got it. I'll knock on your door at seven sharp.","好的，我七点整去敲你的门。"],
+        ["A","Please knock loudly, I'm a heavy sleeper.","请用力敲，我睡得很沉。"],
+        ["B","I will. Don't worry, I won't forget.","我会的，别担心，我不会忘。"],
+        ["A","Thank you. I have an early meeting.","谢谢，我早上有个会。"],
+        ["B","I got you covered.","交给我了。"]
+      ]},
+      { id: 141, turns: [
+        ["A","Is this seat taken?","这个座位有人吗？"],
+        ["B","It's free. No one is sitting here.","空的，没人坐。"],
+        ["A","Great, can I put my bag here?","太好了，我能把包放这儿吗？"],
+        ["B","Sure, there's plenty of space.","可以，地方很宽敞。"],
+        ["A","Thank you. The train is so crowded today.","谢谢，今天火车上人真多。"],
+        ["B","It is, rush hour.","是啊，高峰时段。"]
+      ]},
+      { id: 142, turns: [
+        ["A","Can I sit here next to you?","我能坐你旁边吗？"],
+        ["B","Sure, take a seat.","当然，请坐。"],
+        ["A","The other seats are all occupied.","其他座位都坐满了。"],
+        ["B","I know, this carriage is packed.","我知道，这节车厢挤满了人。"],
+        ["A","Thanks for letting me sit.","谢谢你让我坐下。"],
+        ["B","No trouble.","不麻烦。"]
+      ]},
+      { id: 143, turns: [
+        ["A","Do you have a phone charger with you?","你带手机充电器了吗？"],
+        ["B","I have a Type-C charger. Is that what you need?","我有一个Type-C的充电器，是你需要的吗？"],
+        ["A","Yes! That's exactly the cable I need.","是的！正是我要的线。"],
+        ["B","Here you go, you can borrow it.","给你，借你用。"],
+        ["A","I'll give it back in ten minutes.","我十分钟后还你。"],
+        ["B","No rush.","不急。"]
+      ]},
+      { id: 144, turns: [
+        ["A","Can you turn down the music a little bit?","你能把音乐调小声一点吗？"],
+        ["B","Alright, sorry. Was it too loud?","好的，抱歉。太吵了吗？"],
+        ["A","A little bit. I'm trying to focus on reading.","有一点，我正努力专心看书。"],
+        ["B","My bad, I got carried away.","我的错，我太投入了。"],
+        ["A","Thank you for understanding.","谢谢你理解。"],
+        ["B","No problem at all.","完全没问题。"]
+      ]},
+      { id: 145, turns: [
+        ["A","Could you text me the address later?","晚点能把地址发给我吗？"],
+        ["B","I will. I'll send it to your WeChat.","会的，我发到你微信。"],
+        ["A","Please send it before five, okay?","请在五点前发，好吗？"],
+        ["B","Sure, I won't forget.","好的，我不会忘。"],
+        ["A","That helps a lot. I don't want to get lost.","帮大忙了，我可不想迷路。"],
+        ["B","I'll write it down now to remind myself.","我现在就写下来提醒自己。"]
+      ]}
+    ]
+  },
+  "scene-09": {
+    title: "观点 & 吐槽",
+    icon: "💭",
+    dialogues: [
+      { id: 146, turns: [
+        ["A","I really like this new song on the radio.","我真的很喜欢电台放的这首新歌。"],
+        ["B","Me too. The melody is so catchy.","我也是，旋律太上头了。"],
+        ["A","I keep humming it all day long.","我一整天都在哼它。"],
+        ["B","Same here. The singer has a nice voice.","我也是，歌手的声音很好听。"],
+        ["A","I'm going to save it to my playlist.","我准备把它存进播放列表。"],
+        ["B","Good idea, share it with me later.","好主意，回头分享给我。"]
+      ]},
+      { id: 147, turns: [
+        ["A","I don't like this movie. It's boring.","我不喜欢这部电影，太无聊了。"],
+        ["B","Fair enough. Different people have different tastes.","说得也是，各人口味不同。"],
+        ["A","The plot moves too slowly for me.","对我来说剧情进展太慢了。"],
+        ["B","I actually think it's relaxing.","我反倒觉得它很放松。"],
+        ["A","That's okay, we don't have to agree.","没关系，我们不必意见一致。"],
+        ["B","Exactly.","没错。"]
+      ]},
+      { id: 148, turns: [
+        ["A","That trick you did is awesome!","你刚才那招太厉害了！"],
+        ["B","Right? I practiced it for weeks.","是吧？我练了好几个星期。"],
+        ["A","I couldn't believe how smooth it looked.","真不敢相信看起来那么流畅。"],
+        ["B","It took lots of tries. I messed up many times.","试了好多次，我失败过很多次。"],
+        ["A","Well, it looks perfect now.","不过现在看起来完美了。"],
+        ["B","Thanks, that means a lot.","谢谢，这话对我很重要。"]
+      ]},
+      { id: 149, turns: [
+        ["A","I missed the last bus home. That sucks.","我错过了末班公交，真倒霉。"],
+        ["B","Yeah, that's rough. What are you going to do?","是啊，真够惨的。你打算怎么办？"],
+        ["A","I might have to take an expensive taxi.","我可能得打一辆很贵的出租车。"],
+        ["B","At least you can get home safely.","至少你能安全到家。"],
+        ["A","True, but it will cost me a lot.","话是没错，但会花我很多钱。"],
+        ["B","I get it, that's annoying.","我懂，真烦人。"]
+      ]},
+      { id: 150, turns: [
+        ["A","I agree with your plan. It sounds practical.","我同意你的计划，听起来很可行。"],
+        ["B","Good. I was worried you would think it's risky.","太好了，我还担心你觉得风险大。"],
+        ["A","The risk is small, and the benefit is clear.","风险小，收益又明显。"],
+        ["B","That's what I thought too.","我也是这么想的。"],
+        ["A","Let's start preparing for it.","那我们开始准备吧。"],
+        ["B","Alright.","好。"]
+      ]},
+      { id: 151, turns: [
+        ["A","I don't think so. That idea won't work.","我不这么认为，那个主意行不通。"],
+        ["B","Okay, we disagree. Can you tell me why?","好吧，我们意见不同。能告诉我为什么吗？"],
+        ["A","We don't have enough time to finish it.","我们没有足够的时间完成。"],
+        ["B","Hmm, that's a valid point.","嗯，你说得有道理。"],
+        ["A","We need more time or fewer tasks.","我们需要更多时间，或者更少的任务。"],
+        ["B","I'll think about that.","我会考虑一下。"]
+      ]},
+      { id: 152, turns: [
+        ["A","Maybe we can try it next month.","也许我们可以下个月试试。"],
+        ["B","We'll see. A lot of things can change by then.","到时候再说吧，那时很多东西都可能变了。"],
+        ["A","Right, nothing is certain yet.","对，一切都还没定。"],
+        ["B","Let's keep our options open.","我们保持开放的选择吧。"],
+        ["A","That's the smart way.","这才是明智的做法。"],
+        ["B","Yep.","嗯。"]
+      ]},
+      { id: 153, turns: [
+        ["A","Probably not. I won't join the activity.","可能不行，我不参加这个活动了。"],
+        ["B","Alright. Is there a particular reason?","好吧，有什么特别的原因吗？"],
+        ["A","I have too much homework to finish.","我有太多作业要写。"],
+        ["B","That makes sense. Schoolwork comes first.","说得通，学业要紧。"],
+        ["A","I hope you guys have fun.","希望你们玩得开心。"],
+        ["B","Thank you.","谢谢。"]
+      ]},
+      { id: 154, turns: [
+        ["A","I'm not sure if I can trust that information.","我不确定能否相信那个信息。"],
+        ["B","No worries. We can double-check it online.","别担心，我们可以在网上核实一下。"],
+        ["A","Good idea. News can be misleading sometimes.","好主意，新闻有时会误导人。"],
+        ["B","Definitely, don't believe everything you read.","确实，不能什么都信。"],
+        ["A","I'll look for official sources.","我会找官方来源。"],
+        ["B","That's safe.","那样稳妥。"]
+      ]},
+      { id: 155, turns: [
+        ["A","He quit his job without another one lined up. That's crazy!","他没找好下家就辞职了，太疯狂了！"],
+        ["B","Tell me about it. I was shocked when I heard it.","可不是嘛，我听到时都震惊了。"],
+        ["A","I hope he saved enough money to get by.","希望他存够了钱能撑下去。"],
+        ["B","Me too. It's risky to do that.","我也是，这么做太冒险了。"],
+        ["A","I would never do that.","我绝不会那样做。"],
+        ["B","Same here.","我也是。"]
+      ]},
+      { id: 156, turns: [
+        ["A","Look at this handmade wooden box. That's so cool.","看这个手工木盒，太酷了。"],
+        ["B","I know. The details are really well done.","是啊，细节做得真好。"],
+        ["A","The maker must be very patient.","做它的人一定很有耐心。"],
+        ["B","It takes hours to carve something like this.","雕刻这种东西要花好几个小时。"],
+        ["A","I want to learn woodworking someday.","我想有一天学学木工。"],
+        ["B","That would be awesome.","那会很棒。"]
+      ]},
+      { id: 157, turns: [
+        ["A","I'm tired of this repetitive work every single day.","我厌倦了这种日复一日的重复工作。"],
+        ["B","I get it. It feels like you're stuck in a loop.","我懂，感觉像陷在循环里。"],
+        ["A","Some days I just want to quit.","有些天我真想辞职。"],
+        ["B","Take a break. Go out for fresh air.","歇一歇，出去透透气。"],
+        ["A","Maybe I will take a short walk after finishing this task.","也许我做完这个任务后出去走走。"],
+        ["B","That will help clear your head a little.","那能让你的脑子清醒一点。"]
+      ]},
+      { id: 158, turns: [
+        ["A","Do you think it's a good idea to buy this expensive laptop?","你觉得买这台贵重的笔记本电脑是个好主意吗？"],
+        ["B","It depends on how often you really need it.","取决于你真正需要它的频率。"],
+        ["A","I need it for design work, so performance matters a lot.","我做设计工作需要它，所以性能很重要。"],
+        ["B","Then it might be worth the money.","那可能就物有所值。"],
+        ["A","But I still feel worried about spending so much at once.","但我还是担心一下子花这么多钱。"],
+        ["B","You can compare a few models before making up your mind.","你可以先比较几款再做决定。"]
+      ]},
+      { id: 159, turns: [
+        ["A","I hate waiting in long lines. It wastes so much time.","我讨厌排长队，太浪费时间了。"],
+        ["B","Me neither. Standing here makes me impatient.","我也不喜欢，站在这儿让我很不耐烦。"],
+        ["A","Why are there so many people here today?","今天怎么这么多人？"],
+        ["B","It's the weekend, so everyone comes out to shop.","因为是周末，大家都出来逛街了。"],
+        ["A","I wish they could open more service counters.","真希望他们能多开几个服务窗口。"],
+        ["B","I totally agree with you.","我完全同意。"]
+      ]},
+      { id: 160, turns: [
+        ["A","The traffic today is absolutely terrible.","今天交通简直糟透了。"],
+        ["B","Yeah, we have been moving so slowly for twenty minutes.","是啊，我们都龟速移动二十分钟了。"],
+        ["A","I really hope we won't be late for the meeting.","真希望我们开会不会迟到。"],
+        ["B","Let me send a message to tell them we might be delayed.","我发个消息告诉他们我们可能会晚到。"],
+        ["A","Good thinking. At least they can know our situation.","想得周到，至少他们能了解我们的情况。"],
+        ["B","Right, it's better than letting them wait blindly.","对，总比让他们干等着强。"]
+      ]},
+      { id: 161, turns: [
+        ["A","I think taking the train is better than driving on long trips.","我觉得长途旅行坐火车比开车好。"],
+        ["B","What makes you say that? I prefer driving myself.","你为什么这么说？我更喜欢自己开车。"],
+        ["A","You don't need to focus on steering, and you can enjoy the view.","你不用专注方向盘，还能欣赏风景。"],
+        ["B","That's true, but trains are less flexible.","有道理，但火车没那么灵活。"],
+        ["A","Yeah, you can't stop wherever you want.","是啊，不能想停哪儿就停哪儿。"],
+        ["B","So both ways have their own pros and cons.","所以两种方式各有优缺点。"]
+      ]},
+      { id: 162, turns: [
+        ["A","I don't want to stay up late playing games anymore.","我不想再熬夜打游戏了。"],
+        ["B","That's a wise decision. Late nights drain your energy.","明智的决定，熬夜会消耗你的精力。"],
+        ["A","I feel sleepy and unfocused the next morning.","第二天早上我又困又无法集中精神。"],
+        ["B","Exactly. Sleep affects your whole day.","没错，睡眠影响你的一整天。"],
+        ["A","Starting tomorrow, I will go to bed before eleven.","从明天起，我十一点前上床睡觉。"],
+        ["B","Keep that habit, and you will feel much better soon.","坚持这个习惯，你很快就会感觉好很多。"]
+      ]},
+      { id: 163, turns: [
+        ["A","It seems that our plan may not work as we expected.","看来我们的计划可能不如预期那样顺利。"],
+        ["B","Don't be so negative. We can adjust some steps.","别这么悲观，我们可以调整一些步骤。"],
+        ["A","But we have already run into two big problems.","但我们已经遇到两个大问题了。"],
+        ["B","Problems are normal when we try new things.","尝试新事物时遇到问题很正常。"],
+        ["A","Okay, let's sit down and think of a new solution.","好吧，我们坐下来想个新办法。"],
+        ["B","Sure, two heads are better than one.","好，三个臭皮匠顶个诸葛亮。"]
+      ]},
+      { id: 164, turns: [
+        ["A","I don't believe he forgot the promise he made to us.","我不相信他忘了对我们的承诺。"],
+        ["B","To be honest, I'm not so sure about that.","说实话，我不太确定。"],
+        ["A","He looked sincere when he said it last week.","他上周说的时候看起来很真诚。"],
+        ["B","People sometimes change their minds for hidden reasons.","人们有时会出于隐藏的原因改变主意。"],
+        ["A","Well, we can ask him politely tomorrow.","好吧，我们明天可以礼貌地问问他。"],
+        ["B","That sounds like a calm way to handle this.","听起来是处理这件事的冷静方式。"]
+      ]},
+      { id: 165, turns: [
+        ["A","I'd rather stay home and rest than go to that party.","我宁愿待在家休息，也不去那个派对。"],
+        ["B","No problem at all. You don't have to force yourself.","完全没问题，你不用勉强自己。"],
+        ["A","Crowds make me feel nervous these days.","最近人群让我感到紧张。"],
+        ["B","I understand. Social energy runs out quickly for some people.","我理解，有些人的社交能量消耗得很快。"],
+        ["A","Reading a book and drinking tea sounds much nicer.","看看书喝喝茶听起来好多了。"],
+        ["B","Enjoy your quiet time at home.","好好享受在家安静的时光。"]
+      ]}
+    ]
+  },
+  "scene-10": {
+    title: "爱好 & 休闲",
+    icon: "🎨",
+    dialogues: [
+      { id: 166, turns: [
+        ["A","What do you usually do in your free time?","你空闲时间通常做什么？"],
+        ["B","I love listening to podcasts while cleaning my room.","我喜欢边打扫房间边听播客。"],
+        ["A","That sounds useful. What kind of podcasts do you like?","听起来很实用，你喜欢什么类型的播客？"],
+        ["B","Mostly stories and simple science introductions.","主要是故事和简单的科普介绍。"],
+        ["A","I've never tried podcasts. Are they easy to follow?","我从来没听过播客，容易跟上吗？"],
+        ["B","Yes, you can listen anytime without staring at a screen.","容易，你随时都能听，不用盯着屏幕。"]
+      ]},
+      { id: 167, turns: [
+        ["A","Do you like playing basketball?","你喜欢打篮球吗？"],
+        ["B","Not really. I'm not good at running and jumping.","不太喜欢，我不擅长跑跳。"],
+        ["A","Then what sport do you enjoy?","那你喜欢什么运动？"],
+        ["B","I like swimming. It feels gentle for my joints.","我喜欢游泳，对关节比较温和。"],
+        ["A","Swimming is great exercise. I should try it too.","游泳是很好的运动，我也该试试。"],
+        ["B","We can go to the indoor pool together sometime.","我们可以改天一起去室内泳池。"]
+      ]},
+      { id: 168, turns: [
+        ["A","Have you watched any good shows recently?","最近有看什么好剧吗？"],
+        ["B","Yes, I just finished a warm short drama.","有，我刚看完一部温馨的短剧。"],
+        ["A","What is it about?","讲什么的？"],
+        ["B","It talks about friendship and small happy moments in life.","讲的是友情和生活中微小幸福的时刻。"],
+        ["A","That type suits me. I'm tired of violent plots.","这种类型适合我，我厌倦了暴力剧情。"],
+        ["B","I'll send you its name later.","我回头把剧名发给你。"]
+      ]},
+      { id: 169, turns: [
+        ["A","I'm learning to draw simple sketches these days.","我最近在学画简单的素描。"],
+        ["B","Wow, that's cool. How is it going?","哇，很酷。进展怎么样？"],
+        ["A","Slowly. My lines are still shaky.","很慢，我的线条还是画不稳。"],
+        ["B","Don't rush. Practice makes progress.","别急，熟能生巧。"],
+        ["A","I draw for twenty minutes every evening.","我每天晚上画二十分钟。"],
+        ["B","That steady routine will bring good results.","这样稳定的练习会带来好成果。"]
+      ]},
+      { id: 170, turns: [
+        ["A","Do you play any musical instruments?","你会弹什么乐器吗？"],
+        ["B","I can play the piano a little, just simple tunes.","我会弹一点钢琴，只是些简单的曲子。"],
+        ["A","That's amazing. How long have you learned it?","太厉害了，你学了多久？"],
+        ["B","About one year. I practice three times a week.","大概一年了，我每周练三次。"],
+        ["A","I always wanted to learn an instrument but never started.","我一直想学乐器但从未开始。"],
+        ["B","It's never too late to begin.","开始永远不嫌晚。"]
+      ]},
+      { id: 171, turns: [
+        ["A","I really enjoy gardening on weekends.","我很喜欢周末做园艺。"],
+        ["B","That's such a peaceful hobby. What plants do you grow?","真是个宁静的爱好，你都种些什么植物？"],
+        ["A","Mostly succulents and a few potted flowers.","大多是多肉和一些盆栽花。"],
+        ["B","Are they hard to take care of?","它们难照料吗？"],
+        ["A","Succulents are easy. They don't need too much water.","多肉很容易养，不需要太多水。"],
+        ["B","I killed my plant because I watered it too often.","我的植物就是被我浇太多水浇死的。"]
+      ]},
+      { id: 172, turns: [
+        ["A","Would you like to play badminton with us this afternoon?","今天下午想和我们一起打羽毛球吗？"],
+        ["B","I want to, but my ankle still hurts.","我想去，但我的脚踝还疼。"],
+        ["A","Oh no, did you hurt it before?","天哪，之前就伤过吗？"],
+        ["B","Yeah, I twisted it last month. It hasn't fully recovered.","是啊，上个月扭伤了，还没完全好。"],
+        ["A","Take good care of yourself then. Don't push it.","那你要好好照顾自己，别勉强。"],
+        ["B","Thanks. I'll cheer for you guys from the side.","谢谢，我会在旁边给你们加油。"]
+      ]},
+      { id: 173, turns: [
+        ["A","I love travelling to quiet little towns.","我喜欢去安静的小镇旅行。"],
+        ["B","I know that feeling. Away from noisy big cities.","我懂那种感觉，远离喧嚣的大城市。"],
+        ["A","The air is fresh and people are slow and friendly.","空气清新，人们节奏慢又友好。"],
+        ["B","Do you prefer travelling alone or with friends?","你更喜欢独自旅行还是和朋友一起？"],
+        ["A","Sometimes alone, sometimes with one close friend.","有时一个人，有时和一个好朋友。"],
+        ["B","Solo travel gives you more freedom.","独自旅行给你更多自由。"]
+      ]},
+      { id: 174, turns: [
+        ["A","Do you like video games?","你喜欢电子游戏吗？"],
+        ["B","Yes, but I only play for an hour at most each day.","喜欢，但我每天最多玩一小时。"],
+        ["A","What game do you play most?","你玩得最多的是什么游戏？"],
+        ["B","A relaxing puzzle game, not competitive ones.","一款放松的益智游戏，不是竞技类的。"],
+        ["A","I stay away from competitive games. They make me angry.","我远离竞技游戏，它们让我生气。"],
+        ["B","Exactly, games should help us relax.","没错，游戏应该帮我们放松。"]
+      ]},
+      { id: 175, turns: [
+        ["A","What kind of movies do you prefer?","你喜欢什么类型的电影？"],
+        ["B","I prefer documentaries. They teach me real knowledge.","我更喜欢纪录片，它们教给我真实的知识。"],
+        ["A","I rarely watch documentaries. They feel serious.","我很少看纪录片，感觉太严肃。"],
+        ["B","Some are very lively, with beautiful footage.","有些很生动，画面很美。"],
+        ["A","Maybe I can pick one light documentary this weekend.","也许这周末我可以挑一部轻松的纪录片。"],
+        ["B","I can recommend one for you.","我可以给你推荐一部。"]
+      ]},
+      { id: 176, turns: [
+        ["A","I like baking cookies when I feel bored.","我无聊的时候喜欢烤饼干。"],
+        ["B","That smells wonderful. Do you share them with others?","闻起来真香，你会分给别人吗？"],
+        ["A","Sure, I give some to my neighbours and colleagues.","会，我会分给邻居和同事。"],
+        ["B","They must love getting homemade snacks.","他们一定很喜欢收到自制零食。"],
+        ["A","Baking itself calms me down, even if I burn a few.","烘焙本身让我平静，即使偶尔烤糊几个。"],
+        ["B","Mistakes are part of the fun.","小失误也是乐趣的一部分。"]
+      ]},
+      { id: 177, turns: [
+        ["A","Do you read fiction or non-fiction books?","你读小说还是非虚构类书籍？"],
+        ["B","Both. Fiction lets me escape, non-fiction teaches me.","都读，小说让我逃离现实，非虚构教我知识。"],
+        ["A","I used to only read novels.","我以前只读小说。"],
+        ["B","Non-fiction is helpful for daily work and thinking.","非虚构类对日常工作和思考很有帮助。"],
+        ["A","I will try a simple non-fiction book next.","我接下来想尝试一本简单的非虚构书。"],
+        ["B","Start with an easy one, not too thick.","从简单的开始，别太厚。"]
+      ]},
+      { id: 178, turns: [
+        ["A","I go cycling along the river every Sunday morning.","我每周日早上沿河骑行。"],
+        ["B","That sounds fantastic. Is the road flat?","听起来太棒了，路平坦吗？"],
+        ["A","Yes, there is a special lane for cyclists.","平坦，有专门的自行车道。"],
+        ["B","Do you go alone?","你一个人去吗？"],
+        ["A","Sometimes my neighbour joins me.","有时我的邻居会加入。"],
+        ["B","Cycling is a great way to start the day.","骑行是开启一天的好方式。"]
+      ]},
+      { id: 179, turns: [
+        ["A","Are you interested in photography?","你对摄影感兴趣吗？"],
+        ["B","A little. I take photos of food and sunsets.","有一点，我拍食物和日落。"],
+        ["A","I notice your photos always have warm colours.","我注意到你的照片总是暖色调。"],
+        ["B","I just like soft lighting instead of bright harsh sunlight.","我只是喜欢柔和的光线，不喜欢刺眼的阳光。"],
+        ["A","I always take blurry photos. My hands shake.","我总拍出模糊的照片，我的手会抖。"],
+        ["B","Try holding your breath a little when pressing the shutter.","按快门时试着屏住呼吸。"]
+      ]},
+      { id: 180, turns: [
+        ["A","I want to start collecting postcards.","我想开始收集明信片。"],
+        ["B","That's a lovely hobby. Where do you get them?","很可爱的爱好，你从哪儿弄到它们？"],
+        ["A","Bookstores and scenic spots sell special postcards.","书店和景点有卖特色明信片。"],
+        ["B","You can also exchange postcards with people online.","你还可以在网上和别人交换明信片。"],
+        ["A","Oh, I haven't thought about that.","哦，我没想到这个。"],
+        ["B","It's fun to receive cards sent from different cities.","收到来自不同城市的明信片很有趣。"]
+      ]}
+    ]
+  },
+  "scene-11": {
+    title: "健康 & 情绪",
+    icon: "💚",
+    dialogues: [
+      { id: 181, turns: [
+        ["A","I've been feeling tired these days no matter how much I sleep.","我最近总觉得累，不管睡多少都一样。"],
+        ["B","Have you checked whether you get enough exercise?","你检查过自己运动量够不够吗？"],
+        ["A","I sit at my desk all day and barely move.","我一整天坐在桌前，几乎不动。"],
+        ["B","That's probably the reason. Sitting too long drains you.","很可能就是这个原因，坐太久会让人疲惫。"],
+        ["A","I should stand up and walk around every hour.","我应该每小时站起来走动走动。"],
+        ["B","Yes, small movements make a big difference.","是的，小动作也能有大改变。"]
+      ]},
+      { id: 182, turns: [
+        ["A","My throat hurts a little this morning.","今天早上我的喉咙有点疼。"],
+        ["B","Did you drink enough warm water yesterday?","你昨天喝够温水了吗？"],
+        ["A","Not really. I only drank cold drinks.","没喝够，我只喝了冷饮。"],
+        ["B","Cold things can irritate your throat.","冷的东西会刺激喉咙。"],
+        ["A","I will drink warm water and stay away from spicy food today.","我今天会喝温水，不吃辣。"],
+        ["B","Hope you feel better soon.","希望你快点好起来。"]
+      ]},
+      { id: 183, turns: [
+        ["A","I get nervous easily before speaking in front of people.","在众人面前讲话前我很容易紧张。"],
+        ["B","Lots of people have the same problem, including me.","很多人都有同样的问题，包括我。"],
+        ["A","My hands shake and my mind goes blank.","我的手发抖，脑子一片空白。"],
+        ["B","Take three slow deep breaths before you start talking.","开口前做三次缓慢的深呼吸。"],
+        ["A","Does that trick really work?","这招真的有用吗？"],
+        ["B","It helps me calm down every time.","每次都帮我平静下来。"]
+      ]},
+      { id: 184, turns: [
+        ["A","I'm trying to cut down on sugary drinks.","我在努力少喝含糖饮料。"],
+        ["B","Good for you. Too much sugar is bad for your body.","对你有好处，糖太多对身体不好。"],
+        ["A","It's hard. I used to drink bubble tea every day.","很难，我以前每天喝奶茶。"],
+        ["B","You can switch to plain tea with a little honey first.","你可以先改喝加一点蜂蜜的清茶。"],
+        ["A","That sounds like a gentle way to change the habit.","听起来是温和改变习惯的方法。"],
+        ["B","Don't force yourself to quit all at once.","别强迫自己一下子全戒掉。"]
+      ]},
+      { id: 185, turns: [
+        ["A","I can never fall asleep quickly at night.","我晚上总是很难快速入睡。"],
+        ["B","Do you scroll on your phone right before bed?","你睡前会刷手机吗？"],
+        ["A","Yeah, I usually watch short videos until I feel sleepy.","会，我通常刷短视频直到犯困。"],
+        ["B","The screen light tricks your brain into staying awake.","屏幕的光会让大脑误以为要保持清醒。"],
+        ["A","Maybe I should put my phone outside my bedroom.","也许我该把手机放到卧室外。"],
+        ["B","That's a very effective method.","这是很有效的方法。"]
+      ]},
+      { id: 186, turns: [
+        ["A","I feel stressed about the coming exam.","我对即将到来的考试感到压力很大。"],
+        ["B","It's normal to feel nervous before an important test.","重要考试前紧张是正常的。"],
+        ["A","I keep worrying I will forget everything I learned.","我一直担心会把学的东西全忘掉。"],
+        ["B","Review step by step, and don't cram everything in one night.","一步一步复习，别一夜之间突击。"],
+        ["A","I plan to review for two hours and then rest.","我打算复习两小时然后休息。"],
+        ["B","Keep a steady pace. You have prepared enough.","保持稳定节奏，你已经准备得够多了。"]
+      ]},
+      { id: 187, turns: [
+        ["A","I gained some weight recently. My jeans feel tight.","我最近胖了，牛仔裤穿着有点紧。"],
+        ["B","Don't be too hard on yourself. Weight changes naturally.","别对自己太苛刻，体重自然会有波动。"],
+        ["A","I want to eat lighter and walk more.","我想吃得清淡些，多走走路。"],
+        ["B","No need for strict diets. Small changes last longer.","不需要严格节食，小改变更持久。"],
+        ["A","I will add vegetables to every meal.","我会每餐都加蔬菜。"],
+        ["B","That is a healthy and sustainable choice.","那是健康又可持续的选择。"]
+      ]},
+      { id: 188, turns: [
+        ["A","I feel lonely sometimes even when I am surrounded by people.","有时即使身边都是人，我也感到孤独。"],
+        ["B","I totally understand that feeling. Loneliness is strange.","我完全理解那种感觉，孤独很奇妙。"],
+        ["A","It's not about how many people are around you.","这跟你身边有多少人无关。"],
+        ["B","It's about whether someone truly gets you.","而是有没有人真正懂你。"],
+        ["A","Talking with you makes me feel much better now.","和你聊聊我现在感觉好多了。"],
+        ["B","You can always come talk to me anytime.","你随时都可以来找我聊。"]
+      ]},
+      { id: 189, turns: [
+        ["A","My eyes feel dry after staring at the screen all afternoon.","盯着屏幕一下午，我的眼睛很干。"],
+        ["B","Remember the 20-20-20 rule to protect your eyes.","记住20-20-20法则来保护眼睛。"],
+        ["A","What is that rule again?","那个法则是什么来着？"],
+        ["B","Every twenty minutes, look at something twenty feet away for twenty seconds.","每二十分钟，看二十英尺（约6米）外的东西二十秒。"],
+        ["A","I keep forgetting it when I focus on work.","我一专心工作就老忘记。"],
+        ["B","Set a simple reminder on your computer.","在电脑上设个简单的提醒。"]
+      ]},
+      { id: 190, turns: [
+        ["A","I feel much happier after taking a walk outside.","出去走走之后我感觉开心多了。"],
+        ["B","Nature helps lift our mood without us noticing.","大自然会在不知不觉中提升我们的心情。"],
+        ["A","Fresh air and sunlight really clear my messy thoughts.","新鲜空气和阳光真的能理清我混乱的思绪。"],
+        ["B","We should not stay indoors all day long.","我们不该整天待在室内。"],
+        ["A","From now on I will go out for a short walk daily.","从现在起我每天出去散会儿步。"],
+        ["B","That is such a nice little habit to build.","那是很值得养成的小习惯。"]
+      ]}
+    ]
+  },
+  "scene-12": {
+    title: "工作 & 学习",
+    icon: "💼",
+    dialogues: [
+      { id: 191, turns: [
+        ["A","Did you finish the homework for today?","你今天的作业写完了吗？"],
+        ["B","Not yet. The math questions are really tricky.","还没，数学题太难了。"],
+        ["A","Which part is confusing you?","哪一部分把你难住了？"],
+        ["B","I can't figure out how to set up the equation.","我想不出怎么列方程。"],
+        ["A","Let me show you how I worked through this type.","让我教你怎么解这类题。"],
+        ["B","Thank you so much. I was stuck for half an hour.","太谢谢了，我卡了半个小时。"]
+      ]},
+      { id: 192, turns: [
+        ["A","We have to hand in this report by Friday.","我们必须在周五前交这份报告。"],
+        ["B","I know. I've written half of it already.","我知道，我已经写了一半了。"],
+        ["A","What part are you working on right now?","你现在在写哪部分？"],
+        ["B","I'm organizing the data and adding charts.","我在整理数据和加图表。"],
+        ["A","Data sorting always takes me the longest time.","整理数据总是花我最长时间。"],
+        ["B","Me too, but charts make the report easier to read.","我也是，但图表让报告更容易读。"]
+      ]},
+      { id: 193, turns: [
+        ["A","Do you want to study together in the library tomorrow?","明天想一起去图书馆学习吗？"],
+        ["B","Sure, that would help me stay focused.","好，那能帮我保持专注。"],
+        ["A","The library is quiet and there are desks for us.","图书馆安静，也有桌子给我们。"],
+        ["B","I usually get distracted easily when I study at home.","我在家学习时很容易分心。"],
+        ["A","Same here. My bed makes me want to nap.","我也是，我的床总让我想打盹。"],
+        ["B","Let's meet at nine tomorrow morning.","我们明早九点见吧。"]
+      ]},
+      { id: 194, turns: [
+        ["A","The new boss is very strict about deadlines.","新老板对截止日期要求很严格。"],
+        ["B","I heard about that. He checks every task carefully.","我听说过，他仔细检查每项任务。"],
+        ["A","I need to double-check my work before sending it.","我发出去之前得反复检查工作。"],
+        ["B","Carefulness can help us avoid mistakes.","细心能帮我们避免错误。"],
+        ["A","I will make a checklist for every project.","我会为每个项目列个清单。"],
+        ["B","That's a smart way to prevent careless errors.","那是防止粗心错误的好办法。"]
+      ]},
+      { id: 195, turns: [
+        ["A","I want to improve my oral English quickly.","我想快速提高英语口语。"],
+        ["B","Consistency matters more than rushing.","坚持比着急更重要。"],
+        ["A","What practice method works best for you?","什么练习方法对你最有效？"],
+        ["B","I read aloud for fifteen minutes every morning.","我每天早上大声朗读十五分钟。"],
+        ["A","Should I memorise many sentences?","我需要背很多句子吗？"],
+        ["B","You can start with simple ones you can use in real talks.","你可以从实际对话能用的简单句子开始。"]
+      ]},
+      { id: 196, turns: [
+        ["A","I made a silly mistake in today's presentation.","我今天演示时犯了个低级错误。"],
+        ["B","Don't beat yourself up. Everyone slips sometimes.","别自责了，人人都有失误的时候。"],
+        ["A","I paused and forgot what I wanted to say.","我卡壳了，忘了要说的话。"],
+        ["B","The audience probably didn't even notice it.","观众可能根本没注意到。"],
+        ["A","Next time I will prepare note cards.","下次我会准备提示卡。"],
+        ["B","Notes are helpful when your mind goes blank.","脑子空白时提示卡很有用。"]
+      ]},
+      { id: 197, turns: [
+        ["A","Is group project easier or harder than individual work?","小组项目比个人作业更容易还是更难？"],
+        ["B","It depends on your teammates.","取决于你的队友。"],
+        ["A","Some people don't take their part seriously.","有些人不好好完成自己那部分。"],
+        ["B","That makes extra work fall on the rest of us.","那就让我们其他人干更多活。"],
+        ["A","We should split tasks clearly at the very beginning.","我们应该一开始就明确分工。"],
+        ["B","Right, clear division saves lots of trouble later.","对，明确分工能省去很多麻烦。"]
+      ]},
+      { id: 198, turns: [
+        ["A","I'm thinking about taking an online course.","我在考虑报一门在线课程。"],
+        ["B","What subject do you want to learn?","你想学什么科目？"],
+        ["A","Basic video editing. It's useful for my job.","基础视频剪辑，对我的工作有用。"],
+        ["B","Online courses are flexible. You learn at your own speed.","在线课程很灵活，可以按自己的节奏学。"],
+        ["A","I'm worried I won't keep up.","我担心跟不上。"],
+        ["B","Set a fixed study time every week to stay on track.","每周定个固定的学习时间，保持进度。"]
+      ]},
+      { id: 199, turns: [
+        ["A","I got positive feedback on my work today.","我今天的工作得到了好评。"],
+        ["B","Congratulations! You've put so much effort into it.","恭喜！你付出了那么多努力。"],
+        ["A","I was so nervous before sending it over.","发出去之前我特别紧张。"],
+        ["B","Your hard work deserves this praise.","你的努力值得这份称赞。"],
+        ["A","It encourages me to keep doing better.","这鼓励我继续做得更好。"],
+        ["B","Keep this momentum going.","保持这个势头。"]
+      ]},
+      { id: 200, turns: [
+        ["A","The semester is almost over. Time flew so fast.","这个学期快结束了，时间过得真快。"],
+        ["B","It really did. I still remember the first day of class.","真的，我还记得开学第一天。"],
+        ["A","I learned a lot, but I also wasted some time.","我学到了很多，但也浪费了一些时间。"],
+        ["B","No regrets. We can adjust our plans next term.","别后悔，下学期我们可以调整计划。"],
+        ["A","I will make a better schedule for myself.","我会给自己做个更好的时间表。"],
+        ["B","That sounds like a great plan.","听起来是个好计划。"]
+      ]}
+    ]
+  }
+};</script>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC",
+      "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+    min-height: 100vh;
+    padding: 20px;
+    color: #e8e8e8;
+  }
+
+  .app { max-width: 1080px; margin: 0 auto; }
+
+  /* ========== 顶部标题 ========== */
+  .header {
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 16px;
+    padding: 22px 28px;
+    margin-bottom: 16px;
+    backdrop-filter: blur(10px);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  .header h1 {
+    font-size: 22px;
+    background: linear-gradient(135deg, #00e5ff, #d500f9);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    font-weight: 800;
+  }
+
+  .header .subtitle { font-size: 12px; color: #8a8fa3; margin-top: 4px; }
+
+  .header-stats { display: flex; gap: 14px; font-size: 12px; }
+  .header-stats .pill {
+    background: rgba(0, 229, 255, 0.12);
+    color: #00e5ff;
+    padding: 6px 14px;
+    border-radius: 20px;
+    border: 1px solid rgba(0, 229, 255, 0.3);
+    font-weight: 600;
+  }
+
+  /* ========== 快捷按钮栏 ========== */
+  .quick-bar {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 12px;
+    padding: 12px 14px;
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(0,229,255,0.15);
+    border-radius: 12px;
+  }
+  .quick-row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 10px;
+    width: 100%;
+  }
+
+  .quick-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 10px 18px;
+    border-radius: 10px;
+    font-size: 14px;
+    font-weight: 700;
+    border: none;
+    cursor: pointer;
+    transition: all .15s;
+    font-family: inherit;
+    white-space: nowrap;
+  }
+  .quick-btn:active { transform: translateY(1px); }
+  .quick-btn.primary {
+    background: linear-gradient(135deg, #00e5ff, #00b8d9);
+    color: #0a1929;
+    box-shadow: 0 4px 16px rgba(0,229,255,0.3);
+  }
+  .quick-btn.primary:hover { box-shadow: 0 6px 22px rgba(0,229,255,0.45); transform: translateY(-1px); }
+  .quick-btn.secondary {
+    background: rgba(255,255,255,0.08);
+    color: #d8dce8;
+    border: 1px solid rgba(255,255,255,0.15);
+  }
+  .quick-btn.secondary:hover { background: rgba(255,255,255,0.14); transform: translateY(-1px); }
+  .quick-btn.hero {
+    padding: 16px 64px;
+    font-size: 18px;
+    font-weight: 800;
+    min-width: 260px;
+    border-radius: 14px;
+    letter-spacing: 1px;
+  }
+
+  /* ========== 主面板 ========== */
+  .panel {
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 16px;
+    padding: 26px;
+    margin-bottom: 16px;
+    backdrop-filter: blur(10px);
+  }
+
+  /* ========== 场景导航 ========== */
+  .scene-nav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .scene-tab {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 14px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    background: rgba(255, 255, 255, 0.04);
+    color: #b8bdcf;
+    transition: all .15s;
+    white-space: nowrap;
+  }
+  .scene-tab:hover { background: rgba(0, 229, 255, 0.08); border-color: rgba(0,229,255,0.3); }
+  .scene-tab.active {
+    background: linear-gradient(135deg, rgba(0,229,255,0.2), rgba(213,0,249,0.15));
+    border-color: rgba(0, 229, 255, 0.5);
+    color: #00e5ff;
+  }
+  .scene-tab .count {
+    font-size: 10.5px;
+    opacity: 0.7;
+    background: rgba(255, 255, 255, 0.08);
+    padding: 1px 6px;
+    border-radius: 8px;
+  }
+
+  /* ========== 对话网格 ========== */
+  .dialogue-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+    gap: 12px;
+  }
+  .dialogue-card {
+    background: rgba(255, 255, 255, 0.04);
+    border: 1.5px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    padding: 14px 16px;
+    cursor: pointer;
+    transition: all 0.2s;
+    position: relative;
+    overflow: hidden;
+  }
+  .dialogue-card::before {
+    content: "";
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, #00e5ff, #d500f9);
+    opacity: 0.5;
+  }
+  .dialogue-card:hover {
+    border-color: #00e5ff;
+    background: rgba(0, 229, 255, 0.06);
+    transform: translateY(-2px);
+  }
+  .dialogue-card.done {
+    border-color: rgba(39, 174, 96, 0.5);
+  }
+  .dialogue-card.done::before {
+    background: linear-gradient(90deg, #27ae60, #2ecc71);
+  }
+  .dialogue-card.current {
+    border-color: #00e5ff;
+    background: rgba(0, 229, 255, 0.1);
+    box-shadow: 0 0 0 3px rgba(0, 229, 255, 0.15);
+  }
+  .dialogue-card .dc-id {
+    font-size: 11px;
+    color: #8a8fa3;
+    font-family: "SF Mono", Monaco, monospace;
+    margin-bottom: 4px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .dialogue-card .dc-done-tag {
+    color: #50e3c2;
+    font-size: 10px;
+    font-weight: 700;
+  }
+  .dialogue-card .dc-preview {
+    font-size: 13.5px;
+    color: #fff;
+    line-height: 1.4;
+    margin-bottom: 8px;
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    min-height: 38px;
+  }
+  .dialogue-card .dc-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 11px;
+  }
+  .dialogue-card .dc-progress { color: #f39c12; font-weight: 700; font-family: "SF Mono", Monaco, monospace; }
+  .dialogue-card .dc-progress.full { color: #27ae60; }
+  .dialogue-card .dc-turns { color: #6a7090; }
+
+  /* ========== 练习子页面 ========== */
+  .practice-screen {
+    position: fixed; inset: 0; z-index: 150;
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+    transform: translateY(100%); visibility: hidden;
+    transition: transform .28s ease, visibility .28s;
+  }
+  .practice-screen.open { transform: translateY(0); visibility: visible; }
+  body.practice-open { overflow: hidden; }
+
+  .practice-panel {
+    max-width: 1080px; margin: 0 auto; width: 100%; height: 100%;
+    display: flex; flex-direction: column;
+  }
+
+  /* 顶栏 */
+  .ps-topbar {
+    flex: none; display: flex; flex-direction: column; gap: 8px;
+    padding: 10px 14px; padding-top: calc(10px + env(safe-area-inset-top));
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    background: rgba(26, 26, 46, 0.85); backdrop-filter: blur(10px);
+  }
+  .ps-topbar-actions {
+    display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
+  }
+  .ps-back {
+    background: rgba(255, 255, 255, 0.08); color: #d8dce8; flex: none;
+    border: 1px solid rgba(255, 255, 255, 0.15); border-radius: 10px;
+    padding: 9px 14px; font-size: 14px; cursor: pointer; font-family: inherit;
+  }
+  .ps-back:active { background: rgba(255, 255, 255, 0.18); }
+  .ps-progress {
+    font-size: 12px; color: #8a8fa3; margin-left: auto;
+    font-variant-numeric: tabular-nums;
+  }
+  .ps-title {
+    font-size: 14px; color: #d8dce8; font-weight: 600;
+  }
+  .ps-dialogue-tag {
+    background: rgba(0, 229, 255, 0.15);
+    color: #00e5ff;
+    padding: 3px 10px;
+    border-radius: 12px;
+    font-size: 11px;
+    font-weight: 700;
+  }
+
+  /* 中部可滚动区 */
+  .ps-scroll { flex: 1; overflow-y: auto; padding: 14px; -webkit-overflow-scrolling: touch; }
+
+  /* 聊天记录 */
+  .chat-history {
+    display: flex; flex-direction: column; gap: 8px;
+    margin-bottom: 16px;
+  }
+  .chat-bubble {
+    display: flex; gap: 8px; align-items: flex-start;
+    animation: bubbleIn 0.3s ease;
+  }
+  @keyframes bubbleIn {
+    from { opacity: 0; transform: translateY(6px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .chat-speaker {
+    flex: none;
+    width: 26px; height: 26px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 12px; font-weight: 800;
+  }
+  .chat-speaker.A { background: rgba(0, 229, 255, 0.2); color: #00e5ff; border: 1px solid rgba(0,229,255,0.4); }
+  .chat-speaker.B { background: rgba(213, 0, 249, 0.2); color: #e879f9; border: 1px solid rgba(213,0,249,0.4); }
+  .chat-content {
+    flex: 1;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 10px;
+    padding: 9px 12px;
+    font-size: 13.5px;
+    color: #a8afc0;
+    line-height: 1.5;
+  }
+  .chat-content .chat-cn {
+    font-size: 11.5px;
+    color: #6a7090;
+    margin-top: 4px;
+  }
+  .chat-check {
+    color: #27ae60;
+    font-size: 12px;
+    margin-left: 4px;
+  }
+
+  /* 当前句子卡片 */
+  .example-box {
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 12px;
+    padding: 20px 24px;
+    margin-bottom: 16px;
+    border: 1px solid rgba(255, 255, 255, 0.06);
+  }
+  .example-old {
+    color: #6a7090;
+    font-size: 13px;
+    margin-bottom: 8px;
+    font-style: italic;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .example-arrow {
+    color: #f39c12;
+    font-size: 14px;
+    margin-bottom: 10px;
+    font-weight: 700;
+  }
+  .example-new {
+    font-size: 24px;
+    line-height: 1.65;
+    letter-spacing: 0.5px;
+    font-weight: 500;
+    word-break: break-word;
+    text-align: left;
+    user-select: none;
+    min-height: 40px;
+  }
+  .example-new .char {
+    position: relative;
+    padding: 2px 1px;
+    border-radius: 4px;
+    color: #4a5070;
+    transition: color 0.1s, background 0.1s;
+  }
+  .example-new .char.correct { color: #27ae60; }
+  .example-new .char.incorrect {
+    color: #e74c3c;
+    background: rgba(231, 76, 60, 0.18);
+  }
+  .example-new .char.current::after {
+    content: "";
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: #00e5ff;
+    border-radius: 2px;
+    animation: blink 0.9s infinite;
+  }
+  .example-new .char.masked { color: transparent; }
+  @keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.25; }
+  }
+  .example-cn {
+    margin-top: 12px;
+    color: #8a8fa3;
+    font-size: 13.5px;
+    font-style: italic;
+  }
+
+  /* 语音控制 */
+  .ps-voice-row { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-bottom: 14px; }
+  .voice-controls {
+    display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+    padding: 4px 10px; border-radius: 14px;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+  }
+  .auto-speak-toggle {
+    display: flex; align-items: center; gap: 6px; font-size: 12px;
+    color: rgba(255, 255, 255, 0.6); cursor: pointer; user-select: none;
+    padding: 2px 6px; border-radius: 8px; transition: all .15s; white-space: nowrap;
+  }
+  .auto-speak-toggle:hover { background: rgba(255, 255, 255, 0.07); }
+  .auto-speak-toggle.on { color: #00e5ff; background: rgba(0, 229, 255, 0.1); }
+  .auto-speak-toggle .switch {
+    width: 26px; height: 14px; border-radius: 8px; background: rgba(255,255,255,0.15);
+    position: relative; transition: background .2s; flex-shrink: 0;
+  }
+  .auto-speak-toggle .switch::after {
+    content: ""; position: absolute; width: 10px; height: 10px; border-radius: 50%;
+    background: #fff; top: 2px; left: 2px; transition: left .2s;
+  }
+  .auto-speak-toggle.on .switch { background: rgba(0, 229, 255, 0.5); }
+  .auto-speak-toggle.on .switch::after { left: 14px; }
+
+  .voice-controls select {
+    background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.1);
+    color: #fff; border-radius: 8px; padding: 3px 8px; font-size: 11.5px;
+    max-width: 180px;
+  }
+  .voice-controls select option { background: #0a1628; }
+  .rate-control { display: flex; align-items: center; gap: 4px; }
+  .rate-control input[type=range] {
+    -webkit-appearance: none; appearance: none;
+    background: rgba(255,255,255,0.1); height: 4px; border-radius: 2px;
+    width: 80px; cursor: pointer;
+  }
+  .rate-control input[type=range]::-webkit-slider-thumb {
+    -webkit-appearance: none; appearance: none;
+    width: 14px; height: 14px; border-radius: 50%;
+    background: #00e5ff; cursor: pointer; box-shadow: 0 0 6px rgba(0,229,255,0.6);
+  }
+  .rate-control input[type=range]::-moz-range-thumb {
+    width: 14px; height: 14px; border-radius: 50%;
+    background: #00e5ff; cursor: pointer; border: none;
+  }
+
+  /* 统计栏 */
+  .stats-bar {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 8px;
+  }
+  .stat-card {
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 10px;
+    padding: 8px 6px;
+    text-align: center;
+  }
+  .stat-label { font-size: 10.5px; color: #8a8fa3; margin-bottom: 2px; }
+  .stat-value { font-size: 18px; font-weight: 800; color: #fff; }
+  .stat-value.wrong { color: #ff6b6b; }
+  .stat-value.wrong.zero { color: #50e3c2; }
+
+  /* 底部固定区 */
+  .ps-bottom {
+    flex: none; max-height: 48vh; overflow-y: auto;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    background: rgba(22, 33, 62, 0.94); backdrop-filter: blur(10px);
+    padding: 10px 14px; padding-bottom: calc(12px + env(safe-area-inset-bottom));
+  }
+
+  /* 乱序词条 */
+  .scramble-bar {
+    background: rgba(0, 229, 255, 0.04); border: 1px dashed rgba(0, 229, 255, 0.28);
+    border-radius: 12px; padding: 12px 14px; margin-bottom: 10px;
+  }
+  .scramble-title {
+    font-size: 12px; color: #6a7090; margin-bottom: 10px; line-height: 1.6;
+  }
+  .scramble-title b { color: #00e5ff; font-weight: 600; }
+  .word-chips { display: flex; flex-wrap: wrap; gap: 10px; }
+  .chip {
+    background: rgba(255, 255, 255, 0.06); border: 1px solid rgba(255, 255, 255, 0.14);
+    color: #e8e8e8; border-radius: 10px; padding: 10px 14px; user-select: none;
+    font-size: 17px; line-height: 1.3; letter-spacing: 0.4px; transition: all .15s;
+    cursor: pointer; min-height: 46px;
+    display: inline-flex; align-items: center;
+  }
+  .chip:hover {
+    background: rgba(0, 229, 255, 0.18); border-color: rgba(0, 229, 255, 0.5); color: #00e5ff;
+  }
+  .chip.used {
+    opacity: 0.3; text-decoration: line-through;
+    background: rgba(39, 174, 96, 0.1); border-color: rgba(39, 174, 96, 0.3);
+    cursor: default;
+  }
+  .chip.wrong {
+    animation: chipShake .3s; background: rgba(231, 76, 60, 0.2);
+    border-color: rgba(231, 76, 60, 0.6); color: #e74c3c;
+  }
+  @keyframes chipShake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-4px); }
+    75% { transform: translateX(4px); }
+  }
+
+  /* 输入框 */
+  .input-wrapper { position: relative; margin-bottom: 10px; }
+  #typingInput {
+    width: 100%;
+    padding: 14px 16px;
+    font-size: 18px;
+    border: 2px dashed rgba(0, 229, 255, 0.35);
+    border-radius: 12px;
+    outline: none;
+    font-family: inherit;
+    background: rgba(0, 229, 255, 0.04);
+    color: #e8e8e8;
+    cursor: default;
+  }
+  #typingInput:focus { border-color: rgba(0, 229, 255, 0.5); box-shadow: none; }
+  .hint {
+    font-size: 11.5px; color: #6a7090; text-align: center; margin-top: 6px;
+  }
+
+  /* 主页面空状态 & 提示 */
+  .empty-state {
+    text-align: center; padding: 40px 20px; color: #6a7090;
+  }
+  .empty-state .icon { font-size: 56px; margin-bottom: 14px; opacity: 0.5; }
+
+  /* 弹出提示 */
+  .popup {
+    position: fixed;
+    top: 30%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(0);
+    font-size: 44px;
+    font-weight: 900;
+    pointer-events: none;
+    z-index: 200;
+    text-align: center;
+    opacity: 0;
+  }
+  .popup.combo { color: #f39c12; text-shadow: 0 4px 20px rgba(243, 156, 18, 0.5); }
+  .popup.master { color: #27ae60; text-shadow: 0 4px 20px rgba(39, 174, 96, 0.5); }
+  .popup.show { animation: popAnim 1.2s ease-out; }
+  @keyframes popAnim {
+    0% { transform: translate(-50%, -50%) scale(0.2); opacity: 0; }
+    25% { transform: translate(-50%, -55%) scale(1.15); opacity: 1; }
+    60% { transform: translate(-50%, -65%) scale(1); opacity: 1; }
+    100% { transform: translate(-50%, -90%) scale(0.85); opacity: 0; }
+  }
+
+  /* 完成弹窗 */
+  .round-modal-overlay {
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(4px);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 300;
+    padding: 20px;
+  }
+  .round-modal-overlay.show { display: flex; animation: fadeIn 0.3s ease; }
+  @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+  .round-modal {
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+    border: 1px solid rgba(39, 174, 96, 0.4);
+    border-radius: 20px;
+    padding: 32px 36px;
+    max-width: 520px;
+    width: 100%;
+    text-align: center;
+    box-shadow: 0 8px 60px rgba(39, 174, 96, 0.2);
+    animation: slideUp 0.4s ease;
+  }
+  @keyframes slideUp {
+    from { transform: translateY(30px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+  }
+  .round-modal .icon { font-size: 52px; margin-bottom: 12px; }
+  .round-modal h2 { font-size: 21px; color: #27ae60; margin-bottom: 8px; }
+  .round-modal .stats {
+    display: flex; gap: 14px; justify-content: center; margin: 20px 0; flex-wrap: wrap;
+  }
+  .round-modal .stat {
+    background: rgba(255,255,255,0.06); border-radius: 12px; padding: 10px 16px;
+  }
+  .round-modal .stat-val { font-size: 22px; font-weight: 800; color: #50e3c2; }
+  .round-modal .stat-lbl { font-size: 11px; color: #888; margin-top: 2px; }
+  .round-modal .btns {
+    display: flex; gap: 12px; justify-content: center; margin-top: 20px; flex-wrap: wrap;
+  }
+  .round-modal button {
+    padding: 11px 22px; border-radius: 12px; font-size: 14px; font-weight: 600;
+    cursor: pointer; border: none; transition: transform .15s, box-shadow .15s;
+  }
+  .round-modal button:hover { transform: translateY(-2px); }
+  .round-modal .btn-primary {
+    background: linear-gradient(135deg, #27ae60, #2ecc71); color: #fff;
+    box-shadow: 0 4px 16px rgba(39, 174, 96, 0.4);
+  }
+  .round-modal .btn-secondary {
+    background: rgba(255,255,255,0.1); color: #e8e8e8;
+    border: 1px solid rgba(255,255,255,0.2);
+  }
+
+  /* ========== 可点击发声 ========== */
+  .speakable {
+    cursor: pointer;
+    user-select: none;
+    -webkit-user-select: none;
+    -webkit-tap-highlight-color: transparent;
+    transition: opacity .15s, text-shadow .15s;
+  }
+  .example-new.speakable:hover {
+    text-shadow: 0 0 12px rgba(0, 229, 255, 0.35);
+  }
+
+  @media (max-width: 720px) {
+    body { padding: 12px; }
+    .panel, .header { padding: 18px; }
+    .example-new { font-size: 20px; }
+    .stats-bar { grid-template-columns: repeat(3, 1fr); }
+    .dialogue-grid { grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); }
+    .quick-btn.hero { padding: 14px 40px; font-size: 16px; min-width: 220px; }
+    #practiceScreen .chip { font-size: 15px; padding: 8px 12px; min-height: 40px; }
+    .round-modal { padding: 24px 20px; }
+    .round-modal .stats { gap: 8px; }
+    .round-modal .stat { padding: 8px 12px; }
+    .round-modal .stat-val { font-size: 18px; }
+  }
+</style>
+</head>
+<body data-app="chat">
+
+<div class="app">
+  <!-- 顶部标题 -->
+  <div class="header">
+    <div>
+      <h1>💬 Daily Chat 对话跟读</h1>
+      <div class="subtitle">12 大场景 · 200 组地道对话 · 点击单词拼出整句</div>
+    </div>
+    <div class="header-stats">
+      <span class="pill">📚 200 组对话</span>
+      <span class="pill" id="totalProgressPill">🏆 0/200</span>
+    </div>
+  </div>
+
+  <!-- 快捷按钮栏 -->
+  <div class="quick-bar">
+    <div class="quick-row">
+      <button class="quick-btn secondary" id="btnPrevDialogue">◀ 上一组</button>
+      <button class="quick-btn primary hero" id="btnStart">🚀 继续上次练习</button>
+      <button class="quick-btn secondary" id="btnNextDialogue">下一组 ▶</button>
+    </div>
+  </div>
+
+  <!-- 场景导航 -->
+  <div class="panel">
+    <div class="arsenal-title" style="font-size:15px;color:#00e5ff;margin-bottom:14px;font-weight:700;">🎬 选择场景</div>
+    <div class="scene-nav" id="sceneNav"></div>
+  </div>
+
+  <!-- 对话列表 -->
+  <div class="panel">
+    <div class="arsenal-title" style="font-size:15px;color:#00e5ff;margin-bottom:14px;font-weight:700;display:flex;justify-content:space-between;align-items:center;">
+      <span id="dialogueListTitle">📖 对话列表</span>
+      <span id="dialogueListMeta" style="font-size:11.5px;color:#8a8fa3;font-weight:400;"></span>
+    </div>
+    <div class="dialogue-grid" id="dialogueGrid"></div>
+  </div>
+
+  <!-- 空状态 -->
+  <div class="panel" id="emptyPanel" style="display:none;">
+    <div class="empty-state">
+      <div class="icon">💬</div>
+      <h3 style="color:#d8dce8;margin-bottom:8px;font-size:17px;">欢迎来到 Daily Chat 跟读训练</h3>
+      <p style="font-size:13px;line-height:1.7;max-width:520px;margin:0 auto;">
+        200 组中英对照日常对话，覆盖 12 大生活场景。<br>
+        每句对话都用「点击单词拼句」的方式跟打，边练打字边记地道表达。
+      </p>
+    </div>
+  </div>
+</div>
+
+<!-- 练习子页面 -->
+<div class="practice-screen" id="practiceScreen">
+  <div class="practice-panel">
+    <!-- 顶栏 -->
+    <div class="ps-topbar">
+      <div class="ps-topbar-actions">
+        <button class="ps-back" id="btnPracticeBack">← 返回</button>
+        <span class="ps-dialogue-tag" id="psDialogueTag">对话 #1</span>
+        <span class="ps-title" id="psTitle">问候 & 寒暄</span>
+        <span class="ps-progress" id="practiceProgress">0/0</span>
+      </div>
+    </div>
+
+    <!-- 可滚动区 -->
+    <div class="ps-scroll">
+      <!-- 语音控制 -->
+      <div class="ps-voice-row">
+        <div class="voice-controls">
+          <div class="auto-speak-toggle on" id="autoSpeakToggle" title="每刷新一句自动朗读">
+            <span class="switch"></span><span>自动朗读</span>
+          </div>
+          <select id="voiceSelect" title="选择英文嗓音"></select>
+          <div class="rate-control" title="朗读语速">
+            <span style="font-size:11px;color:#888;">语速</span>
+            <input type="range" id="rateRange" min="0.4" max="1.6" step="0.05" value="0.8" />
+            <span id="rateValue" style="font-size:11px;min-width:34px;text-align:center;font-variant-numeric: tabular-nums;">0.80x</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- 聊天记录 -->
+      <div class="chat-history" id="chatHistory"></div>
+
+      <!-- 当前句子 -->
+      <div class="example-box">
+        <div class="example-old" id="exampleOld">
+          <span class="chat-speaker A" style="width:22px;height:22px;font-size:11px;" id="currentSpeaker">A</span>
+          <span style="font-style:normal;color:#8a8fa3;font-size:12px;">正在跟打...</span>
+        </div>
+        <div class="example-arrow" id="exampleArrow">↓ 按正确语序点击下方单词</div>
+        <div class="example-new speakable" id="exampleNew" title="点击朗读当前句子"></div>
+        <div class="example-cn" id="exampleCn"></div>
+      </div>
+
+      <!-- 统计 -->
+      <div class="stats-bar">
+        <div class="stat-card"><div class="stat-label">⏱ 用时</div><div class="stat-value" id="timerValue">0s</div></div>
+        <div class="stat-card"><div class="stat-label">⭐ 得分</div><div class="stat-value" id="scoreValue">0</div></div>
+        <div class="stat-card"><div class="stat-label">🔥 连击</div><div class="stat-value" id="comboValue">0</div></div>
+        <div class="stat-card"><div class="stat-label">🎯 正确率</div><div class="stat-value" id="accuracyValue">100%</div></div>
+        <div class="stat-card"><div class="stat-label">❌ 错误</div><div class="stat-value wrong zero" id="wrongCharsValue">0</div></div>
+      </div>
+    </div>
+
+    <!-- 底部固定区 -->
+    <div class="ps-bottom">
+      <div class="scramble-bar">
+        <div class="scramble-title">🧩 <b>单词提示（顺序已打乱）</b>：按正确语序请依次<b>点击</b></div>
+        <div class="word-chips" id="wordChips"></div>
+      </div>
+      <div class="input-wrapper">
+        <input type="text" id="typingInput" placeholder="点击上方单词，按正确语序拼出整句..." readonly />
+        <div class="hint">💡 点对的词变绿，点错抖动提示 · 完成一句自动加载下一句</div>
+      </div>
+      <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;">
+        <button class="quick-btn secondary" id="btnPrevTurn">◀ 上一句</button>
+        <button class="quick-btn secondary" id="btnRestartDialogue">🔄 重练本组</button>
+        <button class="quick-btn secondary" id="btnSkipTurn">跳过本句 ▶</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 弹出提示 -->
+<div class="popup combo" id="comboPopup"></div>
+<div class="popup master" id="masterPopup"></div>
+
+<!-- 完成弹窗 -->
+<div class="round-modal-overlay" id="roundModalOverlay">
+  <div class="round-modal">
+    <div class="icon" id="roundModalIcon">🎉</div>
+    <h2 id="roundModalTitle">本组对话完成！</h2>
+    <p id="roundModalSub" style="color:#888;font-size:13px;">恭喜你完成了整组对话的跟打</p>
+    <div class="stats" id="roundModalStats"></div>
+    <div class="btns">
+      <button class="btn-primary" id="roundNextBtn">▶ 下一组对话</button>
+      <button class="btn-secondary" id="roundRetryBtn">🔄 重练本组</button>
+      <button class="btn-secondary" id="roundCloseBtn">✖ 结束</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  // ============================================================
+  //  数据索引
+  // ============================================================
+  const SCENE_DATA = window.DAILY_CHAT_DATA || {};
+  const SCENE_KEYS = Object.keys(SCENE_DATA);
+
+  // 扁平化：dialogueIndex = [{sceneKey, dialogueId, dialogue}]
+  const ALL_DIALOGUES = [];
+  SCENE_KEYS.forEach(sk => {
+    (SCENE_DATA[sk].dialogues || []).forEach(d => {
+      ALL_DIALOGUES.push({ sceneKey: sk, dialogueId: d.id, dialogue: d });
+    });
+  });
+
+  // ============================================================
+  //  进度持久化
+  // ============================================================
+  const PROGRESS_KEY = "daily_chat_progress_v1";
+
+  function defaultProgress() {
+    return {
+      completedTurns: {},   // "scene-01#1#0": true
+      lastScene: "scene-01",
+      lastDialogue: 1,
+      lastTurn: 0,
+      autoSpeak: true
+    };
+  }
+
+  function loadProgress() {
+    try {
+      const raw = localStorage.getItem(PROGRESS_KEY);
+      const p = raw ? JSON.parse(raw) : {};
+      const base = defaultProgress();
+      return Object.assign(base, p, {
+        completedTurns: p.completedTurns || {},
+      });
+    } catch (e) {
+      return defaultProgress();
+    }
+  }
+
+  function saveProgress() {
+    try { localStorage.setItem(PROGRESS_KEY, JSON.stringify(progress)); } catch (e) {}
+  }
+
+  let progress = loadProgress();
+
+  // ============================================================
+  //  DOM
+  // ============================================================
+  const $ = id => document.getElementById(id);
+
+  const sceneNav = $("sceneNav");
+  const dialogueGrid = $("dialogueGrid");
+  const dialogueListTitle = $("dialogueListTitle");
+  const dialogueListMeta = $("dialogueListMeta");
+  const totalProgressPill = $("totalProgressPill");
+  const emptyPanel = $("emptyPanel");
+
+  const btnStart = $("btnStart");
+  const btnPrevDialogue = $("btnPrevDialogue");
+  const btnNextDialogue = $("btnNextDialogue");
+
+  const practiceScreen = $("practiceScreen");
+  const btnPracticeBack = $("btnPracticeBack");
+  const psDialogueTag = $("psDialogueTag");
+  const psTitle = $("psTitle");
+  const practiceProgress = $("practiceProgress");
+
+  const chatHistory = $("chatHistory");
+  const exampleOld = $("exampleOld");
+  const exampleArrow = $("exampleArrow");
+  const exampleNew = $("exampleNew");
+  const exampleCn = $("exampleCn");
+  const currentSpeaker = $("currentSpeaker");
+
+  const wordChips = $("wordChips");
+  const typingInput = $("typingInput");
+
+  const autoSpeakToggle = $("autoSpeakToggle");
+  const voiceSelect = $("voiceSelect");
+  const rateRange = $("rateRange");
+  const rateValue = $("rateValue");
+
+  const timerValue = $("timerValue");
+  const scoreValue = $("scoreValue");
+  const comboValue = $("comboValue");
+  const accuracyValue = $("accuracyValue");
+  const wrongCharsValue = $("wrongCharsValue");
+
+  const btnPrevTurn = $("btnPrevTurn");
+  const btnRestartDialogue = $("btnRestartDialogue");
+  const btnSkipTurn = $("btnSkipTurn");
+
+  const comboPopup = $("comboPopup");
+  const masterPopup = $("masterPopup");
+
+  const roundModalOverlay = $("roundModalOverlay");
+  const roundModalIcon = $("roundModalIcon");
+  const roundModalTitle = $("roundModalTitle");
+  const roundModalSub = $("roundModalSub");
+  const roundModalStats = $("roundModalStats");
+  const roundNextBtn = $("roundNextBtn");
+  const roundRetryBtn = $("roundRetryBtn");
+  const roundCloseBtn = $("roundCloseBtn");
+
+  // ============================================================
+  //  状态
+  // ============================================================
+  let state = {
+    activeScene: "scene-01",
+    // 练习中
+    sceneKey: null,
+    dialogueId: null,
+    turnIndex: 0,
+    currentSentence: "",
+    currentIndex: 0,
+    scrambleTokens: [],
+    scrambleOrder: [],
+    usedTokenIndices: new Set(),
+    // 统计
+    score: 0,
+    combo: 0,
+    maxCombo: 0,
+    correctClicks: 0,
+    totalTyped: 0,
+    wrongChars: 0,
+    startTime: 0,
+    timerId: null
+  };
+
+  // ============================================================
+  //  工具
+  // ============================================================
+  function shuffle(arr) {
+    const a = [...arr];
+    for (let i = a.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [a[i], a[j]] = [a[j], a[i]];
+    }
+    return a;
+  }
+  function escapeHtml(s) {
+    if (s == null) return "";
+    return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;").replace(/'/g, "&#39;");
+  }
+
+  function findDialogue(sceneKey, dialogueId) {
+    const scene = SCENE_DATA[sceneKey];
+    if (!scene) return null;
+    return (scene.dialogues || []).find(d => d.id === dialogueId) || null;
+  }
+
+  function turnKey(sceneKey, dialogueId, turnIndex) {
+    return `${sceneKey}#${dialogueId}#${turnIndex}`;
+  }
+
+  function isTurnDone(sceneKey, dialogueId, turnIndex) {
+    return !!progress.completedTurns[turnKey(sceneKey, dialogueId, turnIndex)];
+  }
+
+  function countDialogueDone(sceneKey, dialogueId) {
+    const d = findDialogue(sceneKey, dialogueId);
+    if (!d) return { done: 0, total: 0 };
+    let done = 0;
+    d.turns.forEach((_, i) => {
+      if (isTurnDone(sceneKey, dialogueId, i)) done++;
+    });
+    return { done, total: d.turns.length };
+  }
+
+  function totalDialogueStats() {
+    let total = 0, done = 0;
+    ALL_DIALOGUES.forEach(({ sceneKey, dialogueId, dialogue }) => {
+      total++;
+      const { done: d, total: t } = countDialogueDone(sceneKey, dialogueId);
+      if (t > 0 && d === t) done++;
+    });
+    return { done, total };
+  }
+
+  function updateHeaderStats() {
+    const { done, total } = totalDialogueStats();
+    totalProgressPill.textContent = `🏆 ${done}/${total}`;
+  }
+
+  // ============================================================
+  //  渲染主页面
+  // ============================================================
+  function renderSceneNav() {
+    sceneNav.innerHTML = "";
+    SCENE_KEYS.forEach(sk => {
+      const s = SCENE_DATA[sk];
+      const tab = document.createElement("div");
+      tab.className = "scene-tab" + (sk === state.activeScene ? " active" : "");
+      tab.innerHTML = `<span>${s.icon || "💬"}</span><span>${escapeHtml(s.title)}</span><span class="count">${(s.dialogues || []).length}</span>`;
+      tab.addEventListener("click", () => {
+        state.activeScene = sk;
+        renderSceneNav();
+        renderDialogueGrid();
+      });
+      sceneNav.appendChild(tab);
+    });
+  }
+
+  function renderDialogueGrid() {
+    const s = SCENE_DATA[state.activeScene];
+    if (!s) { dialogueGrid.innerHTML = ""; return; }
+
+    dialogueListTitle.textContent = `📖 ${s.title}`;
+    const { done: totalDone, total: totalAll } = totalDialogueStats();
+    dialogueListMeta.textContent = `整体进度 ${totalDone}/${totalAll} 组`;
+
+    dialogueGrid.innerHTML = "";
+    (s.dialogues || []).forEach(d => {
+      const { done, total } = countDialogueDone(state.activeScene, d.id);
+      const isFull = total > 0 && done === total;
+      const isCurrent = progress.lastScene === state.activeScene && progress.lastDialogue === d.id;
+
+      const card = document.createElement("div");
+      card.className = "dialogue-card";
+      if (isFull) card.classList.add("done");
+      if (isCurrent) card.classList.add("current");
+
+      const preview = d.turns.length ? d.turns[0][1] : "";
+      const progClass = isFull ? "full" : "";
+
+      card.innerHTML = `
+        <div class="dc-id">
+          <span>#${d.id}</span>
+          ${isFull ? '<span class="dc-done-tag">✓ 已完成</span>' : ''}
+        </div>
+        <div class="dc-preview">${escapeHtml(preview)}</div>
+        <div class="dc-meta">
+          <span class="dc-progress ${progClass}">${done}/${total} 句</span>
+          <span class="dc-turns">${total} 轮</span>
+        </div>
+      `;
+
+      card.addEventListener("click", () => {
+        // 从第一个未完成的轮次开始
+        let startIdx = 0;
+        for (let i = 0; i < d.turns.length; i++) {
+          if (!isTurnDone(state.activeScene, d.id, i)) { startIdx = i; break; }
+          if (i === d.turns.length - 1) startIdx = 0; // 全完成则从头
+        }
+        openDialogue(state.activeScene, d.id, startIdx);
+      });
+
+      dialogueGrid.appendChild(card);
+    });
+  }
+
+  // ============================================================
+  //  练习子页面
+  // ============================================================
+  function openPractice() {
+    practiceScreen.classList.add("open");
+    document.body.classList.add("practice-open");
+  }
+  function closePractice() {
+    practiceScreen.classList.remove("open");
+    document.body.classList.remove("practice-open");
+  }
+
+  function openDialogue(sceneKey, dialogueId, startTurnIndex) {
+    const d = findDialogue(sceneKey, dialogueId);
+    if (!d || !d.turns.length) return;
+
+    state.sceneKey = sceneKey;
+    state.dialogueId = dialogueId;
+    state.turnIndex = Math.max(0, Math.min(startTurnIndex || 0, d.turns.length - 1));
+
+    progress.lastScene = sceneKey;
+    progress.lastDialogue = dialogueId;
+    progress.lastTurn = state.turnIndex;
+    saveProgress();
+
+    resetRoundStats();
+
+    psDialogueTag.textContent = `对话 #${dialogueId}`;
+    psTitle.textContent = SCENE_DATA[sceneKey].title;
+
+    renderChatHistory();
+    loadTurn(state.turnIndex);
+    openPractice();
+    startTimer();
+  }
+
+  function resetRoundStats() {
+    state.score = 0;
+    state.combo = 0;
+    state.maxCombo = 0;
+    state.correctClicks = 0;
+    state.totalTyped = 0;
+    state.wrongChars = 0;
+    updateStats();
+  }
+
+  function renderChatHistory() {
+    const d = findDialogue(state.sceneKey, state.dialogueId);
+    chatHistory.innerHTML = "";
+    if (!d) return;
+    d.turns.forEach((turn, i) => {
+      if (!isTurnDone(state.sceneKey, state.dialogueId, i)) return;
+      const [speaker, en, cn] = turn;
+      const bubble = document.createElement("div");
+      bubble.className = "chat-bubble";
+      bubble.innerHTML = `
+        <div class="chat-speaker ${speaker}">${speaker}</div>
+        <div class="chat-content">
+          <div>${escapeHtml(en)}<span class="chat-check">✓</span></div>
+          <div class="chat-cn">${escapeHtml(cn)}</div>
+        </div>
+      `;
+      chatHistory.appendChild(bubble);
+    });
+    // 滚动到底部
+    setTimeout(() => { chatHistory.scrollTop = chatHistory.scrollHeight; }, 50);
+  }
+
+  function loadTurn(turnIndex) {
+    const d = findDialogue(state.sceneKey, state.dialogueId);
+    if (!d) return;
+    const turn = d.turns[turnIndex];
+    if (!turn) return;
+
+    state.turnIndex = turnIndex;
+    const [speaker, en, cn] = turn;
+    state.currentSentence = en;
+
+    // 说话人
+    currentSpeaker.textContent = speaker;
+    currentSpeaker.className = "chat-speaker " + speaker;
+    exampleOld.innerHTML = `
+      <span class="chat-speaker ${speaker}" style="width:22px;height:22px;font-size:11px;">${speaker}</span>
+      <span style="font-style:normal;color:#8a8fa3;font-size:12px;">正在跟打...</span>
+    `;
+
+    // 中文
+    exampleCn.textContent = `中文：${cn}`;
+
+    // 进度
+    practiceProgress.textContent = `第 ${turnIndex + 1}/${d.turns.length} 句`;
+
+    // 构建打乱单词
+    buildScramble(en);
+    renderChips();
+    resetTypingForNewTurn();
+
+    // 自动朗读
+    autoSpeakIfOn();
+  }
+
+  // ============================================================
+  //  句子渲染与打字逻辑
+  // ============================================================
+  function renderSentenceChars() {
+    const sentence = state.currentSentence;
+    const typed = typingInput.value;
+    const idx = typed.length;
+
+    const html = Array.from(sentence).map((ch, i) => {
+      let cls = "char";
+      if (i < idx) {
+        if (typed[i] === ch) cls += " correct";
+        else cls += " incorrect";
+      }
+      if (i === idx) cls += " current";
+      if (i >= idx) cls += " masked";
+      const display = ch === " " ? "&nbsp;" : escapeHtml(ch);
+      return `<span class="${cls}">${display}</span>`;
+    }).join("");
+    exampleNew.innerHTML = html;
+
+    // 刷新 chips
+    wordChips.querySelectorAll(".chip").forEach(chip => {
+      const ti = parseInt(chip.dataset.index, 10);
+      chip.classList.toggle("used", state.usedTokenIndices.has(ti));
+    });
+  }
+
+  function buildScramble(sentence) {
+    const tokens = [];
+    const re = /\S+/g;
+    let m;
+    while ((m = re.exec(sentence)) !== null) {
+      tokens.push({ text: m[0], start: m.index, end: m.index + m[0].length });
+    }
+    state.scrambleTokens = tokens;
+    state.scrambleOrder = shuffle(tokens.map((_, i) => i));
+  }
+
+  function nextScrambleToken() {
+    return state.scrambleTokens.find(t => t.end > typingInput.value.length) || null;
+  }
+
+  function renderChips() {
+    wordChips.innerHTML = "";
+    state.scrambleOrder.forEach(ti => {
+      const token = state.scrambleTokens[ti];
+      if (!token) return;
+      const chip = document.createElement("span");
+      chip.className = "chip" + (state.usedTokenIndices.has(ti) ? " used" : "");
+      chip.textContent = token.text;
+      chip.dataset.index = String(ti);
+      wordChips.appendChild(chip);
+    });
+  }
+
+  function resetTypingForNewTurn() {
+    state.usedTokenIndices = new Set();
+    state.currentIndex = 0;
+    typingInput.value = "";
+    renderSentenceChars();
+    renderChips();
+  }
+
+  function clickChip(tokenIndex) {
+    const expected = nextScrambleToken();
+    const token = state.scrambleTokens[tokenIndex];
+
+    if (!expected || !token || token.text !== expected.text || state.usedTokenIndices.has(tokenIndex)) {
+      // 错误
+      state.combo = 0;
+      state.score = Math.max(0, state.score - 3);
+      state.totalTyped++;
+      state.wrongChars++;
+      shakeChip(tokenIndex);
+      updateStats();
+      return;
+    }
+
+    // 正确：把这一段字符填入输入框
+    const from = typingInput.value.length;
+    typingInput.value += state.currentSentence.slice(from, expected.end);
+    state.usedTokenIndices.add(tokenIndex);
+
+    state.totalTyped++;
+    state.correctClicks++;
+    state.combo++;
+    state.maxCombo = Math.max(state.maxCombo, state.combo);
+    state.score += 10 + Math.floor(state.combo / 5) * 3;
+    if (state.combo > 0 && state.combo % 10 === 0) showComboPopup(state.combo);
+
+    renderSentenceChars();
+    updateStats();
+
+    // 是否完成整句
+    if (typingInput.value.length >= state.currentSentence.length) {
+      onSentenceComplete();
+    }
+  }
+
+  function shakeChip(tokenIndex) {
+    const chip = wordChips.querySelector(`.chip[data-index="${tokenIndex}"]`);
+    if (!chip) return;
+    chip.classList.remove("wrong");
+    void chip.offsetWidth;
+    chip.classList.add("wrong");
+    setTimeout(() => chip.classList.remove("wrong"), 320);
+  }
+
+  function onSentenceComplete() {
+    // 标记完成
+    progress.completedTurns[turnKey(state.sceneKey, state.dialogueId, state.turnIndex)] = true;
+    saveProgress();
+
+    state.score += 30;
+    updateStats();
+
+    // 高亮整句
+    exampleNew.querySelectorAll(".char").forEach(el => el.classList.remove("current"));
+
+    const d = findDialogue(state.sceneKey, state.dialogueId);
+    const isLast = state.turnIndex >= d.turns.length - 1;
+
+    setTimeout(() => {
+      if (isLast) {
+        showRoundComplete();
+      } else {
+        loadTurn(state.turnIndex + 1);
+        renderChatHistory();
+      }
+    }, 500);
+
+    // 更新主页面统计
+    updateHeaderStats();
+  }
+
+  function updateStats() {
+    scoreValue.textContent = state.score;
+    comboValue.textContent = state.combo;
+    const acc = state.totalTyped === 0 ? 100 : Math.round((state.correctClicks / state.totalTyped) * 100);
+    accuracyValue.textContent = acc + "%";
+    wrongCharsValue.textContent = state.wrongChars;
+    wrongCharsValue.classList.toggle("zero", state.wrongChars === 0);
+  }
+
+  function showComboPopup(combo) {
+    comboPopup.textContent = `🔥 x${combo} 连击！`;
+    comboPopup.classList.remove("show");
+    void comboPopup.offsetWidth;
+    comboPopup.classList.add("show");
+  }
+
+  function showMasterPopup(text) {
+    masterPopup.textContent = text;
+    masterPopup.classList.remove("show");
+    void masterPopup.offsetWidth;
+    masterPopup.classList.add("show");
+  }
+
+  // ============================================================
+  //  计时器
+  // ============================================================
+  function startTimer() {
+    stopTimer();
+    state.startTime = Date.now();
+    state.timerId = setInterval(() => {
+      const sec = Math.floor((Date.now() - state.startTime) / 1000);
+      const m = Math.floor(sec / 60), s = sec % 60;
+      timerValue.textContent = m > 0 ? `${m}m${s}s` : `${s}s`;
+    }, 500);
+  }
+  function stopTimer() {
+    if (state.timerId) { clearInterval(state.timerId); state.timerId = null; }
+  }
+
+  // ============================================================
+  //  完成弹窗
+  // ============================================================
+  function showRoundComplete() {
+    stopTimer();
+    const d = findDialogue(state.sceneKey, state.dialogueId);
+    const elapsed = state.startTime ? Math.floor((Date.now() - state.startTime) / 1000) : 0;
+    const m = Math.floor(elapsed / 60), s = elapsed % 60;
+    const timeStr = m > 0 ? `${m}m${s}s` : `${s}s`;
+    const acc = state.totalTyped === 0 ? 100 : Math.round((state.correctClicks / state.totalTyped) * 100);
+
+    roundModalTitle.textContent = `🎉 对话 #${state.dialogueId} 完成！`;
+    roundModalSub.textContent = `共 ${d.turns.length} 句 · ${SCENE_DATA[state.sceneKey].title}`;
+
+    roundModalStats.innerHTML = `
+      <div class="stat"><div class="stat-val">${state.score}</div><div class="stat-lbl">得分</div></div>
+      <div class="stat"><div class="stat-val">${timeStr}</div><div class="stat-lbl">用时</div></div>
+      <div class="stat"><div class="stat-val">${state.maxCombo}</div><div class="stat-lbl">最高连击</div></div>
+      <div class="stat"><div class="stat-val">${acc}%</div><div class="stat-lbl">正确率</div></div>
+      <div class="stat"><div class="stat-val" style="color:${state.wrongChars ? '#ff6b6b' : '#50e3c2'}">${state.wrongChars}</div><div class="stat-lbl">错误</div></div>
+    `;
+
+    // 下一组
+    const curIdx = ALL_DIALOGUES.findIndex(x => x.sceneKey === state.sceneKey && x.dialogueId === state.dialogueId);
+    const hasNext = curIdx >= 0 && curIdx < ALL_DIALOGUES.length - 1;
+    roundNextBtn.disabled = !hasNext;
+    roundNextBtn.style.opacity = hasNext ? "1" : "0.5";
+
+    roundModalOverlay.classList.add("show");
+    showMasterPopup("🎉 完成！");
+  }
+
+  function hideRoundModal() {
+    roundModalOverlay.classList.remove("show");
+  }
+
+  // ============================================================
+  //  语音合成
+  // ============================================================
+  let AUTO_SPEAK_ON = true;
+  let voicesReady = false;
+  let SPEAK_RATE = 0.8;
+  let SELECTED_VOICE_NAME = null;
+  let pendingSpeakText = null;
+
+  function getVoices() {
+    return window.speechSynthesis ? window.speechSynthesis.getVoices() : [];
+  }
+
+  function pickEnVoice() {
+    const voices = getVoices();
+    if (!voices.length) return null;
+    if (SELECTED_VOICE_NAME) {
+      const v = voices.find(x => x.name === SELECTED_VOICE_NAME);
+      if (v) return v;
+    }
+    return voices.find(v => /en-US/i.test(v.lang) && /Google US English|Samantha|Daniel|Alex|Karen/i.test(v.name))
+      || voices.find(v => /en-US/i.test(v.lang) && v.localService)
+      || voices.find(v => /en-US/i.test(v.lang))
+      || voices.find(v => v.lang && v.lang.toLowerCase().startsWith("en"))
+      || null;
+  }
+
+  function refreshVoiceSelect() {
+    if (!voiceSelect) return;
+    const voices = getVoices();
+    const enVoices = voices.filter(v => v.lang && v.lang.toLowerCase().startsWith("en"));
+    const prev = voiceSelect.value;
+    voiceSelect.innerHTML = "";
+    const all = enVoices.length ? enVoices : voices;
+    if (all.length === 0) {
+      const o = document.createElement("option");
+      o.value = ""; o.textContent = "（无可用英文嗓音）";
+      voiceSelect.appendChild(o); voiceSelect.disabled = true;
+      return;
+    }
+    voiceSelect.disabled = false;
+    all.forEach(v => {
+      const o = document.createElement("option");
+      o.value = v.name;
+      o.textContent = `${v.name} · ${v.lang}`;
+      voiceSelect.appendChild(o);
+    });
+    const picked = pickEnVoice();
+    voiceSelect.value = prev && all.find(v => v.name === prev) ? prev : (picked?.name || all[0].name);
+    SELECTED_VOICE_NAME = voiceSelect.value;
+  }
+
+  if (window.speechSynthesis) {
+    const onReady = () => {
+      voicesReady = true;
+      refreshVoiceSelect();
+      if (pendingSpeakText) {
+        const t = pendingSpeakText;
+        pendingSpeakText = null;
+        doSpeak(t);
+      }
+    };
+    window.speechSynthesis.onvoiceschanged = onReady;
+    if (getVoices().length > 0) onReady();
+  }
+
+  let lastCancelTime = 0;
+
+  function doSpeak(text) {
+    const synth = window.speechSynthesis;
+    if (!synth || !text) return;
+    const now = Date.now();
+    if (synth.speaking && now - lastCancelTime > 300) {
+      synth.cancel();
+      lastCancelTime = now;
+      setTimeout(() => actuallySpeak(text), 60);
+    } else {
+      actuallySpeak(text);
+    }
+  }
+
+  function actuallySpeak(text) {
+    const synth = window.speechSynthesis;
+    try {
+      const u = new SpeechSynthesisUtterance(text);
+      u.volume = 1.0; u.rate = SPEAK_RATE; u.pitch = 1;
+      const v = pickEnVoice();
+      if (v) { u.voice = v; u.lang = v.lang; } else u.lang = "en-US";
+      synth.speak(u);
+      setTimeout(() => { if (synth.paused) synth.resume(); }, 150);
+    } catch (e) { console.warn("TTS speak exception:", e); }
+  }
+
+  function speak(text) {
+    if (!text) return;
+    if (!window.speechSynthesis) return;
+    if (!voicesReady) {
+      pendingSpeakText = text;
+      setTimeout(() => {
+        if (pendingSpeakText) {
+          const t = pendingSpeakText;
+          pendingSpeakText = null;
+          voicesReady = true;
+          doSpeak(t);
+        }
+      }, 2000);
+      return;
+    }
+    doSpeak(text);
+  }
+
+  function autoSpeakIfOn() {
+    if (!AUTO_SPEAK_ON) return;
+    setTimeout(() => {
+      if (state.currentSentence) speak(state.currentSentence);
+    }, 250);
+  }
+
+  // ============================================================
+  //  事件绑定
+  // ============================================================
+
+  // 主页面：继续上次
+  btnStart.addEventListener("click", () => {
+    const lastScene = progress.lastScene && SCENE_DATA[progress.lastScene] ? progress.lastScene : SCENE_KEYS[0];
+    const lastDialogue = progress.lastDialogue || 1;
+    const lastTurn = progress.lastTurn || 0;
+    openDialogue(lastScene, lastDialogue, lastTurn);
+  });
+
+  // 主页面：上一组 / 下一组
+  function jumpDialogue(delta) {
+    const curScene = progress.lastScene || SCENE_KEYS[0];
+    const curId = progress.lastDialogue || 1;
+    const curIdx = ALL_DIALOGUES.findIndex(x => x.sceneKey === curScene && x.dialogueId === curId);
+    let targetIdx = curIdx < 0 ? 0 : curIdx + delta;
+    if (targetIdx < 0) targetIdx = 0;
+    if (targetIdx >= ALL_DIALOGUES.length) targetIdx = ALL_DIALOGUES.length - 1;
+    const t = ALL_DIALOGUES[targetIdx];
+    if (!t) return;
+    state.activeScene = t.sceneKey;
+    renderSceneNav();
+    renderDialogueGrid();
+    let startIdx = 0;
+    for (let i = 0; i < t.dialogue.turns.length; i++) {
+      if (!isTurnDone(t.sceneKey, t.dialogueId, i)) { startIdx = i; break; }
+      if (i === t.dialogue.turns.length - 1) startIdx = 0;
+    }
+    openDialogue(t.sceneKey, t.dialogueId, startIdx);
+  }
+  btnPrevDialogue.addEventListener("click", () => jumpDialogue(-1));
+  btnNextDialogue.addEventListener("click", () => jumpDialogue(1));
+
+  // 练习页：返回
+  btnPracticeBack.addEventListener("click", () => {
+    closePractice();
+    stopTimer();
+    updateHeaderStats();
+    renderDialogueGrid();
+  });
+
+  // 练习页：上一句 / 下一句 / 重练
+  btnPrevTurn.addEventListener("click", () => {
+    if (state.turnIndex > 0) {
+      loadTurn(state.turnIndex - 1);
+      renderChatHistory();
+    }
+  });
+  btnSkipTurn.addEventListener("click", () => {
+    const d = findDialogue(state.sceneKey, state.dialogueId);
+    if (!d) return;
+    if (state.turnIndex < d.turns.length - 1) {
+      loadTurn(state.turnIndex + 1);
+      renderChatHistory();
+    } else {
+      showRoundComplete();
+    }
+  });
+  btnRestartDialogue.addEventListener("click", () => {
+    // 清空本组完成记录
+    const d = findDialogue(state.sceneKey, state.dialogueId);
+    if (d) {
+      d.turns.forEach((_, i) => {
+        delete progress.completedTurns[turnKey(state.sceneKey, state.dialogueId, i)];
+      });
+      saveProgress();
+    }
+    resetRoundStats();
+    renderChatHistory();
+    loadTurn(0);
+    startTimer();
+  });
+
+  // chips 点击
+  wordChips.addEventListener("click", e => {
+    const chip = e.target.closest(".chip");
+    if (!chip) return;
+    if (chip.classList.contains("used")) return;
+    clickChip(parseInt(chip.dataset.index, 10));
+  });
+
+  // 点击句子朗读
+  exampleNew.addEventListener("click", () => {
+    if (state.currentSentence) speak(state.currentSentence);
+  });
+
+  // 自动朗读开关
+  autoSpeakToggle.addEventListener("click", () => {
+    AUTO_SPEAK_ON = !AUTO_SPEAK_ON;
+    autoSpeakToggle.classList.toggle("on", AUTO_SPEAK_ON);
+    progress.autoSpeak = AUTO_SPEAK_ON;
+    saveProgress();
+    if (!AUTO_SPEAK_ON && window.speechSynthesis) window.speechSynthesis.cancel();
+  });
+
+  // 嗓音选择
+  if (voiceSelect) {
+    voiceSelect.addEventListener("change", () => {
+      SELECTED_VOICE_NAME = voiceSelect.value;
+      localStorage.setItem("daily_chat_voice", SELECTED_VOICE_NAME || "");
+    });
+  }
+
+  // 语速
+  if (rateRange) {
+    rateRange.addEventListener("input", () => {
+      SPEAK_RATE = parseFloat(rateRange.value);
+      rateValue.textContent = SPEAK_RATE.toFixed(2) + "x";
+      localStorage.setItem("daily_chat_rate", String(SPEAK_RATE));
+    });
+    const savedRate = localStorage.getItem("daily_chat_rate");
+    if (savedRate) {
+      SPEAK_RATE = parseFloat(savedRate);
+      rateRange.value = String(SPEAK_RATE);
+      rateValue.textContent = SPEAK_RATE.toFixed(2) + "x";
+    }
+    const savedVoice = localStorage.getItem("daily_chat_voice");
+    if (savedVoice) SELECTED_VOICE_NAME = savedVoice;
+  }
+
+  // 完成弹窗按钮
+  roundNextBtn.addEventListener("click", () => {
+    hideRoundModal();
+    closePractice();
+    jumpDialogue(1);
+  });
+  roundRetryBtn.addEventListener("click", () => {
+    hideRoundModal();
+    const d = findDialogue(state.sceneKey, state.dialogueId);
+    if (d) {
+      d.turns.forEach((_, i) => {
+        delete progress.completedTurns[turnKey(state.sceneKey, state.dialogueId, i)];
+      });
+      saveProgress();
+    }
+    resetRoundStats();
+    renderChatHistory();
+    loadTurn(0);
+    startTimer();
+  });
+  roundCloseBtn.addEventListener("click", () => {
+    hideRoundModal();
+    closePractice();
+    stopTimer();
+    updateHeaderStats();
+    renderDialogueGrid();
+  });
+
+  // ============================================================
+  //  初始化
+  // ============================================================
+  (function init() {
+    if (SCENE_KEYS.length === 0) {
+      emptyPanel.style.display = "block";
+      return;
+    }
+
+    // 恢复自动朗读开关
+    if (progress.autoSpeak === false) {
+      AUTO_SPEAK_ON = false;
+      autoSpeakToggle.classList.remove("on");
+    }
+
+    // 初始场景
+    state.activeScene = SCENE_KEYS[0];
+
+    renderSceneNav();
+    renderDialogueGrid();
+    updateHeaderStats();
+
+    console.log(`[DailyChat] ✅ 已加载 ${SCENE_KEYS.length} 个场景 / ${ALL_DIALOGUES.length} 组对话`);
+  })();
+</script>
+<script src="nav.js"></script>
+</body>
+</html>
