@@ -1,19 +1,37 @@
 // nav.js — 共享顶部导航条（MPA 方案）
 // 用法：每个子页面 <body data-app="xxx">，</body> 前引入本脚本
+// 首页（index.html，body 无 data-app）只暴露 APPS，不注入导航条
 (function () {
   'use strict';
   if (document.querySelector('.app-nav[data-injected]')) return;
 
   // ============================================================
   //  子应用注册表：以后新增子页面只需在这里加一行
+  //  desc 字段是给首页卡片用的描述（可选）
   // ============================================================
   const APPS = {
-    vocab: { icon: '🎯', title: '词汇进化',  href: 'vocab.html' },
-    chat:  { icon: '💬', title: 'Daily Chat', href: 'chat.html' },
-    // grammar:   { icon: '📖', title: '语法练习', href: 'grammar.html' },
-    // listening: { icon: '🎧', title: '听力训练', href: 'listening.html' },
+    vocab: {
+      icon: '🎯',
+      title: '词汇进化',
+      href: 'vocab.html',
+      desc: '每周消灭 50 个 Comfort Word · 用更锋利的词替代用烂的词'
+    },
+    chat: {
+      icon: '💬',
+      title: 'Daily Chat',
+      href: 'chat.html',
+      desc: '12 大场景 · 200 组地道对话 · 点击单词拼出整句'
+    },
+    // grammar:   { icon: '📖', title: '语法练习', href: 'grammar.html', desc: '...' },
+    // listening: { icon: '🎧', title: '听力训练', href: 'listening.html', desc: '...' },
   };
   const CURRENT = document.body.dataset.app || '';
+
+  // ★ 暴露给首页（index.html）生成卡片
+  window.DAILY_ENGLISH_APPS = APPS;
+
+  // ★ 首页（body 无 data-app）：不注入导航条，直接返回
+  if (!CURRENT) return;
 
   // ============================================================
   //  注入样式
@@ -55,6 +73,7 @@
       display: flex;
       align-items: center;
       gap: 6px;
+      text-decoration: none;      /* ★ 新增：brand 现在是 <a> */
     }
     .app-nav .tabs {
       display: flex;
@@ -95,11 +114,12 @@
 
   // ============================================================
   //  注入导航条
+  //  ★ brand 从 <div> 改成 <a href="index.html">，点击可回到选择页
   // ============================================================
   const nav = document.createElement('nav');
   nav.className = 'app-nav';
   nav.setAttribute('data-injected', 'nav');
-  let inner = `<div class="brand">📚 <span class="brand-text">Daily English</span></div><div class="tabs">`;
+  let inner = `<a class="brand" href="index.html">📚 <span class="brand-text">Daily English</span></a><div class="tabs">`;
   for (const [key, app] of Object.entries(APPS)) {
     const cls = key === CURRENT ? 'tab active' : 'tab';
     inner += `<a class="${cls}" href="${app.href}"><span>${app.icon}</span><span>${app.title}</span></a>`;
