@@ -2065,6 +2065,13 @@
     color: #8a8fa3;
     font-size: 13.5px;
     font-style: italic;
+  } 
+    /* 中文翻译：从例句框移入单词提示区顶部 */
+  .scramble-bar .example-cn {
+    margin-top: 0;
+    margin-bottom: 10px;
+    padding-bottom: 10px;
+    border-bottom: 1px dashed rgba(0, 229, 255, 0.18);
   }
 
   /* 语音控制 */
@@ -2401,7 +2408,6 @@
         </div>
         <div class="example-arrow" id="exampleArrow">↓ 按正确语序点击下方单词</div>
         <div class="example-new speakable" id="exampleNew" title="点击朗读当前句子"></div>
-        <div class="example-cn" id="exampleCn"></div>
       </div>
 
       <!-- 统计 -->
@@ -2417,6 +2423,7 @@
     <!-- 底部固定区 -->
     <div class="ps-bottom">
       <div class="scramble-bar">
+        <div class="example-cn" id="exampleCn"></div>
         <div class="scramble-title">🧩 <b>单词提示（顺序已打乱）</b>：按正确语序请依次<b>点击</b></div>
         <div class="word-chips" id="wordChips"></div>
       </div>
