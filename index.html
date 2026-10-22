@@ -1274,29 +1274,10 @@
 
 <script>
   // ============================================================
-  //  数据：从 vocab-data.json 加载
-  //  数据模型（与 generate_examples.py 输出一致）：
-  //  {
-  //    "week-01": {
-  //      "title": "第 01 周",
-  //      "desc":  "消灭词 18-154，共 50 词",
-  //      "words": [
-  //        {
-  //          "word": "say", "phonetic": "/seɪ/", "rank": 18, "tier": "T1",
-  //          "reason": "...", "tip": "...",
-  //          "replacements": [
-  //            { "word": "express", "phonetic": "...", "meaning": "...", "level": 3,
-  //              "examples": [ {"old":..,"new":..,"cn":..}, {"old":..,"new":..,"cn":..} ] },
-  //            ... 4 个替代词（level 2/3/4/5 各 1 个），每词 2 例句
-  //          ]
-  //        },
-  //        ... 50 个词
-  //      ]
-  //    }
-  //  }
+  //  数据与常量
   // ============================================================
-  let VOCAB_DATA = {};           // { "week-01": {title, desc, words:[...]} }
-  let WEEK_KEYS = [];            // ["week-01", "week-02", ...]
+  let VOCAB_DATA = {};
+  let WEEK_KEYS = [];
 
   const LEVEL_NAMES = { 2: "CET-4", 3: "CET-6", 4: "雅思/托福", 5: "GRE/专八" };
   const TIER_NAMES = {
@@ -1342,7 +1323,6 @@
   const prevWordBtn = $("prevWordBtn");
   const nextWordBtn = $("nextWordBtn");
 
-  // 练习子页面（App 式全屏）
   const practiceScreen = $("practiceScreen");
   const btnPracticeBack = $("btnPracticeBack");
   const btnPracticeSkip = $("btnPracticeSkip");
@@ -1367,7 +1347,6 @@
   const exampleList = $("exampleList");
   const typingInput = $("typingInput");
 
-  // 两遍模式（旧句 → 新句）
   const scrambleBar = $("scrambleBar");
   const wordChips = $("wordChips");
   const twoPassToggle = $("twoPassToggle");
@@ -1383,7 +1362,6 @@
   const comboPopup = $("comboPopup");
   const masterPopup = $("masterPopup");
 
-  // 完成一轮弹窗 DOM
   const roundModalOverlay = $("roundModalOverlay");
   const roundModalTitle = $("roundModalTitle");
   const roundModalSub = $("roundModalSub");
@@ -1421,7 +1399,7 @@
     reviewIndex: 0,
     scrambleTokens: [],
     scrambleOrder: [],
-    usedTokenIndices: new Set(),   // ← 关键新增：被用户点击过的芯片索引集合（按芯片区分已用，而非按词位置）
+    usedTokenIndices: new Set(),
     twoPass: true,
     currentPass: "new",
   };
@@ -1616,7 +1594,6 @@
 
   // ============================================================
   //  复习模式
-  //  ⚠ 修复：只复习「已练完」的例句（含新句 pass 完成），不再把未学习例句拉进来
   // ============================================================
   function enterReviewMode(mode, scope) {
     state.reviewMode = mode;
@@ -1634,7 +1611,6 @@
         if (!isPracticable(wd)) return;
         wd.replacements.forEach((rep, ri) => {
           rep.examples.forEach((ex, ei) => {
-            // ← 关键过滤：只纳入已经完成的例句
             if (!isExampleDone(wk, wd.word, rep.word, ei)) return;
             queue.push({ week: wk, wordIdx: wi, repIndex: ri, exIndex: ei });
           });
@@ -2000,7 +1976,6 @@
     refreshChipsUsage();
   }
 
-  // ⚠ 已用状态改为按「芯片索引」查集合
   function refreshChipsUsage() {
     if (!wordChips || !isScrambleMode()) return;
     wordChips.querySelectorAll(".chip").forEach(chip => {
@@ -2045,7 +2020,7 @@
   //  打字逻辑
   // ============================================================
   function resetTypingForNewSentence() {
-    state.usedTokenIndices = new Set();   // ← 新句清空已用集合
+    state.usedTokenIndices = new Set();
     state.currentIndex = 0;
     typingInput.value = "";
     typingInput.disabled = false;
@@ -2122,52 +2097,57 @@
     });
   }
 
-  // ⚠ 已用状态改为按「芯片索引」判断
   function isTokenUsed(tokenIndex) {
     return state.usedTokenIndices.has(tokenIndex);
   }
 
   // ============================================================
-  //  相同单词点击逻辑（修复版）
-  //  - 放行条件：文本相同（多个相同词互认）+ 该芯片未使用过（防重复点）
-  //  - 填充内容：从「当前光标位置」到 expected 词尾（保留词间空格）
-  //  - 已用标记：按用户点击的芯片索引记录 → 点哪枚哪枚置灰
+  //  ★★★ 核心修复：clickChip ★★★
+  //  修复要点（相对上一版）：
+  //   1) 函数开头强制同步 currentIndex = typingInput.value.length，
+  //      彻底杜绝 value 与 currentIndex 失步导致的错位
+  //   2) 放行条件增加 state.usedTokenIndices.has(tokenIndex) 拦截
+  //   3) 填充成功后 state.usedTokenIndices.add(tokenIndex) 记录已用
+  //  这样：相同单词互认（按文本匹配放行）+ 按芯片索引置灰，
+  //  彻底解决 "I foun" 卡死 / a 点不了 的问题。
   // ============================================================
   function clickChip(tokenIndex) {
-      const expected = nextScrambleToken();
-      const token = state.scrambleTokens[tokenIndex];
+    // ★ 修复 1：强制同步，杜绝 value 与 currentIndex 失步
+    state.currentIndex = typingInput.value.length;
 
-      // 放行条件：文本相同 且 该芯片未使用过
-      if (!expected || !token || token.text !== expected.text
-          || state.usedTokenIndices.has(tokenIndex)) {
-        state.combo = 0;
-        state.score = Math.max(0, state.score - 3);
-        state.totalTyped++;
-        recordError();
-        shakeChip(tokenIndex);
-        return;
-      }
+    const expected = nextScrambleToken();
+    const token = state.scrambleTokens[tokenIndex];
 
-      // 若光标已进入该词内部，退回到词首重新填入
-      if (state.currentIndex > expected.start) {
-        typingInput.value = typingInput.value.slice(0, expected.start);
-        state.currentIndex = expected.start;
-      }
-
-      // ★ 关键修复：从 currentIndex 到 expected.end（包含词前空格）
-      typingInput.value += state.currentSentence.slice(state.currentIndex, expected.end);
-
-      // 按用户点击的那枚芯片标记已用（不是按 expected 的位置）
-      state.usedTokenIndices.add(tokenIndex);
-
+    // ★ 修复 2：放行条件增加"该芯片未使用过"拦截
+    if (!expected || !token || token.text !== expected.text
+        || state.usedTokenIndices.has(tokenIndex)) {
+      state.combo = 0;
+      state.score = Math.max(0, state.score - 3);
       state.totalTyped++;
-      state.correctChars += expected.text.length;
-      state.combo++;
-      state.maxCombo = Math.max(state.maxCombo, state.combo);
-      state.score += 10 + Math.floor(state.combo / 5) * 3;
-      if (state.combo > 0 && state.combo % 10 === 0) showComboPopup(state.combo);
+      recordError();
+      shakeChip(tokenIndex);
+      return;
+    }
 
-      handleInput();
+    // 若光标已进入该词内部，退回到词首重新填入
+    if (state.currentIndex > expected.start) {
+      typingInput.value = typingInput.value.slice(0, expected.start);
+      state.currentIndex = expected.start;
+    }
+
+    // 从 currentIndex 到 expected.end（包含词前空格）
+    typingInput.value += state.currentSentence.slice(state.currentIndex, expected.end);
+
+    // ★ 修复 3：按用户点击的芯片索引标记已用
+    state.usedTokenIndices.add(tokenIndex);
+
+    state.totalTyped++;
+    state.correctChars += expected.text.length;
+    state.combo++;
+    state.maxCombo = Math.max(state.maxCombo, state.combo);
+    state.score += 10 + Math.floor(state.combo / 5) * 3;
+    if (state.combo > 0 && state.combo % 10 === 0) showComboPopup(state.combo);
+    handleInput();
   }
 
   function shakeChip(tokenIndex) {
@@ -2195,11 +2175,13 @@
 
   function handleInput() {
     const value = typingInput.value;
+    // 光标回退（点击回退后同步）
     if (value.length < state.currentIndex) {
       state.currentIndex = value.length;
       renderSentenceChars(state.currentSentence, currentRepWord());
       return;
     }
+    // ★ 这里以 value.length 为准，且不超过句子长度
     state.currentIndex = Math.min(value.length, state.currentSentence.length);
 
     renderSentenceChars(state.currentSentence, currentRepWord());
@@ -2848,7 +2830,6 @@
     startFromLatest();
   })();
 </script>
-
 
 
 <script>
