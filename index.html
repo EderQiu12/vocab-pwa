@@ -2,12 +2,136 @@
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<meta name="theme-color" content="#4F46E5" />
+<link rel="manifest" href="manifest.json" />
 <title>Daily English · 英语学习工具箱</title>
-<script>
-  // 最简单入口：直接进词汇进化，顶部导航可切到 Daily Chat
-  location.replace('vocab.html');
-</script>
+<style>
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0;
+    min-height: 100vh;
+  }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC",
+      "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+    color: #e8e8e8;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    padding-top: calc(24px + env(safe-area-inset-top));
+    padding-bottom: calc(24px + env(safe-area-inset-bottom));
+  }
+
+  .landing-header {
+    text-align: center;
+    margin-bottom: 32px;
+  }
+  .landing-header h1 {
+    font-size: 28px;
+    margin: 0 0 8px;
+    font-weight: 800;
+    background: linear-gradient(135deg, #00e5ff, #d500f9);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  .landing-header p {
+    margin: 0;
+    color: #8a8fa3;
+    font-size: 14px;
+  }
+
+  .cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 16px;
+    width: 100%;
+    max-width: 720px;
+  }
+
+  .app-card {
+    display: block;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1.5px solid rgba(255, 255, 255, 0.1);
+    border-radius: 16px;
+    padding: 24px;
+    text-decoration: none;
+    color: inherit;
+    transition: all .2s;
+    position: relative;
+    overflow: hidden;
+  }
+  .app-card::before {
+    content: "";
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, #00e5ff, #d500f9);
+    opacity: 0.6;
+  }
+  .app-card:hover {
+    border-color: #00e5ff;
+    background: rgba(0, 229, 255, 0.06);
+    transform: translateY(-3px);
+    box-shadow: 0 8px 32px rgba(0, 229, 255, 0.15);
+  }
+  .app-card .icon {
+    font-size: 40px;
+    margin-bottom: 12px;
+    display: block;
+  }
+  .app-card .title {
+    font-size: 20px;
+    font-weight: 800;
+    color: #fff;
+    margin-bottom: 6px;
+  }
+  .app-card .desc {
+    font-size: 13px;
+    color: #8a8fa3;
+    line-height: 1.6;
+    min-height: 42px;
+  }
+  .app-card .arrow {
+    margin-top: 16px;
+    font-size: 12px;
+    color: #00e5ff;
+    font-weight: 600;
+  }
+</style>
 </head>
-<body></body>
+<body>
+  <div class="landing-header">
+    <h1>📚 Daily English</h1>
+    <p>选择你要练习的应用</p>
+  </div>
+
+  <div class="cards" id="cards"></div>
+
+  <script src="nav.js"></script>
+  <script>
+    // 从 nav.js 暴露的 APPS 生成卡片（若没拿到则用兜底）
+    const APPS = window.DAILY_ENGLISH_APPS || {
+      vocab: { icon: '🎯', title: '词汇进化', href: 'vocab.html', desc: '每周消灭 50 个 Comfort Word' },
+      chat:  { icon: '💬', title: 'Daily Chat', href: 'chat.html', desc: '200 组地道日常对话跟读' }
+    };
+    const cards = document.getElementById('cards');
+    for (const [key, app] of Object.entries(APPS)) {
+      const a = document.createElement('a');
+      a.className = 'app-card';
+      a.href = app.href;
+      a.innerHTML = `
+        <span class="icon">${app.icon}</span>
+        <div class="title">${app.title}</div>
+        <div class="desc">${app.desc || ''}</div>
+        <div class="arrow">进入 →</div>
+      `;
+      cards.appendChild(a);
+    }
+  </script>
+</body>
 </html>
