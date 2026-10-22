@@ -1163,6 +1163,13 @@
   .word-card.excluded .word-card-word {
     text-decoration-color: rgba(255, 107, 107, 0.7);
   }  
+    /* 中文翻译：从例句框移入单词提示区顶部 */
+  .scramble-bar .example-cn {
+    margin-top: 0;
+    margin-bottom: 10px;
+    padding-bottom: 10px;
+    border-bottom: 1px dashed rgba(0, 229, 255, 0.18);
+  }
 </style>
 </head>
 <body>
@@ -1281,7 +1288,20 @@
     </div>
 
     <!-- 可滚动区：语音控制 + 统计 + 例句 + 选项 -->
+
+            <!-- 可滚动区：积分 + 语音控制 + 例句 -->
     <div class="ps-scroll">
+      <!-- 统计栏（移到顶部） -->
+      <div class="stats-bar">
+        <div class="stat-card"><div class="stat-label">⏱ 用时</div><div class="stat-value timer" id="timerValue">0s</div></div>
+        <div class="stat-card"><div class="stat-label">⭐ 得分</div><div class="stat-value score" id="scoreValue">0</div></div>
+        <div class="stat-card"><div class="stat-label">🔥 连击</div><div class="stat-value combo" id="comboValue">0</div></div>
+        <div class="stat-card"><div class="stat-label">🎯 正确率</div><div class="stat-value accuracy" id="accuracyValue">100%</div></div>
+        <div class="stat-card"><div class="stat-label">❌ 错误</div><div class="stat-value wrong" id="wrongCharsValue">0</div></div>
+        <div class="stat-card"><div class="stat-label">📊 本词进度</div><div class="stat-value progress" id="wordProgress">0/0</div></div>
+      </div>
+
+      <!-- 语音控制 + 练习模式（移到积分栏下方） -->
       <div class="ps-voice-row">
         <div class="voice-controls">
           <div class="auto-speak-toggle" id="autoSpeakToggle" title="每刷新一个例句自动播放">
@@ -1301,34 +1321,20 @@
         </div>
       </div>
 
-      <!-- 统计栏 -->
-      <div class="stats-bar">
-        <div class="stat-card"><div class="stat-label">⏱ 用时</div><div class="stat-value timer" id="timerValue">0s</div></div>
-        <div class="stat-card"><div class="stat-label">⭐ 得分</div><div class="stat-value score" id="scoreValue">0</div></div>
-        <div class="stat-card"><div class="stat-label">🔥 连击</div><div class="stat-value combo" id="comboValue">0</div></div>
-        <div class="stat-card"><div class="stat-label">🎯 正确率</div><div class="stat-value accuracy" id="accuracyValue">100%</div></div>
-        <div class="stat-card"><div class="stat-label">❌ 错误</div><div class="stat-value wrong" id="wrongCharsValue">0</div></div>
-        <div class="stat-card"><div class="stat-label">📊 本词进度</div><div class="stat-value progress" id="wordProgress">0/0</div></div>
-      </div>
-
-      <!-- 例句展示 -->
-
+      <!-- 例句展示（exampleCn 已移走） -->
       <div class="example-box" id="exampleBox">
         <div class="example-old speakable" id="exampleOld" title="点击朗读旧句">~~ 旧表达 ~~</div>
         <div class="example-arrow" id="exampleArrow">↓ 用新词替换</div>
         <div class="example-new speakable" id="exampleNew" title="点击朗读当前句子"></div>
-        <div class="example-cn" id="exampleCn"></div>
       </div>
-
     </div>
-
     <!-- 底部固定区：单词块 + 输入框 + 切换按钮 -->
     <div class="ps-bottom">
       <div class="scramble-bar" id="scrambleBar">
-        <div class="scramble-title">🧩 <b>单词提示（顺序已打乱）</b>：按正确语序依次<b>点击</b>它们，拼出完整句子（大小写 / 标点已保留）</div>
+        <div class="example-cn" id="exampleCn"></div>
+        <div class="scramble-title">🧩 <b>单词提示（顺序已打乱）</b>：按正确语序请依次<b>点击</b></div>
         <div class="word-chips" id="wordChips"></div>
       </div>
-
       <div class="input-wrapper">
         <input type="text" id="typingInput" placeholder="逐字输入新表达（高亮紫色为本周替代词）..." autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" disabled />
         <div class="hint">💡 按正确语序点击上方单词拼出整句 · 点对的词变绿，点错抖动提示 · 完成一句自动加载下一句</div>
