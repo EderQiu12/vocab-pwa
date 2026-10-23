@@ -3030,7 +3030,7 @@
 <script>
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
-    navigator.serviceWorker.register('./sw.js').then(
+    navigator.serviceWorker.register('./sw.js', { updateViaCache: 'none' }).then(
       reg => console.log('[PWA] SW registered:', reg.scope),
       err => console.warn('[PWA] SW failed:', err)
     );
