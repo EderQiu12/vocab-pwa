@@ -847,10 +847,10 @@
 
   /* ========== 控制按钮 ========== */
   .controls {
-    display: flex;
-    justify-content: center;
-    gap: 12px;
-    flex-wrap: wrap;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    margin-top: 8px;
   }
 
   .btn {
@@ -1159,7 +1159,7 @@
   }
   .ps-bottom .scramble-bar { margin-bottom: 10px; }
   .ps-bottom .input-wrapper { margin-bottom: 10px; }
-  .ps-bottom .controls { margin-top: 0; }
+  .ps-bottom .controls { margin-top: 8px; }
   #practiceScreen .word-chips { gap: 10px; }
   #practiceScreen .chip {
     font-size: 18px; padding: 12px 16px; min-height: 48px;
@@ -1227,8 +1227,8 @@
   .word-card.excluded .word-card-word {
     text-decoration-color: rgba(255, 107, 107, 0.7);
   }  
-    /* 中文翻译：从例句框移入单词提示区顶部 */
-  .scramble-bar .example-cn {
+      /* 中文翻译：固定在 ps-bottom 顶部 */
+  #exampleCn {
     margin-top: 0;
     margin-bottom: 10px;
     padding-bottom: 10px;
@@ -1407,18 +1407,17 @@
         <div class="example-new speakable" id="exampleNew" title="点击朗读当前句子"></div>
       </div>
     </div>
-    <!-- 底部固定区：单词块 + 输入框 + 切换按钮 -->
+           <!-- 底部固定区：中文 + 输入框 + 单词块 + 切换按钮 -->
     <div class="ps-bottom">
+      <div class="example-cn" id="exampleCn"></div>
+      <div class="input-wrapper">
+        <input type="text" id="typingInput" placeholder="点击下方单词，按正确语序拼出整句..." autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" disabled />
+        <div class="hint">💡 点对的词变绿，点错抖动提示 · 完成一句自动加载下一句</div>
+      </div>
       <div class="scramble-bar" id="scrambleBar">
-        <div class="example-cn" id="exampleCn"></div>
         <div class="scramble-title">🧩 <b>单词提示（顺序已打乱）</b>：按正确语序请依次<b>点击</b></div>
         <div class="word-chips" id="wordChips"></div>
       </div>
-      <div class="input-wrapper">
-        <input type="text" id="typingInput" placeholder="逐字输入新表达（高亮紫色为本周替代词）..." autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" disabled />
-        <div class="hint">💡 按正确语序点击上方单词拼出整句 · 点对的词变绿，点错抖动提示 · 完成一句自动加载下一句</div>
-      </div>
-
       <div class="controls">
         <button class="btn btn-secondary" id="prevWordBtn">← 上一个替代词</button>
         <button class="btn btn-secondary" id="nextWordBtn">下一个替代词 →</button>

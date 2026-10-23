@@ -2066,13 +2066,36 @@
     font-size: 13.5px;
     font-style: italic;
   } 
-    /* 中文翻译：从例句框移入单词提示区顶部 */
-  .scramble-bar .example-cn {
+    /* 中文翻译：固定在 ps-bottom 顶部 */
+  #exampleCn {
     margin-top: 0;
     margin-bottom: 10px;
     padding-bottom: 10px;
     border-bottom: 1px dashed rgba(0, 229, 255, 0.18);
   }
+
+  /* 底部 3 个按钮：一排等宽 */
+  .turn-nav-btns {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+    margin-top: 8px;
+  }
+  .turn-nav-btns .quick-btn {
+    justify-content: center;
+    padding: 10px 6px;
+    font-size: 13px;
+    white-space: nowrap;
+    min-width: 0;
+    width: 100%;
+  }
+  @media (max-width: 400px) {
+    .turn-nav-btns .quick-btn {
+      font-size: 11.5px;
+      padding: 9px 4px;
+    }
+  }
+
 
   /* 语音控制 */
   .ps-voice-row { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-bottom: 14px; }
@@ -2422,16 +2445,16 @@
 
     <!-- 底部固定区 -->
     <div class="ps-bottom">
+      <div class="example-cn" id="exampleCn"></div>
+      <div class="input-wrapper">
+        <input type="text" id="typingInput" placeholder="点击下方单词，按正确语序拼出整句..." readonly />
+        <div class="hint">💡 点对的词变绿，点错抖动提示 · 完成一句自动加载下一句</div>
+      </div>
       <div class="scramble-bar">
-        <div class="example-cn" id="exampleCn"></div>
         <div class="scramble-title">🧩 <b>单词提示（顺序已打乱）</b>：按正确语序请依次<b>点击</b></div>
         <div class="word-chips" id="wordChips"></div>
       </div>
-      <div class="input-wrapper">
-        <input type="text" id="typingInput" placeholder="点击上方单词，按正确语序拼出整句..." readonly />
-        <div class="hint">💡 点对的词变绿，点错抖动提示 · 完成一句自动加载下一句</div>
-      </div>
-      <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;">
+      <div class="turn-nav-btns">
         <button class="quick-btn secondary" id="btnPrevTurn">◀ 上一句</button>
         <button class="quick-btn secondary" id="btnRestartDialogue">🔄 重练本组</button>
         <button class="quick-btn secondary" id="btnSkipTurn">跳过本句 ▶</button>
