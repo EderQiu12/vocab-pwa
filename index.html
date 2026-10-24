@@ -3,19 +3,25 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-<meta name="theme-color" content="#4F46E5" />
+<meta name="theme-color" content="#1a1a2e" />
+<meta name="description" content="Daily English 英语学习工具箱：词汇进化、Daily Chat、1000句高频单句训练。" />
 <link rel="manifest" href="manifest.json" />
+<link rel="apple-touch-icon" href="icons/icon-192.png" />
 <title>Daily English · 英语学习工具箱</title>
 <style>
   * { box-sizing: border-box; }
+
   html, body {
     margin: 0;
     min-height: 100vh;
+    min-height: 100dvh; /* 移动端地址栏收起时更稳定 */
   }
+
   body {
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC",
       "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
     background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+    background-attachment: fixed;
     color: #e8e8e8;
     display: flex;
     flex-direction: column;
@@ -26,6 +32,7 @@
     padding-bottom: calc(24px + env(safe-area-inset-bottom));
   }
 
+  /* ---------- 顶部标题 ---------- */
   .landing-header {
     text-align: center;
     margin-bottom: 32px;
@@ -34,6 +41,7 @@
     font-size: 28px;
     margin: 0 0 8px;
     font-weight: 800;
+    color: #00e5ff; /* 渐变不生效时的兜底色 */
     background: linear-gradient(135deg, #00e5ff, #d500f9);
     -webkit-background-clip: text;
     background-clip: text;
@@ -45,9 +53,10 @@
     font-size: 14px;
   }
 
+  /* ---------- 卡片网格 ---------- */
   .cards {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
     gap: 16px;
     width: 100%;
     max-width: 720px;
@@ -55,15 +64,15 @@
 
   .app-card {
     display: block;
+    position: relative;
+    overflow: hidden;
     background: rgba(255, 255, 255, 0.04);
     border: 1.5px solid rgba(255, 255, 255, 0.1);
     border-radius: 16px;
     padding: 24px;
     text-decoration: none;
     color: inherit;
-    transition: all .2s;
-    position: relative;
-    overflow: hidden;
+    transition: transform .2s, border-color .2s, background .2s, box-shadow .2s;
   }
   .app-card::before {
     content: "";
@@ -79,10 +88,16 @@
     transform: translateY(-3px);
     box-shadow: 0 8px 32px rgba(0, 229, 255, 0.15);
   }
+  .app-card:focus-visible {
+    outline: 2px solid #00e5ff;
+    outline-offset: 3px;
+  }
+
   .app-card .icon {
-    font-size: 40px;
-    margin-bottom: 12px;
     display: block;
+    font-size: 40px;
+    line-height: 1;
+    margin-bottom: 12px;
   }
   .app-card .title {
     font-size: 20px;
@@ -92,46 +107,118 @@
   }
   .app-card .desc {
     font-size: 13px;
-    color: #8a8fa3;
     line-height: 1.6;
-    min-height: 42px;
+    color: #8a8fa3;
+    min-height: 42px; /* 两行高度，保证多卡片对齐 */
   }
   .app-card .arrow {
     margin-top: 16px;
     font-size: 12px;
-    color: #00e5ff;
     font-weight: 600;
+    color: #00e5ff;
+  }
+
+  /* ---------- 禁用 JS 时的提示 ---------- */
+  .no-script {
+    max-width: 720px;
+    margin-top: 16px;
+    padding: 16px 20px;
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    background: rgba(255, 255, 255, 0.04);
+    color: #8a8fa3;
+    font-size: 13px;
+    line-height: 1.6;
+    text-align: center;
+  }
+
+  /* ---------- 减少动效偏好 ---------- */
+  @media (prefers-reduced-motion: reduce) {
+    .app-card,
+    .app-card::before {
+      transition: none !important;
+    }
+    .app-card:hover {
+      transform: none;
+    }
   }
 </style>
 </head>
 <body>
-  <div class="landing-header">
+  <header class="landing-header">
     <h1>📚 Daily English</h1>
     <p>选择你要练习的应用</p>
-  </div>
+  </header>
 
-  <div class="cards" id="cards"></div>
+  <main class="cards" id="cards"></main>
+
+  <noscript>
+    <p class="no-script">此页面需要启用 JavaScript 才能显示应用列表，请在浏览器设置中开启后刷新。</p>
+  </noscript>
 
   <script src="nav.js"></script>
   <script>
-    // 从 nav.js 暴露的 APPS 生成卡片（若没拿到则用兜底）
-    const APPS = window.DAILY_ENGLISH_APPS || {
-      vocab: { icon: '🎯', title: '词汇进化', href: 'vocab.html', desc: '每周消灭 50 个 Comfort Word' },
-      chat:  { icon: '💬', title: 'Daily Chat', href: 'chat.html', desc: '200 组地道日常对话跟读' }
+  (function () {
+    'use strict';
+
+    /* 兜底数据：nav.js 未提供可用配置时使用 */
+    var FALLBACK_APPS = {
+      vocab:   { icon: '🎯', title: '词汇进化',   href: 'vocab.html',   desc: '每周消灭 50 个 Comfort Word' },
+      chat:    { icon: '💬', title: 'Daily Chat', href: 'chat.html',    desc: '201 组地道日常对话跟读' },
+      grammar: { icon: '📝', title: '1000句单句', href: 'phrases.html', desc: '1000句高频单句训练' }
     };
-    const cards = document.getElementById('cards');
-    for (const [key, app] of Object.entries(APPS)) {
-      const a = document.createElement('a');
-      a.className = 'app-card';
-      a.href = app.href;
-      a.innerHTML = `
-        <span class="icon">${app.icon}</span>
-        <div class="title">${app.title}</div>
-        <div class="desc">${app.desc || ''}</div>
-        <div class="arrow">进入 →</div>
-      `;
-      cards.appendChild(a);
+
+    /* 读取 nav.js 暴露的配置，非空对象才采用 */
+    var custom = window.DAILY_ENGLISH_APPS;
+    var apps = (custom && typeof custom === 'object' && Object.keys(custom).length > 0)
+      ? custom
+      : FALLBACK_APPS;
+
+    var container = document.getElementById('cards');
+    if (!container) return;
+
+    var frag = document.createDocumentFragment();
+
+    Object.keys(apps).forEach(function (key) {
+      var app = apps[key];
+      if (!app || typeof app !== 'object' || !app.href) return;
+
+      var card = document.createElement('a');
+      card.className = 'app-card';
+      card.href = app.href;
+
+      var icon = document.createElement('span');
+      icon.className = 'icon';
+      icon.textContent = app.icon || '📄';
+      icon.setAttribute('aria-hidden', 'true');
+
+      var title = document.createElement('div');
+      title.className = 'title';
+      title.textContent = app.title || key;
+
+      var desc = document.createElement('div');
+      desc.className = 'desc';
+      desc.textContent = app.desc || '';
+
+      var arrow = document.createElement('div');
+      arrow.className = 'arrow';
+      arrow.textContent = '进入 →';
+
+      card.append(icon, title, desc, arrow);
+      frag.appendChild(card);
+    });
+
+    container.appendChild(frag);
+
+    /* 注册 Service Worker（需同目录存在 sw.js；不存在时静默失败） */
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', function () {
+        navigator.serviceWorker.register('sw.js').catch(function () {
+          /* 未提供 sw.js 或注册失败时忽略，不影响页面功能 */
+        });
+      });
     }
+  })();
   </script>
 </body>
 </html>
