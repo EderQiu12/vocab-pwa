@@ -1234,6 +1234,21 @@ header h1 {
     padding-bottom: 10px;
     border-bottom: 1px dashed rgba(0, 229, 255, 0.18);
   }
+      /* ========== 键盘选中态 ========== */
+  .chip.focused {
+    background: rgba(0, 229, 255, 0.16); border-color: #00e5ff; color: #00e5ff;
+    outline: 2px solid rgba(0, 229, 255, 0.6); outline-offset: 2px;
+    box-shadow: 0 0 0 4px rgba(0, 229, 255, 0.12);
+  }
+  .chip.focused.used { outline-color: rgba(39, 174, 96, 0.5); }
+
+  .round-modal button.kb-focus {
+    outline: 2px solid #00e5ff; outline-offset: 3px;
+    box-shadow: 0 0 0 4px rgba(0, 229, 255, 0.18);
+  }
+  .round-modal .modal-hint {
+    margin-top: 12px; font-size: 11.5px; color: #6a7090; text-align: center;
+  }
 </style>
 </head>
 <body data-app="vocab">
@@ -1415,7 +1430,7 @@ header h1 {
         <div class="hint">💡 点对的词变绿，点错抖动提示 · 完成一句自动加载下一句</div>
       </div>
       <div class="scramble-bar" id="scrambleBar">
-        <div class="scramble-title">🧩 <b>单词提示（顺序已打乱）</b>：按正确语序请依次<b>点击</b></div>
+        <div class="scramble-title">🧩 <b>单词提示（顺序已打乱）</b>：按正确语序请依次<b>点击</b>，或用 <b>← →</b> 寻找、<b>↑</b> 选择、<b>↓</b> 取消</div>
         <div class="word-chips" id="wordChips"></div>
       </div>
       <div class="controls">
@@ -1446,6 +1461,7 @@ header h1 {
       <button class="btn-warn" id="roundPickBtn">📝 我来选下一词</button>
       <button class="btn-secondary" id="roundCloseBtn">✖ 结束</button>
     </div>
+    <div class="modal-hint">键盘：← → 选择 · ↑/Enter 确认 · ↓/Esc 结束</div>
     <!-- 选择下一词面板 -->
     <div id="roundPickPanel" style="display:none;margin-top:16px;padding-top:16px;border-top:1px solid rgba(255,255,255,0.1);text-align:left;">
       <div style="margin-bottom:8px;font-size:12px;color:#888;text-align:center;">点击下方任一词开始练习（已掌握的会显示删除线）：</div>
@@ -1584,6 +1600,7 @@ header h1 {
     usedTokenIndices: new Set(),
     twoPass: true,
     currentPass: "new",
+    chipFocus: -1, // 👈 新增键盘焦点状态
   };
 
   // ============================================================
@@ -2312,6 +2329,7 @@ header h1 {
   function resetTypingForNewSentence() {
     state.usedTokenIndices = new Set();
     state.currentIndex = 0;
+    state.chipFocus = -1; // 👈 新增
     typingInput.value = "";
     typingInput.disabled = false;
     updateTypingInputLock();
@@ -2375,7 +2393,100 @@ header h1 {
       chip.dataset.index = String(ti);
       wordChips.appendChild(chip);
     });
+    refreshChipFocusClass(); // 👈 新增
+  }  // --- 键盘焦点逻辑开始 ---
+  function chipEls() {
+    return Array.from(wordChips.querySelectorAll(".chip"));
   }
+
+  function refreshChipFocusClass() {
+    const els = chipEls();
+    if (!els.length) { state.chipFocus = -1; return; }
+    if (state.chipFocus >= els.length) state.chipFocus = els.length - 1;
+    els.forEach((el, i) => el.classList.toggle("focused", i === state.chipFocus));
+  }
+
+  function setChipFocus(idx) {
+    const els = chipEls();
+    if (!els.length) { state.chipFocus = -1; return; }
+    const n = els.length;
+    state.chipFocus = ((idx % n) + n) % n;
+    els.forEach((el, i) => el.classList.toggle("focused", i === state.chipFocus));
+    const el = els[state.chipFocus];
+    if (el && el.scrollIntoView) el.scrollIntoView({ block: "nearest", inline: "nearest" });
+  }
+
+  function moveChipFocus(step) {
+    const els = chipEls();
+    if (!els.length) return;
+    const n = els.length;
+    const idx = state.chipFocus;
+    if (idx < 0 || idx >= n) { setChipFocus(step > 0 ? 0 : n - 1); return; }
+    for (let k = 1; k <= n; k++) {
+      const j = ((idx + step * k) % n + n) % n;
+      if (!els[j].classList.contains("used")) { setChipFocus(j); return; }
+    }
+    setChipFocus(idx + step);
+  }
+
+  function selectFocusedChip() {
+    const els = chipEls();
+    const chip = els[state.chipFocus];
+    if (!chip || chip.classList.contains("used")) return;
+    const keep = state.chipFocus;
+    clickChip(parseInt(chip.dataset.index, 10));
+    const after = chipEls();
+    if (!after.length) return;
+    const n = after.length;
+    for (let k = 1; k <= n; k++) {
+      const j = ((keep + k) % n + n) % n;
+      if (!after[j].classList.contains("used")) { setChipFocus(j); return; }
+    }
+  }
+
+  function cancelLastToken() {
+    const used = Array.from(state.usedTokenIndices);
+    if (!used.length) return;
+    let lastTI = -1, lastEnd = -1;
+    used.forEach(ti => {
+      const t = state.scrambleTokens[ti];
+      if (t && t.end > lastEnd) { lastEnd = t.end; lastTI = ti; }
+    });
+    if (lastTI < 0) return;
+    const t = state.scrambleTokens[lastTI];
+    state.usedTokenIndices.delete(lastTI);
+    typingInput.value = state.currentSentence.slice(0, t.start).replace(/\s+$/, "");
+    state.currentIndex = typingInput.value.length;
+    renderSentenceChars(state.currentSentence, currentRepWord());
+    renderChips();
+    const pos = chipEls().findIndex(el => parseInt(el.dataset.index, 10) === lastTI);
+    if (pos >= 0) setChipFocus(pos);
+  }
+
+  let modalFocus = -1;
+  function modalButtons() {
+    return [roundAutoNextBtn, roundRetryBtn, roundPickBtn, roundCloseBtn].filter(b => b && !b.disabled && b.style.display !== "none");
+  }
+  function setModalFocus(idx) {
+    const btns = modalButtons();
+    if (!btns.length) { modalFocus = -1; return; }
+    const n = btns.length;
+    modalFocus = ((idx % n) + n) % n;
+    [roundAutoNextBtn, roundRetryBtn, roundPickBtn, roundCloseBtn].forEach(b => b.classList.remove("kb-focus"));
+    btns[modalFocus].classList.add("kb-focus");
+  }
+  function moveModalFocus(step) {
+    const btns = modalButtons();
+    if (!btns.length) return;
+    if (modalFocus < 0) { setModalFocus(step > 0 ? 0 : btns.length - 1); return; }
+    setModalFocus(modalFocus + step);
+  }
+  function activateModalFocus() {
+    const btns = modalButtons();
+    const btn = btns[modalFocus];
+    if (btn) btn.click();
+  }
+  // --- 键盘焦点逻辑结束 ---
 
   function isTokenUsed(tokenIndex) { return state.usedTokenIndices.has(tokenIndex); }
 
@@ -2567,11 +2678,14 @@ header h1 {
 
     roundPickPanel.style.display = "none";
     roundModalOverlay.classList.add("show");
+    setModalFocus(0); // 👈 新增
   }
 
   function hideRoundModal() {
     roundModalOverlay.classList.remove("show");
     roundPickPanel.style.display = "none";
+    modalFocus = -1; // 👈 新增
+    [roundAutoNextBtn, roundRetryBtn, roundPickBtn, roundCloseBtn].forEach(b => b.classList.remove("kb-focus")); // 👈 新增
   }
 
   function renderPickList() {
@@ -2932,7 +3046,11 @@ header h1 {
 
   wordChips.addEventListener("click", (e) => {
     const chip = e.target.closest(".chip");
-    if (chip) clickChip(parseInt(chip.dataset.index, 10));
+    if (chip) {
+      state.chipFocus = chipEls().indexOf(chip); // 👈 同步焦点
+      clickChip(parseInt(chip.dataset.index, 10));
+      refreshChipFocusClass(); // 👈 刷新样式
+    }
   });
 
   twoPassToggle.addEventListener("click", () => setTwoPass(!state.twoPass));
@@ -3006,6 +3124,54 @@ header h1 {
     if (savedVoice) SELECTED_VOICE_NAME = savedVoice;
   }
 
+  document.addEventListener("keydown", e => {
+    if (!practiceScreen.classList.contains("open")) return;
+    if (e.ctrlKey || e.metaKey || e.altKey) return;
+
+    // 完成弹窗：← → 选按钮，↑/Enter 确认，↓/Esc 结束
+    if (roundModalOverlay.classList.contains("show")) {
+      switch (e.key) {
+        case "ArrowLeft":
+          e.preventDefault(); moveModalFocus(-1); break;
+        case "ArrowRight":
+          e.preventDefault(); moveModalFocus(1); break;
+        case "ArrowUp":
+        case "Enter":
+          e.preventDefault(); activateModalFocus(); break;
+        case "ArrowDown":
+        case "Escape":
+          e.preventDefault(); roundCloseBtn.click(); break;
+      }
+      return;
+    }
+
+    const tag = (e.target.tagName || "").toLowerCase();
+    if (tag === "select" || tag === "textarea" || tag === "input") return;
+    if (tag === "button" && (e.key === "Enter" || e.key === " ")) return;
+
+    switch (e.key) {
+      case "ArrowLeft":
+        e.preventDefault(); moveChipFocus(-1); break;
+      case "ArrowRight":
+        e.preventDefault(); moveChipFocus(1); break;
+      case "ArrowUp":
+        e.preventDefault(); selectFocusedChip(); break;
+      case "Enter":
+        e.preventDefault(); selectFocusedChip(); break;
+      case "ArrowDown":
+        e.preventDefault(); cancelLastToken(); break;
+      case "Escape":
+        e.preventDefault();
+        if (state.chipFocus >= 0) {
+          state.chipFocus = -1;
+          refreshChipFocusClass();
+        } else {
+          if (state.reviewMode) exitReviewMode();
+          closePractice();
+        }
+        break;
+    }
+  });
   // ============================================================
   //  初始化
   // ============================================================
