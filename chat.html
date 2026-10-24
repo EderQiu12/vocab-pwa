@@ -2463,7 +2463,6 @@
       <div class="example-cn" id="exampleCn"></div>
       <div class="input-wrapper">
         <input type="text" id="typingInput" placeholder="点击下方单词，按正确语序拼出整句..." readonly />
-        <div class="hint">💡 点对的词变绿，点错抖动提示 · 键盘：← → 挑选词，↑/Enter 选中，↓ 撤销上一个词</div>
       </div>
       <div class="scramble-bar">
         <div class="scramble-title">🧩 <b>单词提示（顺序已打乱）</b>：按正确语序依次<b>点击</b>，或用 <b>← →</b> 寻找、<b>↑</b> 选择、<b>↓</b> 取消</div>
@@ -3381,14 +3380,23 @@
     refreshChipFocusClass();
   });
 
-  // 键盘：← → 寻找，↑/Enter 选择，↓ 取消，Esc 退出
+  // 键盘：映射键位后，控制寻找、选择、取消、退出
   document.addEventListener("keydown", e => {
     if (!practiceScreen.classList.contains("open")) return;
     if (e.ctrlKey || e.metaKey || e.altKey) return;
 
+    // 1. 定义映射表
+    const KEY_MAP = {
+      'w': 'ArrowUp',    's': 'ArrowDown',  'a': 'ArrowLeft',  'd': 'ArrowRight',
+      'h': 'ArrowLeft',  'j': 'ArrowDown',  'k': 'ArrowUp',    'l': 'ArrowRight',
+      ' ': 'Enter'
+    };
+    const rawKey = e.key.length === 1 ? e.key.toLowerCase() : e.key;
+    const mappedKey = KEY_MAP[rawKey] || e.key;
+
     // 完成弹窗：← → 选按钮，↑/Enter 确认，↓/Esc 结束
     if (roundModalOverlay.classList.contains("show")) {
-      switch (e.key) {
+      switch (mappedKey) { // ★ 核心修改：使用 mappedKey
         case "ArrowLeft":
           e.preventDefault(); moveModalFocus(-1); break;
         case "ArrowRight":
@@ -3406,9 +3414,10 @@
     const tag = (e.target.tagName || "").toLowerCase();
     if (tag === "select" || tag === "textarea") return;
     if (tag === "input" && e.target !== typingInput) return;
-    if (tag === "button" && (e.key === "Enter" || e.key === " ")) return;
+    if (tag === "button" && (mappedKey === "Enter" || mappedKey === " ")) return;
 
-    switch (e.key) {
+    // 练习页面：控制单词块
+    switch (mappedKey) { // ★ 核心修改：使用 mappedKey
       case "ArrowLeft":
         e.preventDefault(); moveChipFocus(-1); break;
       case "ArrowRight":
@@ -3426,6 +3435,7 @@
         break;
     }
   });
+
 
   // 点击句子朗读
   exampleNew.addEventListener("click", () => {
