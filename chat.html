@@ -2200,6 +2200,13 @@
     animation: chipShake .3s; background: rgba(231, 76, 60, 0.2);
     border-color: rgba(231, 76, 60, 0.6); color: #e74c3c;
   }
+  /* 键盘选中态 */
+  .chip.focused {
+    background: rgba(0, 229, 255, 0.16); border-color: #00e5ff; color: #00e5ff;
+    outline: 2px solid rgba(0, 229, 255, 0.6); outline-offset: 2px;
+    box-shadow: 0 0 0 4px rgba(0, 229, 255, 0.12);
+  }
+  .chip.focused.used { outline-color: rgba(39, 174, 96, 0.5); }
   @keyframes chipShake {
     0%, 100% { transform: translateX(0); }
     25% { transform: translateX(-4px); }
@@ -2309,6 +2316,14 @@
   .round-modal .btn-secondary {
     background: rgba(255,255,255,0.1); color: #e8e8e8;
     border: 1px solid rgba(255,255,255,0.2);
+  }
+  /* 弹窗键盘选中态 */
+  .round-modal button.kb-focus {
+    outline: 2px solid #00e5ff; outline-offset: 3px;
+    box-shadow: 0 0 0 4px rgba(0, 229, 255, 0.18);
+  }
+  .round-modal .modal-hint {
+    margin-top: 12px; font-size: 11.5px; color: #6a7090; text-align: center;
   }
 
   /* ========== 可点击发声 ========== */
@@ -2448,10 +2463,10 @@
       <div class="example-cn" id="exampleCn"></div>
       <div class="input-wrapper">
         <input type="text" id="typingInput" placeholder="点击下方单词，按正确语序拼出整句..." readonly />
-        <div class="hint">💡 点对的词变绿，点错抖动提示 · 完成一句自动加载下一句</div>
+        <div class="hint">💡 点对的词变绿，点错抖动提示 · 键盘：← → 挑选词，↑/Enter 选中，↓ 撤销上一个词</div>
       </div>
       <div class="scramble-bar">
-        <div class="scramble-title">🧩 <b>单词提示（顺序已打乱）</b>：按正确语序请依次<b>点击</b></div>
+        <div class="scramble-title">🧩 <b>单词提示（顺序已打乱）</b>：按正确语序依次<b>点击</b>，或用 <b>← →</b> 寻找、<b>↑</b> 选择、<b>↓</b> 取消</div>
         <div class="word-chips" id="wordChips"></div>
       </div>
       <div class="turn-nav-btns">
@@ -2479,6 +2494,7 @@
       <button class="btn-secondary" id="roundRetryBtn">🔄 重练本组</button>
       <button class="btn-secondary" id="roundCloseBtn">✖ 结束</button>
     </div>
+    <div class="modal-hint">键盘：← → 选择 · ↑/Enter 确认 · ↓/Esc 结束</div>
   </div>
 </div>
 
@@ -2604,6 +2620,8 @@
     scrambleTokens: [],
     scrambleOrder: [],
     usedTokenIndices: new Set(),
+    // 键盘选词焦点（chips 的 DOM 下标）
+    chipFocus: -1,
     // 统计
     score: 0,
     combo: 0,
@@ -2876,6 +2894,7 @@
     }
     state.scrambleTokens = tokens;
     state.scrambleOrder = shuffle(tokens.map((_, i) => i));
+    state.chipFocus = -1;
   }
 
   function nextScrambleToken() {
@@ -2893,14 +2912,89 @@
       chip.dataset.index = String(ti);
       wordChips.appendChild(chip);
     });
+    refreshChipFocusClass();
   }
 
   function resetTypingForNewTurn() {
     state.usedTokenIndices = new Set();
     state.currentIndex = 0;
+    state.chipFocus = -1;
     typingInput.value = "";
     renderSentenceChars();
     renderChips();
+  }
+
+  // ============================================================
+  //  键盘选词
+  // ============================================================
+  function chipEls() {
+    return Array.from(wordChips.querySelectorAll(".chip"));
+  }
+
+  function refreshChipFocusClass() {
+    const els = chipEls();
+    if (!els.length) { state.chipFocus = -1; return; }
+    if (state.chipFocus >= els.length) state.chipFocus = els.length - 1;
+    els.forEach((el, i) => el.classList.toggle("focused", i === state.chipFocus));
+  }
+
+  function setChipFocus(idx) {
+    const els = chipEls();
+    if (!els.length) { state.chipFocus = -1; return; }
+    const n = els.length;
+    state.chipFocus = ((idx % n) + n) % n;
+    els.forEach((el, i) => el.classList.toggle("focused", i === state.chipFocus));
+    const el = els[state.chipFocus];
+    if (el && el.scrollIntoView) el.scrollIntoView({ block: "nearest", inline: "nearest" });
+  }
+
+  // 左右移动，自动跳过已用掉的词
+  function moveChipFocus(step) {
+    const els = chipEls();
+    if (!els.length) return;
+    const n = els.length;
+    const idx = state.chipFocus;
+    if (idx < 0 || idx >= n) { setChipFocus(step > 0 ? 0 : n - 1); return; }
+    for (let k = 1; k <= n; k++) {
+      const j = ((idx + step * k) % n + n) % n;
+      if (!els[j].classList.contains("used")) { setChipFocus(j); return; }
+    }
+    setChipFocus(idx + step);
+  }
+
+  function selectFocusedChip() {
+    const els = chipEls();
+    const chip = els[state.chipFocus];
+    if (!chip || chip.classList.contains("used")) return;
+    const keep = state.chipFocus;
+    clickChip(parseInt(chip.dataset.index, 10));
+    // 选中后焦点自动后移，方便继续拼
+    const after = chipEls();
+    if (!after.length) return;
+    const n = after.length;
+    for (let k = 1; k <= n; k++) {
+      const j = ((keep + k) % n + n) % n;
+      if (!after[j].classList.contains("used")) { setChipFocus(j); return; }
+    }
+  }
+
+  // ↓：撤销最后选中的一个词
+  function cancelLastToken() {
+    const used = Array.from(state.usedTokenIndices);
+    if (!used.length) return;
+    let lastTI = -1, lastEnd = -1;
+    used.forEach(ti => {
+      const t = state.scrambleTokens[ti];
+      if (t && t.end > lastEnd) { lastEnd = t.end; lastTI = ti; }
+    });
+    if (lastTI < 0) return;
+    const t = state.scrambleTokens[lastTI];
+    state.usedTokenIndices.delete(lastTI);
+    typingInput.value = state.currentSentence.slice(0, t.start).replace(/\s+$/, "");
+    renderSentenceChars();
+    renderChips();
+    const pos = chipEls().findIndex(el => parseInt(el.dataset.index, 10) === lastTI);
+    setChipFocus(pos);
   }
 
   function clickChip(tokenIndex) {
@@ -3044,10 +3138,44 @@
 
     roundModalOverlay.classList.add("show");
     showMasterPopup("🎉 完成！");
+    setModalFocus(0);
   }
 
   function hideRoundModal() {
     roundModalOverlay.classList.remove("show");
+    modalFocus = -1;
+    [roundNextBtn, roundRetryBtn, roundCloseBtn].forEach(b => b.classList.remove("kb-focus"));
+  }
+
+  // ============================================================
+  //  完成弹窗键盘操作
+  // ============================================================
+  let modalFocus = -1;
+
+  function modalButtons() {
+    return [roundNextBtn, roundRetryBtn, roundCloseBtn].filter(b => b && !b.disabled);
+  }
+
+  function setModalFocus(idx) {
+    const btns = modalButtons();
+    if (!btns.length) { modalFocus = -1; return; }
+    const n = btns.length;
+    modalFocus = ((idx % n) + n) % n;
+    [roundNextBtn, roundRetryBtn, roundCloseBtn].forEach(b => b.classList.remove("kb-focus"));
+    btns[modalFocus].classList.add("kb-focus");
+  }
+
+  function moveModalFocus(step) {
+    const btns = modalButtons();
+    if (!btns.length) return;
+    if (modalFocus < 0) { setModalFocus(step > 0 ? 0 : btns.length - 1); return; }
+    setModalFocus(modalFocus + step);
+  }
+
+  function activateModalFocus() {
+    const btns = modalButtons();
+    const btn = btns[modalFocus];
+    if (btn) btn.click();
   }
 
   // ============================================================
@@ -3248,7 +3376,55 @@
     const chip = e.target.closest(".chip");
     if (!chip) return;
     if (chip.classList.contains("used")) return;
+    state.chipFocus = chipEls().indexOf(chip);
     clickChip(parseInt(chip.dataset.index, 10));
+    refreshChipFocusClass();
+  });
+
+  // 键盘：← → 寻找，↑/Enter 选择，↓ 取消，Esc 退出
+  document.addEventListener("keydown", e => {
+    if (!practiceScreen.classList.contains("open")) return;
+    if (e.ctrlKey || e.metaKey || e.altKey) return;
+
+    // 完成弹窗：← → 选按钮，↑/Enter 确认，↓/Esc 结束
+    if (roundModalOverlay.classList.contains("show")) {
+      switch (e.key) {
+        case "ArrowLeft":
+          e.preventDefault(); moveModalFocus(-1); break;
+        case "ArrowRight":
+          e.preventDefault(); moveModalFocus(1); break;
+        case "ArrowUp":
+        case "Enter":
+          e.preventDefault(); activateModalFocus(); break;
+        case "ArrowDown":
+        case "Escape":
+          e.preventDefault(); roundCloseBtn.click(); break;
+      }
+      return;
+    }
+
+    const tag = (e.target.tagName || "").toLowerCase();
+    if (tag === "select" || tag === "textarea") return;
+    if (tag === "input" && e.target !== typingInput) return;
+    if (tag === "button" && (e.key === "Enter" || e.key === " ")) return;
+
+    switch (e.key) {
+      case "ArrowLeft":
+        e.preventDefault(); moveChipFocus(-1); break;
+      case "ArrowRight":
+        e.preventDefault(); moveChipFocus(1); break;
+      case "ArrowUp":
+        e.preventDefault(); selectFocusedChip(); break;
+      case "Enter":
+        e.preventDefault(); selectFocusedChip(); break;
+      case "ArrowDown":
+        e.preventDefault(); cancelLastToken(); break;
+      case "Escape":
+        e.preventDefault();
+        if (state.chipFocus >= 0) { state.chipFocus = -1; refreshChipFocusClass(); }
+        else { closePractice(); stopTimer(); updateHeaderStats(); renderDialogueGrid(); }
+        break;
+    }
   });
 
   // 点击句子朗读
