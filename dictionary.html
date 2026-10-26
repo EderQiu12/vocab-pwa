@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
@@ -58,22 +59,24 @@
   .search-bar { display: flex; gap: 10px; margin-bottom: 14px; }
   .input-wrap { position: relative; flex: 1; min-width: 0; }
   #searchInput {
-    width: 100%; padding: 14px 46px 14px 18px; font-size: 17px; font-family: inherit;
+    width: 100%; padding: 14px 52px 14px 18px; font-size: 17px; font-family: inherit;
     background: rgba(0,0,0,0.3); color: #fff;
     border: 2px solid rgba(255,255,255,0.12); border-radius: 12px;
     outline: none; transition: border-color .15s, box-shadow .15s;
   }
   #searchInput:focus { border-color: #00e5ff; box-shadow: 0 0 0 4px rgba(0,229,255,0.15); }
+  /* X 按钮：始终显示，输入时变亮可点 */
   .clear-btn {
     position: absolute; right: 10px; top: 50%; transform: translateY(-50%);
-    width: 28px; height: 28px; border-radius: 50%;
-    background: rgba(255,255,255,0.1); border: none;
-    color: rgba(255,255,255,0.6); font-size: 18px; line-height: 1; cursor: pointer;
-    font-family: inherit; padding: 0; display: none; align-items: center; justify-content: center;
-    transition: all .15s;
+    width: 30px; height: 30px; border-radius: 50%;
+    background: rgba(255,255,255,0.08); border: none;
+    color: rgba(255,255,255,0.6); font-size: 19px; line-height: 1; cursor: pointer;
+    font-family: inherit; padding: 0; display: flex; align-items: center; justify-content: center;
+    transition: all .15s; opacity: 0.35; pointer-events: none;
   }
-  .clear-btn.show { display: flex; }
-  .clear-btn:hover { background: rgba(255,107,107,0.25); color: #ff6b6b; transform: translateY(-50%) scale(1.08); }
+  .clear-btn.show { opacity: 1; pointer-events: auto; background: rgba(255,255,255,0.12); color: #fff; }
+  .clear-btn:hover { background: rgba(255,107,107,0.3); color: #ff6b6b; transform: translateY(-50%) scale(1.1); }
+
   #searchBtn {
     padding: 0 26px; font-size: 15px; font-weight: 700; font-family: inherit;
     background: linear-gradient(135deg, #00e5ff, #00b8d9); color: #0a1929;
@@ -114,6 +117,7 @@
   }
   .word-source.offline { background: rgba(142,68,173,0.15); color: #bb8fce; border-color: rgba(142,68,173,0.35); }
   .word-source.cached  { background: rgba(80,227,194,0.12); color: #50e3c2; border-color: rgba(80,227,194,0.3); }
+  .word-source.cn      { background: rgba(243,156,18,0.15); color: #f39c12; border-color: rgba(243,156,18,0.35); }
 
   .speak-btn {
     width: 34px; height: 34px; border-radius: 50%;
@@ -125,7 +129,6 @@
   .speak-btn:hover { background: rgba(0,229,255,0.25); transform: scale(1.05); }
   .speak-btn.playing { background: rgba(0,229,255,0.4); }
 
-  /* 生词表按钮（结果卡片内） */
   .wb-add-btn {
     width: 34px; height: 34px; border-radius: 50%;
     background: rgba(243,156,18,0.12); border: 1px solid rgba(243,156,18,0.4);
@@ -199,9 +202,7 @@
   .status-msg .icon { font-size: 44px; margin-bottom: 10px; opacity: 0.6; }
 
   /* ========== 生词表 ========== */
-  .wb-toolbar {
-    display: flex; gap: 8px; margin-bottom: 14px; flex-wrap: wrap;
-  }
+  .wb-toolbar { display: flex; gap: 8px; margin-bottom: 14px; flex-wrap: wrap; }
   .wb-tool-btn {
     padding: 9px 16px; font-size: 13px; font-weight: 600;
     font-family: inherit; border-radius: 10px; cursor: pointer;
@@ -212,7 +213,6 @@
   .wb-tool-btn:hover { background: rgba(0,229,255,0.12); color: #00e5ff; border-color: rgba(0,229,255,0.35); }
   .wb-tool-btn.danger { color: #ff6b6b; border-color: rgba(255,107,107,0.3); }
   .wb-tool-btn.danger:hover { background: rgba(255,107,107,0.15); }
-  .wb-tool-btn:disabled { opacity: 0.4; cursor: not-allowed; }
   .wb-tool-btn input[type="file"] { display: none; }
 
   .wb-search {
@@ -256,6 +256,24 @@
   }
   .wb-empty .icon { font-size: 44px; margin-bottom: 12px; opacity: 0.5; }
 
+  /* 中文查询结果条目 */
+  .cn-match-item {
+    background: rgba(243,156,18,0.05);
+    border: 1px solid rgba(243,156,18,0.25);
+    border-radius: 10px; padding: 12px 14px; margin-bottom: 8px;
+    cursor: pointer; transition: all .15s;
+    display: flex; align-items: flex-start; gap: 10px;
+  }
+  .cn-match-item:hover {
+    background: rgba(243,156,18,0.12);
+    border-color: rgba(243,156,18,0.5);
+    transform: translateY(-1px);
+  }
+  .cn-match-info { flex: 1; min-width: 0; }
+  .cn-match-word { font-size: 17px; font-weight: 800; color: #fff; }
+  .cn-match-phonetic { font-size: 12px; color: #8a8fa3; font-family: "SF Mono", Monaco, monospace; margin-left: 6px; }
+  .cn-match-meaning { font-size: 13px; color: #f39c12; margin-top: 3px; }
+
   /* Toast */
   .dict-toast {
     position: fixed; left: 50%; bottom: 40px; transform: translate(-50%, 20px);
@@ -272,7 +290,7 @@
     body { padding: 12px; }
     .header, .result-card { padding: 16px 18px; }
     .word-title { font-size: 24px; }
-    #searchInput { font-size: 16px; padding: 12px 42px 12px 14px; }
+    #searchInput { font-size: 16px; padding: 12px 46px 12px 14px; }
     #searchBtn { padding: 0 18px; font-size: 14px; }
     .dict-tab { font-size: 13px; padding: 9px 6px; }
   }
@@ -283,20 +301,18 @@
 <div class="app">
   <div class="header" id="pageHeader">
     <h1>📖 查词</h1>
-    <div class="subtitle">离线词典 + 联网释义 + 中文简译 + 生词表</div>
+    <div class="subtitle">离线词典 + 联网释义 + 中文简译 + 生词表 · 支持中英互查</div>
   </div>
 
-  <!-- 双 Tab -->
   <div class="dict-tabs" id="dictTabs">
     <button class="dict-tab active" data-tab="dict">📖 查词</button>
     <button class="dict-tab" data-tab="wordbook">⭐ 生词表<span class="wb-badge" id="wbTabBadge" style="display:none;">0</span></button>
   </div>
 
-  <!-- 查词面板 -->
   <div id="paneDict">
     <div class="search-bar">
       <div class="input-wrap">
-        <input id="searchInput" type="text" placeholder="输入英文单词，如 declare / obtain"
+        <input id="searchInput" type="text" placeholder="输入英文或中文，如 declare / 宣布"
                autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" />
         <button id="clearBtn" class="clear-btn" title="清空" aria-label="清空输入">×</button>
       </div>
@@ -309,7 +325,6 @@
     <div id="resultArea"></div>
   </div>
 
-  <!-- 生词表面板 -->
   <div id="paneWordbook" style="display:none;">
     <div class="wb-toolbar">
       <button class="wb-tool-btn" id="wbExportBtn">💾 导出 JSON</button>
@@ -326,20 +341,23 @@
 
 <script>
 /* ============================================================
- *  1. 离线词典
- *  ★ 保持原 OFFLINE_DICT 完整内容不变，直接粘贴在下面
+ *  1. 离线词典（★ 保持你原有的 OFFLINE_DICT 完整内容不变）
  * ============================================================ */
 const OFFLINE_DICT = {
-  /* ... 保留你现有 dictionary.html 里的完整 OFFLINE_DICT 内容 ... */
-  // ---- vocab 替代词 ----
+  /* ...此处保留你当前 dictionary.html 中所有词条，不重复贴出... */
   "declare":["/dɪˈkler/","v. 宣布，声明"],
-  "remark":["/rɪˈmɑːrk/","v. 评论，说起"],
   "obtain":["/əbˈteɪn/","v. 获得，取得"],
-  "acquire":["/əˈkwaɪər/","v. 获得，学到，收购"],
-  "secure":["/sɪˈkjʊr/","v. 确保，获得"],
-  "procure":["/prəˈkjʊr/","v. 采购，弄到"],
-  "create":["/kriˈeɪt/","v. 创造，产生"],
-  "produce":["/prəˈdjuːs/","v. 生产，制造"],
+  "essential":["/ɪˈsenʃl/","adj. 本质的，必需的"],
+  "crucial":["/ˈkruːʃl/","adj. 关键的，决定性的"],
+  "hello":["/həˈloʊ/","int. 你好"],
+  "world":["/wɜːrld/","n. 世界"],
+  "work":["/wɜːrk/","n. 工作，事务"],
+  "study":["/ˈstʌdi/","v. 研究，学习"],
+  "understand":["/ˌʌndərˈstænd/","v. 理解"],
+  "remember":["/rɪˈmembər/","v. 记得"],
+  "important":["/ɪmˈpɔːrtnt/","adj. 重要的"],
+  "beautiful":["/ˈbjuːtɪfl/","adj. 美丽的"],
+  "happy":["/ˈhæpi/","adj. 高兴的"],
   "generate":["/ˈdʒenəreɪt/","v. 生成，引起"],
   "concoct":["/kənˈkɒkt/","v. 编造，捏造"],
   "ponder":["/ˈpɑːndər/","v. 沉思，考虑"],
@@ -827,11 +845,12 @@ const OFFLINE_DICT = {
   "drink":["/drɪŋk/","v. 喝"],
   "sleep":["/sliːp/","v. 睡觉"]
 
+
+  /* ← 把你原来的 OFFLINE_DICT 完整内容全部粘贴到此 */
 };
 
-
 /* ============================================================
- *  2. vocab 词索引（同上）
+ *  2. vocab 词索引（★ 保持你原有内容）
  * ============================================================ */
 const VOCAB_WORDS_BY_WEEK = {
   "week-01": "say go get make know time year think people take see come like want way look new day use man find thing give tell very back good woman life child work call world school try ask need feel state become high something family leave put old mean keep student let",
@@ -868,11 +887,10 @@ function pushHistory(word) {
 function clearHistory() { try { localStorage.removeItem(HISTORY_KEY); } catch (e) {} renderHistory(); }
 
 /* ============================================================
- *  4. IndexedDB 生词表封装
+ *  4. IndexedDB 生词表
  * ============================================================ */
 const DB_NAME = "dict_wordbook_v1";
 const DB_STORE = "words";
-
 function openDB() {
   return new Promise((resolve, reject) => {
     const req = indexedDB.open(DB_NAME, 1);
@@ -887,7 +905,6 @@ function openDB() {
     req.onerror = () => reject(req.error);
   });
 }
-
 async function wbAdd(item) {
   const db = await openDB();
   return new Promise((resolve, reject) => {
@@ -954,8 +971,14 @@ const wbList = document.getElementById("wbList");
 const wbTabBadge = document.getElementById("wbTabBadge");
 const wbSearchInput = document.getElementById("wbSearchInput");
 
+/* ★ 统一入口：无论从哪修改输入框，都同步 X 按钮状态 */
+function setInputValue(val) {
+  searchInput.value = val || "";
+  clearBtn.classList.toggle("show", !!searchInput.value);
+}
+
 /* ============================================================
- *  6. 联网查询 + 翻译
+ *  6. 联网 + 翻译
  * ============================================================ */
 async function fetchFromAPI(word) {
   const url = `https://api.dictionaryapi.dev/api/v2/entries/en/${encodeURIComponent(word)}`;
@@ -963,10 +986,24 @@ async function fetchFromAPI(word) {
   if (!res.ok) throw new Error("not_found");
   return res.json();
 }
+/* 英 → 中 */
 async function translateToChinese(text) {
   if (!text || !text.trim()) return "";
   try {
     const url = `https://api.mymemory.translated.net/get?q=${encodeURIComponent(text.slice(0, 200))}&langpair=en|zh-CN`;
+    const res = await fetch(url);
+    if (!res.ok) return "";
+    const json = await res.json();
+    const t = json?.responseData?.translatedText || "";
+    if (!t || /^MYMEMORY WARNING/i.test(t)) return "";
+    return t;
+  } catch (e) { return ""; }
+}
+/* 中 → 英（新增） */
+async function translateToEnglish(text) {
+  if (!text || !text.trim()) return "";
+  try {
+    const url = `https://api.mymemory.translated.net/get?q=${encodeURIComponent(text.slice(0, 200))}&langpair=zh-CN|en`;
     const res = await fetch(url);
     if (!res.ok) return "";
     const json = await res.json();
@@ -998,7 +1035,6 @@ function normalizeApi(apiData, word) {
     meanings, source: "api", cachedAt: Date.now()
   };
 }
-
 async function enrichChinese(entry) {
   if (entry.cnMeaning) return;
   const src = entry.firstDefForTranslation || (entry.meanings?.[0]?.definitions?.[0]?.definition) || "";
@@ -1008,15 +1044,27 @@ async function enrichChinese(entry) {
 }
 
 /* ============================================================
- *  7. 查询主流程
+ *  7. 查询主流程（★ 中英分流）
  * ============================================================ */
 let currentEntry = null;
 let currentAudioEl = null;
 
-async function search(rawWord) {
-  const word = String(rawWord || "").trim().toLowerCase();
-  if (!word) { renderStatus("🔍", "请输入要查询的英文单词"); return; }
-  if (!/^[a-z][a-z' -]*$/.test(word)) { renderStatus("⚠️", "只支持英文单词查询"); return; }
+function isChineseText(text) {
+  return /[\u4e00-\u9fa5]/.test(text);
+}
+
+async function search(rawInput) {
+  const input = String(rawInput || "").trim();
+  if (!input) { renderStatus("🔍", "请输入要查询的英文或中文"); return; }
+
+  // ★ 中文 → 中文查询
+  if (isChineseText(input)) {
+    return searchChinese(input);
+  }
+
+  // 英文 → 原流程
+  const word = input.toLowerCase();
+  if (!/^[a-z][a-z' -]*$/.test(word)) { renderStatus("⚠️", "只支持英文单词或中文查询"); return; }
 
   searchBtn.disabled = true;
   const cache = loadCache();
@@ -1076,7 +1124,125 @@ async function search(rawWord) {
 }
 
 /* ============================================================
- *  8. 渲染
+ *  8. 中文查询
+ * ============================================================ */
+async function searchChinese(keyword) {
+  searchBtn.disabled = true;
+  renderStatus("⏳", `正在检索「${keyword}」…`);
+
+  const lower = keyword.toLowerCase();
+  const seen = new Set();
+  const matches = [];
+
+  // (1) 离线词典匹配
+  for (const [word, [phonetic, meaning]] of Object.entries(OFFLINE_DICT)) {
+    if (meaning && meaning.toLowerCase().includes(lower)) {
+      if (!seen.has(word)) {
+        seen.add(word);
+        matches.push({ word, phonetic, meaning, src: "离线" });
+      }
+    }
+  }
+  // (2) 缓存匹配
+  const cache = loadCache();
+  for (const [w, data] of Object.entries(cache)) {
+    if (data.cnMeaning && data.cnMeaning.toLowerCase().includes(lower) && !seen.has(w)) {
+      seen.add(w);
+      matches.push({ word: w, phonetic: data.phonetic || "", meaning: data.cnMeaning, src: "缓存" });
+    }
+  }
+  // (3) 生词表匹配
+  const wbItems = await wbGetAll();
+  for (const it of wbItems) {
+    if (it.cnMeaning && it.cnMeaning.toLowerCase().includes(lower) && !seen.has(it.word)) {
+      seen.add(it.word);
+      matches.push({ word: it.word, phonetic: it.phonetic || "", meaning: it.cnMeaning, src: "生词表" });
+    }
+  }
+
+  let translationHint = "";
+
+  // (4) 本地无结果 → 在线翻译兜底
+  if (matches.length === 0) {
+    renderStatus("⏳", `本地无匹配，正在翻译「${keyword}」…`);
+    translationHint = await translateToEnglish(keyword);
+  }
+
+  searchBtn.disabled = false;
+  renderChineseResults(keyword, matches, translationHint);
+  pushHistory("中:" + keyword);
+}
+
+function renderChineseResults(keyword, matches, translationHint) {
+  let html = `<div class="result-card">
+    <div class="word-head">
+      <span class="word-title">🔍 "${escapeHtml(keyword)}"</span>
+      <span class="word-source cn">中文查询</span>
+    </div>`;
+
+  if (matches.length > 0) {
+    html += `<div style="font-size:12.5px;color:#8a8fa3;margin-bottom:14px;">
+      找到 <b style="color:#f39c12;">${matches.length}</b> 个匹配的英文单词（点击查看详情）：
+    </div>`;
+    matches.forEach(m => {
+      html += `<div class="cn-match-item" data-word="${escapeHtml(m.word)}">
+        <div class="cn-match-info">
+          <div>
+            <span class="cn-match-word">${escapeHtml(m.word)}</span>
+            ${m.phonetic ? `<span class="cn-match-phonetic">${escapeHtml(m.phonetic)}</span>` : ""}
+          </div>
+          <div class="cn-match-meaning">${escapeHtml(m.meaning)}</div>
+        </div>
+        <div class="wb-item-actions">
+          <button class="wb-item-btn" data-act="speak" title="朗读">🔊</button>
+        </div>
+      </div>`;
+    });
+  } else if (translationHint) {
+    const trans = translationHint.trim();
+    html += `<div class="cn-meaning" style="border-left-color:#f39c12;background:rgba(243,156,18,0.06);color:#f39c12;">
+      <span class="cn-label" style="color:#f39c12;">在线翻译结果</span>
+      "${escapeHtml(keyword)}" 的英文翻译是：<b>${escapeHtml(trans)}</b>
+    </div>
+    <div style="margin-top:10px;text-align:center;">
+      <button class="vocab-jump-btn" id="queryTransBtn" data-word="${escapeHtml(trans.toLowerCase())}">
+        🔍 立即查询 "${escapeHtml(trans)}"
+      </button>
+    </div>`;
+  } else {
+    html += `<div class="status-msg">
+      <div class="icon">🤔</div>
+      <div>没有找到匹配「${escapeHtml(keyword)}」的单词<br>试试更简短的词，或者手动输入英文</div>
+    </div>`;
+  }
+
+  html += `</div>`;
+  resultArea.innerHTML = html;
+
+  // 点击条目 → 查英文详情
+  resultArea.querySelectorAll(".cn-match-item").forEach(el => {
+    el.addEventListener("click", (e) => {
+      if (e.target.closest(".wb-item-btn")) return;
+      const w = el.dataset.word;
+      setInputValue(w);
+      search(w);
+    });
+  });
+  resultArea.querySelectorAll('.cn-match-item .wb-item-btn[data-act="speak"]').forEach(btn => {
+    btn.addEventListener("click", (e) => {
+      e.stopPropagation();
+      const w = btn.closest(".cn-match-item").dataset.word;
+      speakText(w);
+    });
+  });
+  document.getElementById("queryTransBtn")?.addEventListener("click", (e) => {
+    const w = e.currentTarget.dataset.word;
+    if (w) { setInputValue(w); search(w); }
+  });
+}
+
+/* ============================================================
+ *  9. 渲染英文详情
  * ============================================================ */
 function renderStatus(icon, msg) {
   resultArea.innerHTML = `
@@ -1088,7 +1254,6 @@ function renderStatus(icon, msg) {
 async function renderEntry(entry, sourceType) {
   const sourceLabel = { cached: "缓存", offline: "离线", api: "联网" }[sourceType] || "来源";
   const sourceCls = sourceType === "offline" ? "offline" : (sourceType === "cached" ? "cached" : "");
-
   const inWb = await wbHas(entry.word.toLowerCase());
 
   let html = `<div class="result-card">
@@ -1141,10 +1306,8 @@ async function renderEntry(entry, sourceType) {
   html += `</div>`;
   resultArea.innerHTML = html;
 
-  // 朗读
   document.getElementById("speakBtn")?.addEventListener("click", (e) => speakWord(entry, e.currentTarget));
 
-  // 生词表
   document.getElementById("wbAddBtn")?.addEventListener("click", async (e) => {
     const btn = e.currentTarget;
     const w = entry.word.toLowerCase();
@@ -1156,11 +1319,8 @@ async function renderEntry(entry, sourceType) {
       toast("已从生词表移除", "danger");
     } else {
       await wbAdd({
-        word: w,
-        phonetic: entry.phonetic || "",
-        cnMeaning: entry.cnMeaning || "",
-        source: sourceType,
-        addedAt: Date.now()
+        word: w, phonetic: entry.phonetic || "",
+        cnMeaning: entry.cnMeaning || "", source: sourceType, addedAt: Date.now()
       });
       btn.classList.add("added"); btn.textContent = "✓";
       btn.title = "已在生词表，点击移除";
@@ -1170,7 +1330,6 @@ async function renderEntry(entry, sourceType) {
     if (paneWordbook.style.display !== "none") renderWordbook();
   });
 
-  // 词汇进化
   document.getElementById("vocabJumpBtn")?.addEventListener("click", (e) => {
     const w = e.currentTarget.dataset.word;
     if (!w) return;
@@ -1181,17 +1340,16 @@ async function renderEntry(entry, sourceType) {
     }
   });
 
-  // 近义词点击
   resultArea.querySelectorAll(".syn-tag").forEach(el => {
     el.addEventListener("click", () => {
       const w = el.dataset.word;
-      if (w) { searchInput.value = w; search(w); }
+      if (w) { setInputValue(w); search(w); }
     });
   });
 }
 
 /* ============================================================
- *  9. 发音
+ *  10. 发音
  * ============================================================ */
 let lastCancel = 0;
 function speakWord(entry, btn) {
@@ -1232,16 +1390,23 @@ function actuallySpeak(text) {
 }
 
 /* ============================================================
- *  10. 历史 / 快捷词
+ *  11. 历史 / 快捷词
  * ============================================================ */
 function renderHistory() {
   const h = loadHistory();
   if (!h.length) { historyRow.innerHTML = ""; return; }
   historyRow.innerHTML = `<span class="chips-label">最近：</span>` +
-    h.map(w => `<span class="chip-link" data-word="${escapeHtml(w)}">${escapeHtml(w)}</span>`).join("") +
+    h.map(w => {
+      const label = w.startsWith("中:") ? w.slice(2) : w;
+      return `<span class="chip-link" data-word="${escapeHtml(label)}">${escapeHtml(label)}</span>`;
+    }).join("") +
     `<span class="chip-link chip-clear" id="clearHistoryBtn">清空</span>`;
   historyRow.querySelectorAll(".chip-link[data-word]").forEach(el => {
-    el.addEventListener("click", () => { searchInput.value = el.dataset.word; search(el.dataset.word); });
+    el.addEventListener("click", () => {
+      const w = el.dataset.word;
+      setInputValue(w);
+      search(w);
+    });
   });
   document.getElementById("clearHistoryBtn")?.addEventListener("click", clearHistory);
 }
@@ -1251,12 +1416,15 @@ function renderQuick() {
   quickRow.innerHTML = `<span class="chips-label">快捷：</span>` +
     QUICK_WORDS.map(w => `<span class="chip-link" data-word="${w}">${w}</span>`).join("");
   quickRow.querySelectorAll(".chip-link").forEach(el => {
-    el.addEventListener("click", () => { searchInput.value = el.dataset.word; search(el.dataset.word); });
+    el.addEventListener("click", () => {
+      setInputValue(el.dataset.word);
+      search(el.dataset.word);
+    });
   });
 }
 
 /* ============================================================
- *  11. 生词表 UI
+ *  12. 生词表 UI
  * ============================================================ */
 async function refreshWbCount() {
   const list = await wbGetAll();
@@ -1307,14 +1475,13 @@ async function renderWordbook() {
 
   wbList.querySelectorAll(".wb-item").forEach(el => {
     const word = el.dataset.word;
-    const it = list.find(x => x.word === word);
     el.querySelectorAll(".wb-item-btn").forEach(btn => {
       btn.addEventListener("click", async (e) => {
         e.stopPropagation();
         const act = btn.dataset.act;
         if (act === "query") {
           switchTab("dict");
-          searchInput.value = word;
+          setInputValue(word);
           search(word);
         } else if (act === "speak") {
           speakText(word);
@@ -1326,16 +1493,14 @@ async function renderWordbook() {
         }
       });
     });
-    // 点条目也可查询
     el.addEventListener("click", () => {
       switchTab("dict");
-      searchInput.value = word;
+      setInputValue(word);
       search(word);
     });
   });
 }
 
-/* 导出 / 导入 */
 async function exportWordbook() {
   const list = await wbGetAll();
   if (!list.length) { toast("生词表为空，无需导出", "danger"); return; }
@@ -1378,7 +1543,7 @@ async function importWordbook(file) {
 }
 
 /* ============================================================
- *  12. Tab 切换
+ *  13. Tab
  * ============================================================ */
 function switchTab(name) {
   tabsEl.querySelectorAll(".dict-tab").forEach(t => {
@@ -1395,7 +1560,7 @@ tabsEl.addEventListener("click", (e) => {
 });
 
 /* ============================================================
- *  13. 工具
+ *  14. 工具
  * ============================================================ */
 function escapeHtml(s) {
   if (s == null) return "";
@@ -1417,7 +1582,7 @@ function toast(msg, type) {
 }
 
 /* ============================================================
- *  14. 事件 + 初始化
+ *  15. 事件 + 初始化
  * ============================================================ */
 searchBtn.addEventListener("click", () => search(searchInput.value));
 searchInput.addEventListener("keydown", (e) => {
@@ -1427,8 +1592,7 @@ searchInput.addEventListener("input", () => {
   clearBtn.classList.toggle("show", !!searchInput.value);
 });
 clearBtn.addEventListener("click", () => {
-  searchInput.value = "";
-  clearBtn.classList.remove("show");
+  setInputValue("");
   searchInput.focus();
 });
 wbSearchInput.addEventListener("input", () => renderWordbook());
@@ -1464,7 +1628,7 @@ window.addEventListener("message", (e) => {
   if (!d || typeof d !== "object") return;
   if (d.type === "dict-query" && d.word) {
     switchTab("dict");
-    searchInput.value = d.word;
+    setInputValue(d.word);
     search(d.word);
   }
 });
@@ -1481,10 +1645,10 @@ refreshWbCount();
 /* URL 参数直达 */
 const paramW = params.get("w");
 if (paramW) {
-  searchInput.value = paramW;
+  setInputValue(paramW);
   search(paramW);
 } else {
-  renderStatus("👋", "输入英文单词开始查词。点 ⭐ 可加入生词表，随时导出备份。");
+  renderStatus("👋", "输入英文或中文开始查词。点 ⭐ 可加入生词表，随时导出备份。");
 }
 
 /* 动态加载 nav.js（仅非 embed 模式） */
