@@ -2225,7 +2225,7 @@
     font-family: inherit;
     background: rgba(0, 229, 255, 0.04);
     color: #e8e8e8;
-    cursor: default;
+    cursor: pointer;
   }
   #typingInput:focus { border-color: rgba(0, 229, 255, 0.5); box-shadow: none; }
   .hint {
@@ -2487,7 +2487,7 @@
       <div class="example-cn" id="exampleCn"></div>
       <div class="input-wrapper">
         <input type="text" id="typingInput" placeholder="点击下方单词，按正确语序拼出整句..." readonly />
-        <div class="hint">💡 点对的词变绿，点错抖动提示 · 键盘：← → 挑选词，↑/Enter 选中，↓ 撤销上一个词</div>
+        <div class="hint">💡 点对的词变绿，点错抖动提示 · 点击输入框可重听本句 · 键盘：← → 挑选词，↑/Enter 选中，↓ 撤销上一个词</div>
       </div>
       <div class="scramble-bar">
         <div class="scramble-title">🧩 <b>单词提示（顺序已打乱）</b>：按正确语序依次<b>点击</b>，或用 <b>← →</b> 寻找、<b>↑</b> 选择、<b>↓</b> 取消</div>
@@ -3450,6 +3450,12 @@
 
   // 当前句子：点击整句朗读
   exampleNew.addEventListener("click", () => {
+    if (!state.currentSentence) return;
+    stopReadAll();
+    speak(state.currentSentence);
+  });
+  // 点击输入框（“点击下方单词，按正确语序拼出整句...”）同样朗读当前句
+  typingInput.addEventListener("click", () => {
     if (!state.currentSentence) return;
     stopReadAll();
     speak(state.currentSentence);
