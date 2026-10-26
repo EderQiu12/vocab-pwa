@@ -30,37 +30,44 @@
   }
   .header .subtitle { font-size: 12px; color: #8a8fa3; margin-top: 4px; }
 
-  .search-bar {
-    display: flex; gap: 10px; margin-bottom: 14px;
-  }
+  /* 搜索栏 */
+  .search-bar { display: flex; gap: 10px; margin-bottom: 14px; }
+  .input-wrap { position: relative; flex: 1; min-width: 0; }
   #searchInput {
-    flex: 1; padding: 14px 18px; font-size: 17px; font-family: inherit;
+    width: 100%; padding: 14px 46px 14px 18px; font-size: 17px; font-family: inherit;
     background: rgba(0,0,0,0.3); color: #fff;
     border: 2px solid rgba(255,255,255,0.12); border-radius: 12px;
     outline: none; transition: border-color .15s, box-shadow .15s;
   }
   #searchInput:focus { border-color: #00e5ff; box-shadow: 0 0 0 4px rgba(0,229,255,0.15); }
+
+  .clear-btn {
+    position: absolute; right: 10px; top: 50%; transform: translateY(-50%);
+    width: 28px; height: 28px; border-radius: 50%;
+    background: rgba(255,255,255,0.1); border: none;
+    color: rgba(255,255,255,0.6); font-size: 18px; line-height: 1; cursor: pointer;
+    font-family: inherit; padding: 0; display: none; align-items: center; justify-content: center;
+    transition: all .15s;
+  }
+  .clear-btn.show { display: flex; }
+  .clear-btn:hover { background: rgba(255,107,107,0.25); color: #ff6b6b; transform: translateY(-50%) scale(1.08); }
+
   #searchBtn {
     padding: 0 26px; font-size: 15px; font-weight: 700; font-family: inherit;
     background: linear-gradient(135deg, #00e5ff, #00b8d9); color: #0a1929;
     border: none; border-radius: 12px; cursor: pointer;
-    box-shadow: 0 4px 16px rgba(0,229,255,0.3); transition: all .15s;
-    white-space: nowrap;
+    box-shadow: 0 4px 16px rgba(0,229,255,0.3); transition: all .15s; white-space: nowrap;
   }
   #searchBtn:hover { box-shadow: 0 6px 22px rgba(0,229,255,0.45); transform: translateY(-1px); }
   #searchBtn:disabled { opacity: 0.5; cursor: wait; }
 
-  /* 历史 + 快捷词 */
-  .chips-row {
-    display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 16px;
-    align-items: center;
-  }
+  /* 历史 / 快捷词 */
+  .chips-row { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 16px; align-items: center; }
   .chips-label { font-size: 12px; color: #6a7090; margin-right: 4px; }
   .chip-link {
     padding: 5px 12px; font-size: 12.5px; border-radius: 14px;
     background: rgba(0,229,255,0.08); color: #00e5ff;
-    border: 1px solid rgba(0,229,255,0.25); cursor: pointer;
-    transition: all .15s; user-select: none;
+    border: 1px solid rgba(0,229,255,0.25); cursor: pointer; transition: all .15s; user-select: none;
   }
   .chip-link:hover { background: rgba(0,229,255,0.18); transform: translateY(-1px); }
   .chip-clear { color: #ff6b6b; border-color: rgba(255,107,107,0.3); background: rgba(255,107,107,0.08); }
@@ -101,6 +108,24 @@
     background: rgba(80,227,194,0.06); border-left: 3px solid #50e3c2;
     border-radius: 0 8px 8px 0; margin-bottom: 16px; line-height: 1.6;
   }
+  .cn-meaning .cn-label {
+    font-size: 10.5px; font-weight: 700; color: #50e3c2; opacity: 0.7;
+    display: block; margin-bottom: 4px; letter-spacing: 0.5px;
+  }
+
+  /* 词汇进化跳转 */
+  .vocab-jump-row { margin: 12px 0 4px; }
+  .vocab-jump-btn {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 10px 20px; font-size: 14px; font-weight: 700; font-family: inherit;
+    background: linear-gradient(135deg, rgba(0,229,255,0.15), rgba(213,0,249,0.15));
+    color: #00e5ff; border: 1px solid rgba(0,229,255,0.4);
+    border-radius: 12px; cursor: pointer; transition: all .15s; white-space: nowrap;
+  }
+  .vocab-jump-btn:hover {
+    background: linear-gradient(135deg, rgba(0,229,255,0.25), rgba(213,0,249,0.25));
+    transform: translateY(-1px); box-shadow: 0 4px 16px rgba(0,229,255,0.25);
+  }
 
   .meanings-title {
     font-size: 12px; color: #8a8fa3; margin: 16px 0 10px;
@@ -137,19 +162,12 @@
     font-size: 13px; line-height: 1.7;
   }
   .status-msg .icon { font-size: 44px; margin-bottom: 10px; opacity: 0.6; }
-  .status-msg button {
-    margin-top: 12px; padding: 8px 18px; font-family: inherit;
-    font-size: 13px; font-weight: 600; border-radius: 10px; cursor: pointer;
-    background: rgba(0,229,255,0.12); color: #00e5ff;
-    border: 1px solid rgba(0,229,255,0.3); transition: all .15s;
-  }
-  .status-msg button:hover { background: rgba(0,229,255,0.22); }
 
   @media (max-width: 480px) {
     body { padding: 12px; }
     .header, .result-card { padding: 16px 18px; }
     .word-title { font-size: 24px; }
-    #searchInput { font-size: 16px; padding: 12px 14px; }
+    #searchInput { font-size: 16px; padding: 12px 42px 12px 14px; }
     #searchBtn { padding: 0 18px; font-size: 14px; }
   }
 </style>
@@ -159,12 +177,15 @@
 <div class="app">
   <div class="header">
     <h1>📖 查词</h1>
-    <div class="subtitle">离线词典 + 联网释义 + 缓存加速 · 支持发音</div>
+    <div class="subtitle">离线词典 + 联网释义 + 中文简译 + 发音</div>
   </div>
 
   <div class="search-bar">
-    <input id="searchInput" type="text" placeholder="输入英文单词，如 declare / obtain / get"
-           autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" />
+    <div class="input-wrap">
+      <input id="searchInput" type="text" placeholder="输入英文单词，如 declare / obtain / get"
+             autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" />
+      <button id="clearBtn" class="clear-btn" title="清空" aria-label="清空输入">×</button>
+    </div>
     <button id="searchBtn">查询</button>
   </div>
 
@@ -176,8 +197,7 @@
 
 <script>
 /* ============================================================
- *  1. 离线词典（vocab 替代词 + 常用高频词，精简格式）
- *     格式: word: [phonetic, 中文释义]
+ *  1. 离线词典
  * ============================================================ */
 const OFFLINE_DICT = {
   // ---- vocab 替代词 ----
@@ -241,7 +261,6 @@ const OFFLINE_DICT = {
   "question":["/ˈkwestʃən/","v. 质问"],
   "inquire":["/ɪnˈkwaɪər/","v. 询问"],
   "require":["/rɪˈkwaɪər/","v. 需要（正式）"],
-  "essential_adj":["",""],
   "indispensable":["/ˌɪndɪˈspensəbl/","adj. 不可或缺的"],
   "sense":["/sens/","v. 感知，察觉"],
   "register":["/ˈredʒɪstər/","v. 感知，登记"],
@@ -475,7 +494,6 @@ const OFFLINE_DICT = {
   "interpersonal":["/ˌɪntərˈpɜːrsənl/","adj. 人际的"],
   "societal":["/səˈsaɪətl/","adj. 社会的"],
   "communal":["/kəˈmjuːnl/","adj. 共同的"],
-  "grasp_v":["",""],
   "fathom":["/ˈfæðəm/","v. 理解，领悟"],
   "discern":["/dɪˈsɜːrn/","v. 精准辨别"],
   "track":["/træk/","v. 跟踪，追踪"],
@@ -631,7 +649,6 @@ const OFFLINE_DICT = {
   "hungry":["/ˈhʌŋɡri/","adj. 饥饿的"],
   "beautiful":["/ˈbjuːtɪfl/","adj. 美丽的"],
   "big":["/bɪɡ/","adj. 大的"],
-  "small":["/smɔːl/","adj. 小的"],
   "fast":["/fæst/","adj. 快速的"],
   "slow":["/sloʊ/","adj. 慢的"],
   "easy":["/ˈiːzi/","adj. 容易的"],
@@ -654,7 +671,6 @@ const OFFLINE_DICT = {
   "language":["/ˈlæŋɡwɪdʒ/","n. 语言"],
   "English":["/ˈɪŋɡlɪʃ/","n. 英语"],
   "Chinese":["/ˌtʃaɪˈniːz/","n. 中文"],
-  "question":["/ˈkwestʃən/","n. 问题"],
   "answer":["/ˈænsər/","n./v. 回答"],
   "understand":["/ˌʌndərˈstænd/","v. 理解"],
   "remember":["/rɪˈmembər/","v. 记得"],
@@ -668,25 +684,44 @@ const OFFLINE_DICT = {
   "want":["/wɑːnt/","v. 想要"],
   "need":["/niːd/","v. 需要"],
   "help":["/help/","v. 帮助"],
-  "learn":["/lɜːrn/","v. 学习"],
   "teach":["/tiːtʃ/","v. 教"],
   "read":["/riːd/","v. 阅读"],
   "write":["/raɪt/","v. 写"],
   "speak":["/spiːk/","v. 说话"],
-  "listen":["/ˈlɪsn/","v. 听"],
   "watch":["/wɒtʃ/","v. 观看"],
   "play":["/pleɪ/","v. 玩"],
   "run":["/rʌn/","v. 跑"],
   "walk":["/wɔːk/","v. 走"],
   "eat":["/iːt/","v. 吃"],
   "drink":["/drɪŋk/","v. 喝"],
-  "sleep":["/sliːp/","v. 睡觉"],
-  "work":["/wɜːrk/","v./n. 工作"],
-  "study":["/ˈstʌdi/","v. 学习，研究"]
+  "sleep":["/sliːp/","v. 睡觉"]
 };
 
 /* ============================================================
- *  2. 缓存（localStorage，永久离线可查）
+ *  2. vocab 词索引
+ * ============================================================ */
+const VOCAB_WORDS_BY_WEEK = {
+  "week-01": "say go get make know time year think people take see come like want way look new day use man find thing give tell very back good woman life child work call world school try ask need feel state become high something family leave put old mean keep student let",
+  "week-02": "great big group begin seem country help talk turn problem start hand American show part place case week company system right program hear money",
+  "week-03": "fact month different lot study book eye job word business issue side kind head black long little house provide service friend important father sit power hour game line political end stand bad lose member pay law meet car city include continue set community name white president learn real change team",
+  "week-04": "minute best idea body information lead social understand watch follow parent stop face create public speak read level allow add office spend door health person art sure war history party grow result open morning walk reason low win research girl guy early food moment air teacher force offer education remember",
+  "week-05": "foot second boy able age policy love process music consider appear buy human wait serve market die send expect sense build stay fall",
+  "week-06": "report role better economic effort decide rate strong possible heart drug leader light voice wife whole police mind pull return free military price decision explain son hope develop view relationship carry town road drive arm true federal break difference thank receive value international building action full model join season society",
+  "week-07": "tax director position"
+};
+
+const VOCAB_COMFORT_WORDS = {};
+Object.entries(VOCAB_WORDS_BY_WEEK).forEach(([week, str]) => {
+  str.split(/\s+/).forEach(w => {
+    if (w && !VOCAB_COMFORT_WORDS[w]) VOCAB_COMFORT_WORDS[w] = week;
+  });
+});
+function isVocabWord(word) {
+  return !!VOCAB_COMFORT_WORDS[String(word || "").toLowerCase()];
+}
+
+/* ============================================================
+ *  3. 缓存 & 历史
  * ============================================================ */
 const CACHE_KEY = "dict_cache_v1";
 const HISTORY_KEY = "dict_history_v1";
@@ -716,16 +751,17 @@ function clearHistory() {
 }
 
 /* ============================================================
- *  3. DOM + 状态
+ *  4. DOM
  * ============================================================ */
 const searchInput = document.getElementById("searchInput");
 const searchBtn = document.getElementById("searchBtn");
+const clearBtn = document.getElementById("clearBtn");
 const resultArea = document.getElementById("resultArea");
 const historyRow = document.getElementById("historyRow");
 const quickRow = document.getElementById("quickRow");
 
 /* ============================================================
- *  4. 数据获取
+ *  5. 联网查询 + 中文简译
  * ============================================================ */
 async function fetchFromAPI(word) {
   const url = `https://api.dictionaryapi.dev/api/v2/entries/en/${encodeURIComponent(word)}`;
@@ -734,17 +770,21 @@ async function fetchFromAPI(word) {
   return res.json();
 }
 
-function buildOfflineResult(word) {
-  const item = OFFLINE_DICT[word];
-  if (!item) return null;
-  return {
-    word,
-    phonetic: item[0] || "",
-    cnMeaning: item[1] || "",
-    meanings: [],
-    source: "offline",
-    cachedAt: Date.now()
-  };
+/** 用 MyMemory 免费翻译 API 把英文释义转成简短中文（不需要 key） */
+async function translateToChinese(text) {
+  if (!text || !text.trim()) return "";
+  try {
+    const url = `https://api.mymemory.translated.net/get?q=${encodeURIComponent(text.slice(0, 200))}&langpair=en|zh-CN`;
+    const res = await fetch(url);
+    if (!res.ok) return "";
+    const json = await res.json();
+    const t = json?.responseData?.translatedText || "";
+    // MyMemory 有时会返回大写的错误提示，过滤掉
+    if (!t || /^MYMEMORY WARNING/i.test(t)) return "";
+    return t;
+  } catch (e) {
+    return "";
+  }
 }
 
 function normalizeApi(apiData, word) {
@@ -754,28 +794,39 @@ function normalizeApi(apiData, word) {
   const phoneticText = entry.phonetic
     || (phonetics.find(p => p.text) || {}).text
     || "";
+
   const off = OFFLINE_DICT[word.toLowerCase()];
+
+  // 取第一条释义作为“简短中文意思”的翻译源
+  let firstDef = "";
+  const meanings = (entry.meanings || []).map(m => {
+    const defs = (m.definitions || []).slice(0, 4).map(d => ({
+      definition: d.definition,
+      example: d.example || "",
+      synonyms: (d.synonyms || []).slice(0, 4)
+    }));
+    if (!firstDef && defs[0]?.definition) firstDef = defs[0].definition;
+    return {
+      partOfSpeech: m.partOfSpeech,
+      definitions: defs,
+      synonyms: (m.synonyms || []).slice(0, 6)
+    };
+  });
+
   return {
     word: entry.word || word,
     phonetic: phoneticText,
     audio,
-    cnMeaning: off ? off[1] : "",
-    meanings: (entry.meanings || []).map(m => ({
-      partOfSpeech: m.partOfSpeech,
-      definitions: (m.definitions || []).slice(0, 4).map(d => ({
-        definition: d.definition,
-        example: d.example || "",
-        synonyms: (d.synonyms || []).slice(0, 4)
-      })),
-      synonyms: (m.synonyms || []).slice(0, 6)
-    })),
+    cnMeaning: off ? off[1] : "",   // 离线词典有就用离线，没有留空等翻译填充
+    firstDefForTranslation: firstDef,
+    meanings,
     source: "api",
     cachedAt: Date.now()
   };
 }
 
 /* ============================================================
- *  5. 查询主流程
+ *  6. 查询主流程
  * ============================================================ */
 let currentEntry = null;
 let currentAudioEl = null;
@@ -790,31 +841,47 @@ async function search(rawWord) {
   searchBtn.disabled = true;
   const cache = loadCache();
 
-  // 1) 缓存命中 → 直接展示
+  // 1) 缓存命中
   if (cache[word]) {
     currentEntry = cache[word];
+    // 如果缓存里没有中文，尝试后台补翻译
+    if (!currentEntry.cnMeaning) {
+      enrichChinese(currentEntry).then(() => {
+        if (currentEntry && currentEntry.word === word) renderEntry(currentEntry, "cached");
+      });
+    }
     renderEntry(currentEntry, "cached");
     pushHistory(word);
     searchBtn.disabled = false;
     return;
   }
 
-  // 2) 离线词典命中 → 展示，同时后台尝试联网补全
-  const offline = buildOfflineResult(word);
+  // 2) 离线词典命中 → 先展示，后台联网补全英文释义
+  const offline = OFFLINE_DICT[word];
   if (offline) {
-    currentEntry = offline;
-    renderEntry(offline, "offline");
+    currentEntry = {
+      word,
+      phonetic: offline[0],
+      cnMeaning: offline[1],
+      firstDefForTranslation: "",
+      meanings: [],
+      source: "offline",
+      cachedAt: Date.now()
+    };
+    renderEntry(currentEntry, "offline");
     pushHistory(word);
-    // 后台补全（不阻塞 UI）
-    fetchFromAPI(word).then(apiData => {
+
+    fetchFromAPI(word).then(async apiData => {
       const enriched = normalizeApi(apiData, word);
-      const merged = { ...offline, ...enriched, cnMeaning: offline.cnMeaning || enriched.cnMeaning };
+      const merged = { ...offline, ...enriched, cnMeaning: currentEntry.cnMeaning || enriched.cnMeaning };
+      // 如果仍然没有中文，用英文释义翻译
+      if (!merged.cnMeaning) await enrichChinese(merged);
       const c = loadCache(); c[word] = merged; saveCache(c);
       if (currentEntry && currentEntry.word === word) {
         currentEntry = merged;
         renderEntry(merged, "offline");
       }
-    }).catch(() => { /* 忽略：离线已可用 */ });
+    }).catch(() => {});
     searchBtn.disabled = false;
     return;
   }
@@ -824,6 +891,8 @@ async function search(rawWord) {
   try {
     const apiData = await fetchFromAPI(word);
     const entry = normalizeApi(apiData, word);
+    // 关键：如果没有离线中文，用英文释义翻译
+    if (!entry.cnMeaning) await enrichChinese(entry);
     const c = loadCache(); c[word] = entry; saveCache(c);
     currentEntry = entry;
     renderEntry(entry, "api");
@@ -835,25 +904,29 @@ async function search(rawWord) {
   }
 }
 
+/** 用英文首条释义翻译出简短中文 */
+async function enrichChinese(entry) {
+  if (entry.cnMeaning) return;
+  const src = entry.firstDefForTranslation
+    || (entry.meanings?.[0]?.definitions?.[0]?.definition)
+    || "";
+  if (!src) return;
+  const cn = await translateToChinese(src);
+  if (cn) entry.cnMeaning = cn;
+}
+
 /* ============================================================
- *  6. 渲染
+ *  7. 渲染
  * ============================================================ */
 function renderStatus(icon, msg) {
   resultArea.innerHTML = `
     <div class="result-card">
-      <div class="status-msg">
-        <div class="icon">${icon}</div>
-        <div>${msg}</div>
-      </div>
+      <div class="status-msg"><div class="icon">${icon}</div><div>${msg}</div></div>
     </div>`;
 }
 
 function renderEntry(entry, sourceType) {
-  const sourceLabel = {
-    cached: "缓存",
-    offline: "离线",
-    api: "联网"
-  }[sourceType] || "来源";
+  const sourceLabel = { cached: "缓存", offline: "离线", api: "联网" }[sourceType] || "来源";
   const sourceCls = sourceType === "offline" ? "offline" : (sourceType === "cached" ? "cached" : "");
 
   let html = `<div class="result-card">
@@ -864,8 +937,24 @@ function renderEntry(entry, sourceType) {
       <span class="word-source ${sourceCls}">${sourceLabel}</span>
     </div>`;
 
+  // ★ 中文简译（联网查询也会显示）
   if (entry.cnMeaning) {
-    html += `<div class="cn-meaning">${escapeHtml(entry.cnMeaning)}</div>`;
+    html += `<div class="cn-meaning">
+      <span class="cn-label">中文简译</span>
+      ${escapeHtml(entry.cnMeaning)}
+    </div>`;
+  }
+
+  // ★ 词汇进化跳转
+  if (isVocabWord(entry.word)) {
+    const safeWord = encodeURIComponent(entry.word.toLowerCase());
+    html += `
+      <div class="vocab-jump-row">
+        <button class="vocab-jump-btn" id="vocabJumpBtn" data-word="${safeWord}">
+          🎯 去词汇进化深度学习「${escapeHtml(entry.word)}」
+        </button>
+      </div>
+    `;
   }
 
   if (entry.meanings && entry.meanings.length) {
@@ -875,32 +964,36 @@ function renderEntry(entry, sourceType) {
       if (m.partOfSpeech) html += `<span class="pos">${escapeHtml(m.partOfSpeech)}</span>`;
       m.definitions.forEach(d => {
         html += `<div class="def-item"><div class="def-text">${escapeHtml(d.definition)}</div>`;
-        if (d.example) {
-          html += `<div class="def-example">"${escapeHtml(d.example)}"</div>`;
-        }
+        if (d.example) html += `<div class="def-example">"${escapeHtml(d.example)}"</div>`;
         if (d.synonyms && d.synonyms.length) {
-          html += `<div class="synonyms">近义：
-            ${d.synonyms.map(s => `<span class="syn-tag" data-word="${escapeHtml(s)}">${escapeHtml(s)}</span>`).join(" ")}
-          </div>`;
+          html += `<div class="synonyms">近义：${d.synonyms.map(s =>
+            `<span class="syn-tag" data-word="${escapeHtml(s)}">${escapeHtml(s)}</span>`).join(" ")}</div>`;
         }
         html += `</div>`;
       });
       html += `</div>`;
     });
   } else if (!entry.cnMeaning) {
-    html += `<div class="status-msg" style="padding:16px;">暂无更多释义。可点击下方「🔄 重新联网查询」重试。</div>`;
+    html += `<div class="status-msg" style="padding:16px;">暂无更多释义。</div>`;
   }
 
   html += `</div>`;
   resultArea.innerHTML = html;
 
-  // 朗读按钮
+  // 朗读
   const speakBtn = document.getElementById("speakBtn");
-  if (speakBtn) {
-    speakBtn.addEventListener("click", () => speakWord(entry, speakBtn));
+  if (speakBtn) speakBtn.addEventListener("click", () => speakWord(entry, speakBtn));
+
+  // 去词汇进化
+  const vocabJumpBtn = document.getElementById("vocabJumpBtn");
+  if (vocabJumpBtn) {
+    vocabJumpBtn.addEventListener("click", () => {
+      const w = vocabJumpBtn.dataset.word;
+      if (w) location.href = `vocab.html?word=${w}`;
+    });
   }
 
-  // 近义词点击 → 直接查询
+  // 近义词点击查询
   resultArea.querySelectorAll(".syn-tag").forEach(el => {
     el.addEventListener("click", () => {
       const w = el.dataset.word;
@@ -910,12 +1003,11 @@ function renderEntry(entry, sourceType) {
 }
 
 /* ============================================================
- *  7. 发音
+ *  8. 发音
  * ============================================================ */
 let lastCancel = 0;
 
 function speakWord(entry, btn) {
-  // 有 API 音频 → 优先播放
   if (entry.audio) {
     try {
       if (currentAudioEl) { currentAudioEl.pause(); currentAudioEl = null; }
@@ -928,7 +1020,7 @@ function speakWord(entry, btn) {
         audio.onerror = () => btn.classList.remove("playing");
       }
       return;
-    } catch (e) { /* fallthrough */ }
+    } catch (e) {}
   }
   speakText(entry.word);
 }
@@ -940,9 +1032,7 @@ function speakText(text) {
     speechSynthesis.cancel();
     lastCancel = now;
     setTimeout(() => actuallySpeak(text), 60);
-  } else {
-    actuallySpeak(text);
-  }
+  } else actuallySpeak(text);
 }
 function actuallySpeak(text) {
   try {
@@ -956,7 +1046,7 @@ function actuallySpeak(text) {
 }
 
 /* ============================================================
- *  8. 历史 / 快捷词
+ *  9. 历史 / 快捷词
  * ============================================================ */
 function renderHistory() {
   const h = loadHistory();
@@ -970,8 +1060,8 @@ function renderHistory() {
       search(el.dataset.word);
     });
   });
-  const clearBtn = document.getElementById("clearHistoryBtn");
-  if (clearBtn) clearBtn.addEventListener("click", clearHistory);
+  const clearBtnEl = document.getElementById("clearHistoryBtn");
+  if (clearBtnEl) clearBtnEl.addEventListener("click", clearHistory);
 }
 
 const QUICK_WORDS = ["declare", "obtain", "essential", "crucial", "significant", "articulate", "comprehend", "resilience", "innovative", "efficient"];
@@ -988,7 +1078,7 @@ function renderQuick() {
 }
 
 /* ============================================================
- *  9. 工具
+ *  10. 工具
  * ============================================================ */
 function escapeHtml(s) {
   if (s == null) return "";
@@ -998,28 +1088,38 @@ function escapeHtml(s) {
 }
 
 /* ============================================================
- *  10. 事件 + 初始化
+ *  11. 事件 + 初始化
  * ============================================================ */
 searchBtn.addEventListener("click", () => search(searchInput.value));
 searchInput.addEventListener("keydown", (e) => {
   if (e.key === "Enter") { e.preventDefault(); search(searchInput.value); }
 });
 
+// 清空按钮
+searchInput.addEventListener("input", () => {
+  clearBtn.classList.toggle("show", !!searchInput.value);
+});
+clearBtn.addEventListener("click", () => {
+  searchInput.value = "";
+  clearBtn.classList.remove("show");
+  searchInput.focus();
+});
+
 if (window.speechSynthesis) {
-  speechSynthesis.onvoiceschanged = () => {};
   speechSynthesis.getVoices();
+  speechSynthesis.onvoiceschanged = () => {};
 }
 
 renderHistory();
 renderQuick();
 
-// URL 参数直达：dictionary.html?w=declare
+// URL 参数直达
 const paramW = new URLSearchParams(location.search).get("w");
 if (paramW) {
   searchInput.value = paramW;
   search(paramW);
 } else {
-  renderStatus("👋", "输入英文单词开始查词。已内置约 400 条离线词典（含 vocab 替代词），其余走联网。");
+  renderStatus("👋", "输入英文单词开始查词。联网查询会自动附带中文简译。");
 }
 </script>
 <script src="nav.js"></script>

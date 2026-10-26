@@ -33,7 +33,7 @@
       icon: '📖',
       title: '查词',
       href: 'dictionary.html',
-      desc: '离线词典 + 联网释义 + 发音 · 查词后离线可查'
+      desc: '离线词典 + 联网释义 + 中文简译 + 发音'
     }
   };
 

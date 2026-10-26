@@ -3181,6 +3181,53 @@ header h1 {
         break;
     }
   });
+
+
+
+    /* 从查词页跳转过来时，按 URL 参数定位到指定词 */
+  function jumpToWord(rawWord) {
+    const word = String(rawWord || "").trim().toLowerCase();
+    if (!word) return false;
+
+    for (const weekKey of WEEK_KEYS) {
+      const w = VOCAB_DATA[weekKey];
+      if (!w?.words) continue;
+      for (let i = 0; i < w.words.length; i++) {
+        const wd = w.words[i];
+        if (!isPracticable(wd)) continue;
+
+        // 命中 comfort word
+        if (wd.word.toLowerCase() === word) {
+          state.currentWeek = weekKey;
+          state.currentWordIndex = i;
+          renderWeek();
+          updateWeekSelect();
+          startWord(i, 0, 0);
+          openPractice();
+          showCliHint(`已定位到「${wd.word}」`);
+          return true;
+        }
+
+        // 命中替代词
+        for (let ri = 0; ri < wd.replacements.length; ri++) {
+          const rep = wd.replacements[ri];
+          if ((rep.word || "").toLowerCase() === word) {
+            state.currentWeek = weekKey;
+            state.currentWordIndex = i;
+            renderWeek();
+            updateWeekSelect();
+            startWord(i, ri, 0);
+            openPractice();
+            showCliHint(`已定位到「${wd.word}」的替代词「${rep.word}」`);
+            return true;
+          }
+        }
+      }
+    }
+    return false;
+  }
+
+
   // ============================================================
   //  初始化
   // ============================================================
@@ -3198,6 +3245,11 @@ header h1 {
     let savedTwoPass = true;
     try { savedTwoPass = localStorage.getItem(TWO_PASS_KEY) !== "0"; } catch (e) {}
     setTwoPass(savedTwoPass);
+
+    // ★ 优先处理 URL 参数
+    const targetWord = new URLSearchParams(location.search).get("word");
+    if (targetWord && jumpToWord(targetWord)) return;
+
     startFromLatest();
   })();
 </script>
