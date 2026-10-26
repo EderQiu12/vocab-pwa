@@ -2338,6 +2338,29 @@
     text-shadow: 0 0 12px rgba(0, 229, 255, 0.35);
   }
 
+  /* 聊天记录里的句子：点击即朗读 */
+  .chat-bubble.speakable {
+    cursor: pointer;
+    transition: background .15s, box-shadow .15s;
+  }
+  .chat-bubble.speakable:hover { background: rgba(0, 229, 255, 0.08); }
+  .chat-bubble.speakable.playing {
+    box-shadow: 0 0 0 2px rgba(0, 229, 255, 0.55), 0 0 14px rgba(0, 229, 255, 0.35);
+  }
+  .read-all-btn {
+    padding: 6px 12px; border-radius: 10px; font-size: 12px; font-weight: 600;
+    cursor: pointer; border: 1px solid rgba(0, 229, 255, 0.35);
+    background: rgba(0, 229, 255, 0.08); color: #00e5ff;
+    transition: background .15s, border-color .15s, color .15s;
+    white-space: nowrap;
+  }
+  .read-all-btn:hover { background: rgba(0, 229, 255, 0.16); }
+  .read-all-btn.on {
+    background: rgba(255, 107, 107, 0.16);
+    border-color: rgba(255, 107, 107, 0.5);
+    color: #ff8b8b;
+  }
+
   @media (max-width: 720px) {
     body { padding: 12px; }
     .panel, .header { padding: 18px; }
@@ -2426,6 +2449,7 @@
           <div class="auto-speak-toggle on" id="autoSpeakToggle" title="每刷新一句自动朗读">
             <span class="switch"></span><span>自动朗读</span>
           </div>
+          <button class="read-all-btn" id="btnReadAll" title="从头到尾朗读整组对话">🔊 整段朗读</button>
           <select id="voiceSelect" title="选择英文嗓音"></select>
           <div class="rate-control" title="朗读语速">
             <span style="font-size:11px;color:#888;">语速</span>
@@ -2463,6 +2487,7 @@
       <div class="example-cn" id="exampleCn"></div>
       <div class="input-wrapper">
         <input type="text" id="typingInput" placeholder="点击下方单词，按正确语序拼出整句..." readonly />
+        <div class="hint">💡 点对的词变绿，点错抖动提示 · 键盘：← → 挑选词，↑/Enter 选中，↓ 撤销上一个词</div>
       </div>
       <div class="scramble-bar">
         <div class="scramble-title">🧩 <b>单词提示（顺序已打乱）</b>：按正确语序依次<b>点击</b>，或用 <b>← →</b> 寻找、<b>↑</b> 选择、<b>↓</b> 取消</div>
@@ -2579,6 +2604,7 @@
   const typingInput = $("typingInput");
 
   const autoSpeakToggle = $("autoSpeakToggle");
+  const btnReadAll = $("btnReadAll");
   const voiceSelect = $("voiceSelect");
   const rateRange = $("rateRange");
   const rateValue = $("rateValue");
@@ -2691,6 +2717,43 @@
   // ============================================================
   //  渲染主页面
   // ============================================================
+  // 该场景里第一组还没练完的对话
+  function firstUnfinishedTurn(sceneKey, dialogueId) {
+    const d = findDialogue(sceneKey, dialogueId);
+    if (!d) return 0;
+    for (let i = 0; i < d.turns.length; i++) {
+      if (!isTurnDone(sceneKey, dialogueId, i)) return i;
+    }
+    return 0;
+  }
+
+  function pickDialogueToStart(sceneKey) {
+    const list = (SCENE_DATA[sceneKey] && SCENE_DATA[sceneKey].dialogues) || [];
+    if (!list.length) return null;
+    // 当前场景就是上次练的场景：接着上次那组继续
+    if (progress.lastScene === sceneKey && findDialogue(sceneKey, progress.lastDialogue)) {
+      const d = findDialogue(sceneKey, progress.lastDialogue);
+      const unfinished = d.turns.some((_, i) => !isTurnDone(sceneKey, progress.lastDialogue, i));
+      if (unfinished) return { dialogueId: progress.lastDialogue, turnIndex: firstUnfinishedTurn(sceneKey, progress.lastDialogue) };
+    }
+    // 否则从该场景第一组未完成的对话开始
+    for (const d of list) {
+      if (d.turns.some((_, i) => !isTurnDone(sceneKey, d.id, i))) {
+        return { dialogueId: d.id, turnIndex: firstUnfinishedTurn(sceneKey, d.id) };
+      }
+    }
+    // 全练完了：从本场景第一组重新开始
+    return { dialogueId: list[0].id, turnIndex: 0 };
+  }
+
+  function updateStartButton() {
+    const sk = state.activeScene;
+    const same = progress.lastScene === sk;
+    const title = (SCENE_DATA[sk] && SCENE_DATA[sk].title) || "";
+    btnStart.textContent = same ? "🚀 继续上次练习" : `🚀 开始练习 · ${title}`;
+    btnStart.title = same ? "从上次中断处继续" : `从「${title}」第一组未完成的对话开始`;
+  }
+
   function renderSceneNav() {
     sceneNav.innerHTML = "";
     SCENE_KEYS.forEach(sk => {
@@ -2702,6 +2765,7 @@
         state.activeScene = sk;
         renderSceneNav();
         renderDialogueGrid();
+        updateStartButton();
       });
       sceneNav.appendChild(tab);
     });
@@ -2763,6 +2827,7 @@
     document.body.classList.add("practice-open");
   }
   function closePractice() {
+    stopReadAll();
     practiceScreen.classList.remove("open");
     document.body.classList.remove("practice-open");
   }
@@ -2809,7 +2874,9 @@
       if (!isTurnDone(state.sceneKey, state.dialogueId, i)) return;
       const [speaker, en, cn] = turn;
       const bubble = document.createElement("div");
-      bubble.className = "chat-bubble";
+      bubble.className = "chat-bubble speakable";
+      bubble.dataset.turn = String(i);
+      bubble.title = "点击朗读这句";
       bubble.innerHTML = `
         <div class="chat-speaker ${speaker}">${speaker}</div>
         <div class="chat-content">
@@ -2817,6 +2884,12 @@
           <div class="chat-cn">${escapeHtml(cn)}</div>
         </div>
       `;
+      bubble.addEventListener("click", () => {
+        stopReadAll();
+        speak(en);
+        bubble.classList.add("playing");
+        setTimeout(() => bubble.classList.remove("playing"), 1200);
+      });
       chatHistory.appendChild(bubble);
     });
     // 滚动到底部
@@ -2824,6 +2897,7 @@
   }
 
   function loadTurn(turnIndex) {
+    if (readAllActive) stopReadAll();
     const d = findDialogue(state.sceneKey, state.dialogueId);
     if (!d) return;
     const turn = d.turns[turnIndex];
@@ -3273,6 +3347,7 @@
   function speak(text) {
     if (!text) return;
     if (!window.speechSynthesis) return;
+    if (readAllActive) stopReadAll(true);
     if (!voicesReady) {
       pendingSpeakText = text;
       setTimeout(() => {
@@ -3296,15 +3371,88 @@
   }
 
   // ============================================================
+  //  整段朗读（从头到尾，逐句播）
+  // ============================================================
+  let readAllActive = false;
+  let readAllTimer = null;
+  let readAllToken = 0;
+
+  function stopReadAll(silent) {
+    readAllActive = false;
+    readAllToken++;
+    if (readAllTimer) { clearTimeout(readAllTimer); readAllTimer = null; }
+    if (!silent && window.speechSynthesis) window.speechSynthesis.cancel();
+    chatHistory.querySelectorAll(".chat-bubble.playing").forEach(b => b.classList.remove("playing"));
+    if (btnReadAll) {
+      btnReadAll.classList.remove("on");
+      btnReadAll.textContent = "🔊 整段朗读";
+    }
+  }
+
+  function highlightTurn(turnIndex) {
+    chatHistory.querySelectorAll(".chat-bubble.playing").forEach(b => b.classList.remove("playing"));
+    const el = chatHistory.querySelector(`.chat-bubble[data-turn="${turnIndex}"]`);
+    if (el) {
+      el.classList.add("playing");
+      if (typeof el.scrollIntoView === "function") el.scrollIntoView({ block: "nearest", behavior: "smooth" });
+    }
+  }
+
+  function playAllDialogue() {
+    if (readAllActive) { stopReadAll(); return; }
+    const d = findDialogue(state.sceneKey, state.dialogueId);
+    if (!d || !d.turns.length || !window.speechSynthesis) return;
+    const synth = window.speechSynthesis;
+    stopReadAll(true);
+    synth.cancel();
+    readAllActive = true;
+    const myToken = ++readAllToken;
+    btnReadAll.classList.add("on");
+    btnReadAll.textContent = "⏹ 停止朗读";
+
+    const speakTurn = idx => {
+      if (!readAllActive || myToken !== readAllToken || idx >= d.turns.length) {
+        if (myToken === readAllToken) stopReadAll(true);
+        return;
+      }
+      highlightTurn(idx);
+      const en = d.turns[idx][1];
+      const u = new SpeechSynthesisUtterance(en);
+      u.volume = 1.0; u.rate = SPEAK_RATE; u.pitch = 1;
+      const v = pickEnVoice();
+      if (v) { u.voice = v; u.lang = v.lang; } else u.lang = "en-US";
+      u.onend = () => {
+        if (myToken === readAllToken && readAllActive) readAllTimer = setTimeout(() => speakTurn(idx + 1), 260);
+      };
+      u.onerror = () => {
+        if (myToken === readAllToken && readAllActive) readAllTimer = setTimeout(() => speakTurn(idx + 1), 260);
+      };
+      synth.speak(u);
+    };
+    readAllTimer = setTimeout(() => speakTurn(0), 120);
+  }
+
+  // ============================================================
   //  事件绑定
   // ============================================================
 
-  // 主页面：继续上次
+  // 主页面：开始 / 继续（始终以当前选中的场景为准）
   btnStart.addEventListener("click", () => {
-    const lastScene = progress.lastScene && SCENE_DATA[progress.lastScene] ? progress.lastScene : SCENE_KEYS[0];
-    const lastDialogue = progress.lastDialogue || 1;
-    const lastTurn = progress.lastTurn || 0;
-    openDialogue(lastScene, lastDialogue, lastTurn);
+    const sk = SCENE_DATA[state.activeScene] ? state.activeScene
+      : (SCENE_DATA[progress.lastScene] ? progress.lastScene : SCENE_KEYS[0]);
+    const target = pickDialogueToStart(sk);
+    if (!target) return;
+    openDialogue(sk, target.dialogueId, target.turnIndex);
+  });
+
+  // 整段朗读
+  btnReadAll.addEventListener("click", playAllDialogue);
+
+  // 当前句子：点击整句朗读
+  exampleNew.addEventListener("click", () => {
+    if (!state.currentSentence) return;
+    stopReadAll();
+    speak(state.currentSentence);
   });
 
   // 主页面：上一组 / 下一组
@@ -3320,6 +3468,7 @@
     state.activeScene = t.sceneKey;
     renderSceneNav();
     renderDialogueGrid();
+    updateStartButton();
     let startIdx = 0;
     for (let i = 0; i < t.dialogue.turns.length; i++) {
       if (!isTurnDone(t.sceneKey, t.dialogueId, i)) { startIdx = i; break; }
@@ -3336,6 +3485,7 @@
     stopTimer();
     updateHeaderStats();
     renderDialogueGrid();
+    updateStartButton();
   });
 
   // 练习页：上一句 / 下一句 / 重练
@@ -3380,23 +3530,14 @@
     refreshChipFocusClass();
   });
 
-  // 键盘：映射键位后，控制寻找、选择、取消、退出
+  // 键盘：← → 寻找，↑/Enter 选择，↓ 取消，Esc 退出
   document.addEventListener("keydown", e => {
     if (!practiceScreen.classList.contains("open")) return;
     if (e.ctrlKey || e.metaKey || e.altKey) return;
 
-    // 1. 定义映射表
-    const KEY_MAP = {
-      'w': 'ArrowUp',    's': 'ArrowDown',  'a': 'ArrowLeft',  'd': 'ArrowRight',
-      'h': 'ArrowLeft',  'j': 'ArrowDown',  'k': 'ArrowUp',    'l': 'ArrowRight',
-      ' ': 'Enter'
-    };
-    const rawKey = e.key.length === 1 ? e.key.toLowerCase() : e.key;
-    const mappedKey = KEY_MAP[rawKey] || e.key;
-
     // 完成弹窗：← → 选按钮，↑/Enter 确认，↓/Esc 结束
     if (roundModalOverlay.classList.contains("show")) {
-      switch (mappedKey) { // ★ 核心修改：使用 mappedKey
+      switch (e.key) {
         case "ArrowLeft":
           e.preventDefault(); moveModalFocus(-1); break;
         case "ArrowRight":
@@ -3414,10 +3555,9 @@
     const tag = (e.target.tagName || "").toLowerCase();
     if (tag === "select" || tag === "textarea") return;
     if (tag === "input" && e.target !== typingInput) return;
-    if (tag === "button" && (mappedKey === "Enter" || mappedKey === " ")) return;
+    if (tag === "button" && (e.key === "Enter" || e.key === " ")) return;
 
-    // 练习页面：控制单词块
-    switch (mappedKey) { // ★ 核心修改：使用 mappedKey
+    switch (e.key) {
       case "ArrowLeft":
         e.preventDefault(); moveChipFocus(-1); break;
       case "ArrowRight":
@@ -3436,11 +3576,6 @@
     }
   });
 
-
-  // 点击句子朗读
-  exampleNew.addEventListener("click", () => {
-    if (state.currentSentence) speak(state.currentSentence);
-  });
 
   // 自动朗读开关
   autoSpeakToggle.addEventListener("click", () => {
@@ -3519,11 +3654,12 @@
       autoSpeakToggle.classList.remove("on");
     }
 
-    // 初始场景
-    state.activeScene = SCENE_KEYS[0];
+    // 初始场景：优先上次练的场景，这样「继续上次练习」和场景选择一致
+    state.activeScene = SCENE_DATA[progress.lastScene] ? progress.lastScene : SCENE_KEYS[0];
 
     renderSceneNav();
     renderDialogueGrid();
+    updateStartButton();
     updateHeaderStats();
 
     console.log(`[DailyChat] ✅ 已加载 ${SCENE_KEYS.length} 个场景 / ${ALL_DIALOGUES.length} 组对话`);
