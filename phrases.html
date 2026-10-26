@@ -1,0 +1,1792 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+<meta name="theme-color" content="#6C5CE7" />
+<title>高频单句拼接训练 · 1000句</title>
+<style>
+/* ========== 全局样式 ========== */
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+  min-height: 100vh; color: #e8e8e8;
+  padding-bottom: env(safe-area-inset-bottom);
+}
+.app { max-width: 900px; margin: 0 auto; padding: 16px; }
+
+.header { text-align: center; padding: 10px 0 16px; }
+.header h1 {
+  font-size: 26px; font-weight: 800;
+  background: linear-gradient(135deg, #a29bfe, #6C5CE7, #00cec9);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  margin-bottom: 6px;
+}
+.header .subtitle { font-size: 13px; color: #8a8fa3; }
+.progress-bar { margin-top: 12px; background: rgba(255,255,255,0.08); border-radius: 10px; height: 8px; overflow: hidden; }
+.progress-fill { height: 100%; background: linear-gradient(90deg, #6C5CE7, #00cec9); border-radius: 10px; transition: width 0.3s; width: 0%; }
+.progress-text { font-size: 12px; color: #8a8fa3; margin-top: 6px; }
+
+.quick-stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin: 16px 0; }
+.quick-stat { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; padding: 12px 8px; text-align: center; }
+.quick-stat .qs-val { font-size: 20px; font-weight: 800; color: #fff; }
+.quick-stat .qs-lbl { font-size: 11px; color: #8a8fa3; margin-top: 2px; }
+
+/* 场景分类卡片 */
+.scene-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 12px; margin: 20px 0; }
+.scene-card { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-radius: 14px; padding: 16px; cursor: pointer; transition: all 0.2s; position: relative; overflow: hidden; }
+.scene-card:hover { border-color: rgba(108, 92, 231, 0.5); background: rgba(108, 92, 231, 0.1); transform: translateY(-2px); }
+.scene-card .scene-icon { font-size: 28px; margin-bottom: 8px; }
+.scene-card .scene-name { font-size: 14px; font-weight: 600; margin-bottom: 4px; }
+.scene-card .scene-count { font-size: 11px; color: #8a8fa3; }
+.scene-card .scene-progress-dot { position: absolute; top: 12px; right: 12px; width: 10px; height: 10px; border-radius: 50%; background: rgba(255,255,255,0.2); }
+.scene-card .scene-progress-dot.done { background: #00b894; }
+.scene-card .scene-mini-bar { position: absolute; bottom: 0; left: 0; height: 3px; background: linear-gradient(90deg, #6C5CE7, #00cec9); border-radius: 0 3px 3px 0; }
+
+/* 列表 */
+.sl-grid { display: grid; gap: 8px; }
+.sl-item { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 10px; padding: 12px 14px; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; gap: 10px; }
+.sl-item:hover { border-color: rgba(108, 92, 231, 0.4); background: rgba(108, 92, 231, 0.08); }
+.sl-item.done { border-color: rgba(0, 184, 148, 0.4); background: rgba(0, 184, 148, 0.05); }
+.sl-num { font-size: 12px; color: #8a8fa3; min-width: 28px; }
+.sl-item.done .sl-num { color: #00b894; }
+.sl-content { flex: 1; min-width: 0; }
+.sl-en { font-size: 14px; margin-bottom: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.sl-cn { font-size: 12px; color: #8a8fa3; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.sl-check { color: #00b894; font-size: 16px; flex-shrink: 0; }
+
+/* 按钮 */
+.btn { padding: 12px 24px; border: none; border-radius: 12px; font-size: 14px; font-weight: 600; cursor: pointer; font-family: inherit; transition: all 0.15s; }
+.btn-primary { background: linear-gradient(135deg, #6C5CE7, #a29bfe); color: white; box-shadow: 0 4px 15px rgba(108, 92, 231, 0.4); }
+.btn-secondary { background: rgba(255,255,255,0.08); color: #d8dce8; border: 1px solid rgba(255,255,255,0.15); }
+.btn-block { width: 100%; margin: 8px 0; }
+.btn-row { display: flex; gap: 10px; margin: 12px 0; flex-wrap: wrap; }
+.btn-row .btn { flex: 1; min-width: 120px; }
+
+/* 练习全屏页 */
+.practice-screen { position: fixed; inset: 0; z-index: 100; background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%); transform: translateY(100%); visibility: hidden; transition: transform 0.3s ease, visibility 0.3s; display: flex; flex-direction: column; }
+.practice-screen.open { transform: translateY(0); visibility: visible; }
+body.practice-open { overflow: hidden; }
+
+.ps-top { flex: none; padding: 12px 16px; padding-top: calc(12px + env(safe-area-inset-top)); border-bottom: 1px solid rgba(255,255,255,0.08); background: rgba(26, 26, 46, 0.9); backdrop-filter: blur(10px); }
+.ps-top-row { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 8px; }
+.ps-back { background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15); color: #d8dce8; padding: 8px 14px; border-radius: 10px; font-size: 14px; cursor: pointer; font-family: inherit; }
+.ps-scene-name { font-size: 13px; color: #a29bfe; font-weight: 600; }
+.ps-progress { font-size: 12px; color: #8a8fa3; font-variant-numeric: tabular-nums; }
+
+.ps-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 8px; }
+.ps-stat { background: rgba(255,255,255,0.04); border-radius: 10px; padding: 8px; text-align: center; }
+.ps-stat-val { font-size: 18px; font-weight: 800; }
+.ps-stat-val.time { color: #00cec9; }
+.ps-stat-val.score { color: #fdcb6e; }
+.ps-stat-val.combo { color: #e17055; }
+.ps-stat-lbl { font-size: 10px; color: #8a8fa3; }
+
+.ps-middle { flex: 1; overflow-y: auto; padding: 16px; -webkit-overflow-scrolling: touch; }
+
+/* 历史记录区 */
+.history-list { display: flex; flex-direction: column; gap: 10px; margin-bottom: 20px; }
+.history-item { background: rgba(255,255,255,0.02); border-radius: 12px; padding: 12px 16px; border: 1px dashed rgba(255,255,255,0.1); opacity: 0.6; }
+.history-item .h-cn { color: #8a8fa3; margin-bottom: 4px; font-size: 13px; font-style: italic; }
+.history-item .h-en { color: #00b894; font-size: 15px; }
+
+/* 当前句子卡片 */
+.sentence-box { background: rgba(0,0,0,0.3); border-radius: 16px; padding: 24px; border: 1px solid rgba(255,255,255,0.06); min-height: 120px; cursor: pointer; transition: background 0.2s; }
+.sentence-box:hover { background: rgba(0,0,0,0.4); }
+.sentence-cn { font-size: 15px; color: #a29bfe; margin-bottom: 16px; font-style: italic; }
+.sentence-en { font-size: 26px; line-height: 1.6; font-weight: 500; letter-spacing: 0.5px; word-break: break-word; min-height: 50px; }
+.sentence-en .char { display: inline-block; padding: 2px 1px; border-radius: 4px; color: #4a5070; transition: all 0.1s; position: relative; }
+.sentence-en .char.correct { color: #00b894; }
+.sentence-en .char.incorrect { color: #d63031; background: rgba(214, 48, 49, 0.2); }
+.sentence-en .char.current::after { content: ""; position: absolute; bottom: -2px; left: 0; right: 0; height: 3px; background: #a29bfe; border-radius: 2px; animation: blink 0.9s infinite; }
+@keyframes blink { 0%,100% { opacity: 1; } 50% { opacity: 0.3; } }
+
+.ps-bottom { flex: none; border-top: 1px solid rgba(255,255,255,0.1); background: rgba(22, 33, 62, 0.95); backdrop-filter: blur(10px); padding: 12px 16px; padding-bottom: calc(12px + env(safe-area-inset-bottom)); max-height: 55vh; overflow-y: auto; }
+
+/* 单词块区域 */
+.chips-area { background: rgba(108, 92, 231, 0.05); border: 1px dashed rgba(108, 92, 231, 0.3); border-radius: 12px; padding: 14px; margin-bottom: 12px; }
+.chips-title { font-size: 12px; color: #8a8fa3; margin-bottom: 10px; }
+.chips-title b { color: #a29bfe; }
+.chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.chip { background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15); color: #e8e8e8; border-radius: 10px; padding: 10px 14px; font-size: 16px; line-height: 1.3; cursor: pointer; user-select: none; transition: all 0.15s; min-height: 44px; display: inline-flex; align-items: center; }
+.chip:hover { background: rgba(108, 92, 231, 0.2); border-color: rgba(108, 92, 231, 0.5); color: #a29bfe; }
+.chip.used { opacity: 0.3; text-decoration: line-through; background: rgba(0, 184, 148, 0.1); border-color: rgba(0, 184, 148, 0.3); cursor: not-allowed; }
+.chip.wrong { animation: chipShake 0.3s; background: rgba(214, 48, 49, 0.2); border-color: rgba(214, 48, 49, 0.6); color: #d63031; }
+.chip.focused { background: rgba(108, 92, 231, 0.3); border-color: #a29bfe; color: #fff; outline: 2px solid #a29bfe; outline-offset: 2px; box-shadow: 0 0 0 4px rgba(108, 92, 231, 0.2); }
+@keyframes chipShake { 0%,100% { transform: translateX(0); } 25% { transform: translateX(-5px); } 75% { transform: translateX(5px); } }
+
+.input-show { width: 100%; padding: 14px 16px; font-size: 17px; border: 2px dashed rgba(108, 92, 231, 0.4); border-radius: 12px; background: rgba(108, 92, 231, 0.05); color: #e8e8e8; margin-bottom: 8px; min-height: 52px; word-break: break-word; }
+.input-hint { font-size: 11px; color: #6a7090; text-align: center; margin-bottom: 12px; }
+
+.popup { position: fixed; top: 40%; left: 50%; transform: translate(-50%, -50%) scale(0); font-size: 42px; font-weight: 900; pointer-events: none; z-index: 200; text-align: center; opacity: 0; }
+.popup.combo { color: #fdcb6e; text-shadow: 0 4px 20px rgba(253, 203, 110, 0.5); }
+.popup.perfect { color: #00b894; text-shadow: 0 4px 20px rgba(0, 184, 148, 0.5); }
+.popup.show { animation: popAnim 1s ease-out; }
+@keyframes popAnim { 0% { transform: translate(-50%, -50%) scale(0.2); opacity: 0; } 30% { transform: translate(-50%, -60%) scale(1.2); opacity: 1; } 100% { transform: translate(-50%, -100%) scale(0.8); opacity: 0; } }
+
+.modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.7); backdrop-filter: blur(4px); display: none; align-items: center; justify-content: center; z-index: 300; padding: 20px; }
+.modal-overlay.show { display: flex; animation: fadeIn 0.3s; }
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+.modal { background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%); border: 1px solid rgba(0, 184, 148, 0.4); border-radius: 20px; padding: 32px; max-width: 420px; width: 100%; text-align: center; box-shadow: 0 8px 60px rgba(0, 184, 148, 0.2); animation: slideUp 0.4s ease; }
+@keyframes slideUp { from { transform: translateY(30px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+.modal .modal-icon { font-size: 56px; margin-bottom: 12px; }
+.modal h2 { font-size: 22px; color: #00b894; margin-bottom: 8px; }
+.modal p { color: #888; font-size: 13px; margin-bottom: 20px; }
+.modal .modal-stats { display: flex; gap: 12px; justify-content: center; margin-bottom: 24px; flex-wrap: wrap; }
+.modal .m-stat { background: rgba(255,255,255,0.06); border-radius: 12px; padding: 12px 16px; min-width: 80px; }
+.modal .m-val { font-size: 22px; font-weight: 800; color: #a29bfe; }
+.modal .m-lbl { font-size: 11px; color: #888; margin-top: 2px; }
+
+@media (max-width: 600px) {
+  .app { padding: 12px; }
+  .header h1 { font-size: 24px; }
+  .sentence-en { font-size: 22px; }
+  .chip { font-size: 15px; padding: 10px 12px; }
+  .scene-grid { grid-template-columns: repeat(2, 1fr); }
+  .quick-stats { grid-template-columns: repeat(2, 1fr); }
+}
+</style>
+</head>
+<body>
+
+<div class="app">
+  <div class="header">
+    <h1>💬 1000句高频单句训练</h1>
+    <div class="subtitle">覆盖10大生活场景 · 沉浸式拼接记忆 · 支持键盘 WASD/HJKL</div>
+    <div class="progress-bar">
+      <div class="progress-fill" id="totalProgressFill"></div>
+    </div>
+    <div class="progress-text" id="totalProgressText">已掌握 0 / 1000 句</div>
+  </div>
+
+  <div class="quick-stats">
+    <div class="quick-stat"><div class="qs-val" id="statLearned">0</div><div class="qs-lbl">✅ 已学会</div></div>
+    <div class="quick-stat"><div class="qs-val" id="statAccuracy">0%</div><div class="qs-lbl">🎯 正确率</div></div>
+    <div class="quick-stat"><div class="qs-val" id="statCombo">0</div><div class="qs-lbl">🔥 最高连击</div></div>
+    <div class="quick-stat"><div class="qs-val" id="statScore">0</div><div class="qs-lbl">⭐ 总得分</div></div>
+  </div>
+
+  <div class="btn-row">
+    <button class="btn btn-primary" onclick="startRandomPractice()">🎲 随机练习(20句)</button>
+    <button class="btn btn-secondary" onclick="resetProgress()">🔄 重置进度</button>
+  </div>
+
+  <h3 style="font-size:16px;margin:20px 0 12px;color:#d8dce8;">📚 场景分类</h3>
+  <div class="scene-grid" id="sceneGrid"></div>
+
+  <!-- 句子列表区 -->
+  <div id="sentenceListArea" style="display:none;">
+    <div class="btn-row">
+      <button class="btn btn-secondary" onclick="backToScenes()">← 返回场景</button>
+      <button class="btn btn-primary" onclick="startScenePractice()">🚀 开始练习本场景</button>
+    </div>
+    <div class="sentence-list-panel">
+      <div class="sentence-list-header" style="display:flex; justify-content:space-between; margin-bottom:12px;">
+        <span class="sentence-list-title" id="currentSceneTitle" style="font-weight:600;"></span>
+        <span id="sceneProgressText" style="font-size:12px;color:#8a8fa3;"></span>
+      </div>
+      <div class="sl-grid" id="sentenceList"></div>
+    </div>
+  </div>
+</div>
+
+<!-- 练习全屏页面 -->
+<div class="practice-screen" id="practiceScreen">
+  <div class="ps-top">
+    <div class="ps-top-row">
+      <button class="ps-back" onclick="exitPractice()">← 返回</button>
+      <span class="ps-scene-name" id="psSceneName"></span>
+      <span class="ps-progress" id="psProgress"></span>
+    </div>
+    <div class="ps-stats">
+      <div class="ps-stat"><div class="ps-stat-val time" id="psTimer">0s</div><div class="ps-stat-lbl">⏱ 用时</div></div>
+      <div class="ps-stat"><div class="ps-stat-val score" id="psScore">0</div><div class="ps-stat-lbl">⭐ 本句得分</div></div>
+      <div class="ps-stat"><div class="ps-stat-val combo" id="psCombo">0</div><div class="ps-stat-lbl">🔥 连击</div></div>
+    </div>
+  </div>
+
+  <div class="ps-middle" id="psMiddle">
+    <!-- 历史记录区（前5句） -->
+    <div class="history-list" id="historyList"></div>
+    
+    <!-- 当前句子区（点击可朗读） -->
+    <div class="sentence-box" onclick="speakCurrent()">
+      <div class="sentence-cn" id="psCn"></div>
+      <div class="sentence-en" id="psEn"></div>
+    </div>
+  </div>
+
+  <div class="ps-bottom">
+    <div class="chips-area" id="chipsArea">
+      <div class="chips-title">🧩 <b>单词顺序已打乱</b>，依次点击正确的单词拼出整句（支持键盘 WASD/HJKL 选择，↑/Enter 选中）</div>
+      <div class="chips" id="chips"></div>
+    </div>
+    <div class="input-show" id="inputShow"></div>
+    <div class="input-hint" id="inputHint">💡 点击上方单词按正确顺序拼接句子</div>
+    <div class="btn-row">
+      <button class="btn btn-secondary" onclick="prevSentence()">← 上一句</button>
+      <button class="btn btn-secondary" onclick="nextSentence()">下一句 →</button>
+    </div>
+  </div>
+</div>
+
+<div class="popup combo" id="comboPopup"></div>
+<div class="popup perfect" id="perfectPopup"></div>
+
+<!-- 完成弹窗 -->
+<div class="modal-overlay" id="completeModal">
+  <div class="modal">
+    <div class="modal-icon">🎉</div>
+    <h2>练习完成！</h2>
+    <p>太棒了，继续保持！</p>
+    <div class="modal-stats">
+      <div class="m-stat"><div class="m-val" id="modalCorrect">0</div><div class="m-lbl">✅ 正确</div></div>
+      <div class="m-stat"><div class="m-val" id="modalAccuracy">0%</div><div class="m-lbl">🎯 正确率</div></div>
+      <div class="m-stat"><div class="m-val" id="modalCombo">0</div><div class="m-lbl">🔥 最高连击</div></div>
+    </div>
+    <button class="btn btn-primary btn-block" onclick="closeModal()">继续学习</button>
+  </div>
+</div>
+
+<script>
+// ============================================================
+//  1000句数据（完整版）
+// ============================================================
+const SENTENCES_RAW = `
+1. How’s everything going? 一切都还好吗？
+2. Long time no see. 好久不见。
+3. What have you been up to lately? 你最近在忙什么？
+4. I’ve been pretty busy lately. 我最近挺忙的。
+5. How was your weekend? 你周末过得怎么样？
+6. It was pretty relaxing. 过得特别放松。
+7. How are you doing? 你还好吗？
+8. I’m doing great, thanks. 我挺好的，谢谢。
+9. Not too bad, all things considered. 总的来说还不赖。
+10. I’m hanging in there. 我勉强撑着呢。
+11. It’s been ages since we last met. 我们上次见面都过去好久了。
+12. Good to catch up with you. 很高兴和你叙叙旧。
+13. How’s life treating you these days? 最近日子过得顺心吗？
+14. Same old, nothing special. 老样子，没什么特别的。
+15. Can’t complain too much. 没什么可抱怨的。
+16. Hope you’re keeping well. 希望你一切安好。
+17. It’s great to hear from you. 很高兴收到你的消息。
+18. Sorry I haven’t been around much. 抱歉最近很少露面。
+19. I’ve been a little under the weather. 我最近身体有点不舒服。
+20. Things have been a bit hectic. 最近事情有点忙乱。
+21. How’s your new job going? 你的新工作怎么样？
+22. It’s going better than I expected. 比我预想的顺利。
+23. How’s your family doing? 你的家人最近还好吗？
+24. They’re all doing well, thanks. 他们都挺好的，谢谢。
+25. Long time no chat. 好久没聊天了。
+26. What’s new with you? 你那边有什么新鲜事？
+27. Not much, just the usual. 没什么，还是老样子。
+28. How did your trip go? 你的旅途顺利吗？
+29. It was absolutely amazing. 旅途特别棒。
+30. Glad things are working out for you. 很高兴看到你一切顺利。
+31. How’s your new place working out? 你的新家住得还习惯吗？
+32. It’s really comfortable to live in. 住起来特别舒服。
+33. How’s your workload these days? 最近工作忙不忙？
+34. I’ve been swamped with work. 我最近忙得不可开交。
+35. How’s your health holding up? 你的身体状态怎么样？
+36. I’m feeling much better now. 我现在好多了。
+37. Good morning! 早上好！
+38. Good afternoon! 下午好！
+39. Good evening! 晚上好！
+40. Good night! 晚安！
+41. See you later. 回头见。
+42. Catch you tomorrow. 明天见。
+43. Talk to you soon. 很快再聊。
+44. Keep in touch. 保持联系。
+45. Take care of yourself. 照顾好自己。
+46. Have a nice day! 祝你今天过得愉快！
+47. Enjoy your day off! 祝你休息日玩得开心！
+48. Have a safe trip. 一路平安。
+49. Cheers for now. 先拜拜啦。
+50. Until next time. 下次再见。
+51. Fancy meeting you here! 真巧在这儿碰到你！
+52. What a small world! 世界真小啊！
+53. I didn’t expect to see you here. 我没想到会在这儿见到你。
+54. You look familiar. 你看起来很眼熟。
+55. Haven’t we met somewhere before? 我们之前是不是在哪里见过？
+56. It’s so nice to see you again. 再次见到你真开心。
+57. You look great today. 你今天气色真好。
+58. Thank you, you too. 谢谢，你也是。
+59. How come you’re here? 你怎么会在这里？
+60. I’m just here for a coffee. 我就是来这儿喝杯咖啡的。
+61. What brings you here? 什么风把你吹来了？
+62. I’m here to pick up a friend. 我来这儿接个朋友。
+63. It’s been a really long day. 今天真是漫长的一天。
+64. I can totally relate. 我太懂这种感觉了。
+65. The weather is so nice today. 今天天气真好。
+66. Yeah, perfect for a walk. 对啊，特别适合散步。
+67. It’s freezing outside today. 今天外面特别冷。
+68. I totally forgot to bring my coat. 我完全忘了带外套。
+69. It’s pouring with rain outside. 外面正在下倾盆大雨。
+70. Did you bring an umbrella? 你带伞了吗？
+71. The traffic is terrible today. 今天交通特别堵。
+72. I spent an hour stuck on the road. 我在路上堵了一个小时。
+73. You won’t believe what happened to me today. 你绝对想不到我今天遇到了什么事。
+74. Do tell me. 快说给我听听。
+75. Long time no talk, how’s it going? 好久没聊了，最近怎么样？
+76. Things have been a little chaotic lately. 最近事情有点乱糟糟的。
+77. How did your weekend pan out? 你周末过得怎么样？
+78. I just stayed home and rested. 我就待在家里休息了。
+79. Hope everything goes smoothly for you. 希望你一切顺利。
+80. Thanks, I really appreciate that. 谢谢，我很受用。
+81. How do you do? 你好。
+82. How do you do? Nice to meet you. 你好，很高兴认识你。
+83. Nice to meet you too. 我也很高兴认识你。
+84. It’s a pleasure to meet you. 认识你是我的荣幸。
+85. I’ve heard a lot about you. 我早就听说过你了。
+86. All good things must come to an end. 天下没有不散的筵席。
+87. I have to go now, see you. 我得走了，再见。
+88. It was lovely chatting with you. 和你聊天特别开心。
+89. Let’s get together again soon. 我们找时间再聚聚吧。
+90. That sounds like a plan. 这个主意不错。
+91. Have a wonderful weekend. 祝你周末愉快。
+92. Thanks, you too. 谢谢，你也是。
+93. Have a good one. 祝你一切顺利。
+94. Same to you. 你也是。
+95. I’m so glad I ran into you. 真高兴能碰到你。
+96. Me too, we should hang out more. 我也是，我们该多出来聚聚。
+97. Are you free later this week? 你这周晚些时候有空吗？
+98. Let me check my schedule first. 我先看看我的日程安排。
+99. I’ll text you later to confirm. 我晚点给你发消息确认。
+100. Sounds great, I’ll wait for your message. 太好了，我等你消息。
+101. I’m so happy today! 我今天太开心了！
+102. I’m really excited about this. 我对这件事特别期待。
+103. This just made my day. 这件事让我今天一整天都特别开心。
+104. I’m glad to hear that. 听到这个我太开心了。
+105. I’m proud of you. 我为你感到骄傲。
+106. I feel great today. 我今天心情特别好。
+107. I’m so lucky. 我太幸运了。
+108. I’m really satisfied with the result. 我对这个结果特别满意。
+109. That makes me so happy. 这件事让我特别开心。
+110. I can’t believe it! 我简直不敢相信！
+111. That’s incredible! 这太不可思议了！
+112. You’re kidding me! 你在跟我开玩笑吧！
+113. No way! 不可能！
+114. Are you serious? 你是认真的吗？
+115. That’s amazing! 这太棒了！
+116. Wow, that’s so cool. 哇，这太酷了。
+117. I’m so surprised. 我特别惊讶。
+118. That’s totally unexpected. 这完全出乎意料。
+119. I didn’t see that coming. 我完全没预料到会这样。
+120. That’s hilarious! 太搞笑了！
+121. You’re killing me! 笑死我了！
+122. That made me laugh so hard. 这件事让我笑到不行。
+123. I can’t stop laughing. 我笑到停不下来。
+124. That’s so funny. 这太有意思了。
+125. You’re really funny. 你太有趣了。
+126. I’m so tired. 我太累了。
+127. I’m completely exhausted. 我累坏了。
+128. I’m really stressed out. 我压力特别大。
+129. I feel a little nervous. 我有点紧张。
+130. I’m worried about it. 我很担心这件事。
+131. I feel uncomfortable. 我感觉不太舒服。
+132. I’m not feeling well today. 我今天身体有点不舒服。
+133. I’m so bored. 我太无聊了。
+134. I feel down today. 我今天心情很低落。
+135. I’m not in a good mood. 我今天心情不好。
+136. I feel so sorry about that. 我对这件事感到特别抱歉。
+137. That’s not good. 这可不太好。
+138. I feel bad for you. 我为你感到难受。
+139. That’s terrible. 太糟糕了。
+140. Don’t worry about it. 别担心这件事。
+141. Take it easy. 放轻松点。
+142. Cheer up! 振作起来！
+143. Calm down. 冷静一点。
+144. Everything will be fine. 一切都会好起来的。
+145. It’s not a big deal. 这没什么大不了的。
+146. Never mind. 没关系。
+147. Forget it. 算了吧。
+148. No problem. 没问题。
+149. That’s okay. 没事的。
+150. It doesn’t matter. 这不重要。
+151. I totally agree with you. 我完全同意你的看法。
+152. That’s exactly what I think. 这正是我想的。
+153. You’re absolutely right. 你说得完全对。
+154. That makes sense. 这说得通。
+155. I see your point. 我明白你的意思。
+156. I partially agree with you. 我部分同意你的观点。
+157. I don’t think so. 我不这么认为。
+158. That’s not what I mean. 我不是这个意思。
+159. I have a different opinion. 我有不同的看法。
+160. I’m afraid I can’t agree. 恐怕我不能同意。
+161. What do you think? 你觉得怎么样？
+162. What’s your opinion on this? 你对这件事有什么看法？
+163. I think it’s a great idea. 我觉得这是个好主意。
+164. It’s up to you. 由你来决定。
+165. I don’t mind. 我不介意。
+166. Whatever you want. 你想怎么样都行。
+167. It doesn’t make any difference to me. 对我来说没什么区别。
+168. I don’t care. 我不在乎。
+169. That’s totally fine. 完全没问题。
+170. Sounds good to me. 我觉得可以。
+171. I’m not sure. 我不太确定。
+172. I have no idea. 我完全不知道。
+173. I don’t know for sure. 我不太确定。
+174. Maybe, I’m not 100% sure. 可能吧，我不能百分百确定。
+175. It depends. 看情况吧。
+176. I guess so. 我想是这样的。
+177. Probably. 很有可能。
+178. Most likely. 十有八九是这样。
+179. It’s possible. 有可能。
+180. There’s a chance. 有这个可能性。
+181. I doubt it. 我对此表示怀疑。
+182. That’s impossible. 这不可能。
+183. No way that’s true. 这绝对不可能是真的。
+184. I can’t stand it. 我受不了这个。
+185. I really hate it. 我特别讨厌这个。
+186. It’s so annoying. 这太烦人了。
+187. That drives me crazy. 这快把我逼疯了。
+188. It’s so frustrating. 这太让人挫败了。
+189. I’m really annoyed. 我特别生气。
+190. I can’t believe you did that. 我真不敢相信你做了这种事。
+191. Are you kidding me? 你在逗我吗？
+192. That’s ridiculous. 这太荒谬了。
+193. What on earth are you doing? 你到底在干什么？
+194. Calm down, it’s not that bad. 冷静点，事情没那么糟。
+195. Don’t be mad. 别生气了。
+196. I didn’t mean it. 我不是故意的。
+197. It was just a joke. 这只是个玩笑。
+198. I didn’t do it on purpose. 我不是故意这么做的。
+199. I’m really sorry. 我真的很抱歉。
+200. Apology accepted. 我接受你的道歉。
+201. Thank you so much. 非常感谢你。
+202. You’re welcome. 不客气。
+203. No worries. 别客气。
+204. My pleasure. 我的荣幸。
+205. I really appreciate your help. 我特别感谢你的帮助。
+206. That’s so kind of you. 你人太好了。
+207. I owe you one. 我欠你一个人情。
+208. Let me buy you a drink later. 我晚点请你喝一杯。
+209. Don’t mention it. 不用客气。
+210. It’s nothing. 这没什么。
+211. Excuse me. 不好意思打扰一下。
+212. Pardon me. 麻烦再说一遍。
+213. Could you repeat that? 你能重复一遍吗？
+214. I didn’t catch that. 我没听清刚才的话。
+215. Could you speak a little slower? 你能说慢一点吗？
+216. Sorry, my mistake. 抱歉，是我的错。
+217. It’s my fault. 是我的问题。
+218. I messed up. 我搞砸了。
+219. Let me fix that. 我来把它修好。
+220. No, it’s my bad. 不，是我的问题。
+221. Congratulations! 恭喜你！
+222. Well done! 做得好！
+223. Great job! 干得漂亮！
+224. You did an amazing job. 你做得特别棒。
+225. I’m so happy for you. 我真为你感到开心。
+226. Good luck! 祝你好运！
+227. Break a leg! 祝你一切顺利！
+228. Hope everything goes well. 希望一切顺利。
+229. You can do it! 你能做到的！
+230. I’m rooting for you. 我支持你。
+231. What a shame! 太可惜了！
+232. That’s such a pity. 这太遗憾了。
+233. I feel so bad for that. 我对这件事感到很遗憾。
+234. Better luck next time. 下次运气会更好的。
+235. Don’t beat yourself up. 别太苛责自己。
+236. It’s not the end of the world. 这又不是世界末日。
+237. Things will get better. 事情会好起来的。
+238. I’m here for you. 我会陪着你的。
+239. Let me know if you need anything. 如果你需要什么就告诉我。
+240. I’ll be there for you. 我会支持你的。
+241. That’s so sweet. 这太暖心了。
+242. You’re the best. 你太好了。
+243. I really enjoy talking to you. 我特别喜欢和你聊天。
+244. Time flies so fast when I’m with you. 和你在一起的时候时间过得特别快。
+245. I had a really good time. 我今天过得特别开心。
+246. This is such a nice surprise. 这真是个意外的惊喜。
+247. I didn’t expect this at all. 我完全没预料到这个。
+248. You really made my day. 你真的让我今天特别开心。
+249. I’m speechless. 我都不知道说什么好了。
+250. That’s beyond my expectation. 这超出了我的预期。
+251. Could you do me a favor? 你能帮我个忙吗？
+252. Sure, what is it? 当然，什么事？
+253. Can you pass me the water? 你能把水递给我吗？
+254. Here you go. 给你。
+255. Could you help me with this? 你能帮我弄一下这个吗？
+256. No problem, let me see. 没问题，我看看。
+257. Do you mind if I open the window? 你介意我打开窗户吗？
+258. Not at all, go ahead. 完全不介意，开吧。
+259. Can I borrow your pen? 我能借你的笔用一下吗？
+260. Sure, here it is. 当然，给你。
+261. Could you wait for me a second? 你能等我一下吗？
+262. Take your time, I’m not in a hurry. 慢慢来，我不急。
+263. Can you give me a hand? 你能搭把手帮我一下吗？
+264. Of course, what do you need? 当然，你需要什么？
+265. Would you mind turning down the music? 你介意把音乐调小一点吗？
+266. Oh sorry, I didn’t realize it was that loud. 哦抱歉，我没意识到声音这么大。
+267. Can you show me how to use this? 你能给我演示一下怎么用这个吗？
+268. It’s really easy, let me walk you through it. 特别简单，我一步步教你。
+269. Could you send me that document later? 你晚点能把那个文件发给我吗？
+270. Sure, I’ll send it to you right away. 没问题，我马上就发给你。
+271. Can you remind me to take the medicine later? 你晚点能提醒我吃药吗？
+272. No problem, I’ll text you at 3 o’clock. 没问题，我三点给你发消息。
+273. Would you please close the door? 你能关一下门吗？
+274. Sure thing. 好的。
+275. Can I get you something to drink? 我给你拿点喝的吧？
+276. A glass of water would be great, thanks. 一杯水就好，谢谢。
+277. Let me help you carry that. 我来帮你搬那个。
+278. Oh thank you so much, it’s really heavy. 哦太感谢你了，这个特别重。
+279. Do you need any help? 你需要帮忙吗？
+280. I’m okay, but thank you for asking. 我自己可以，不过谢谢你问我。
+281. Could you tell me the time? 你能告诉我现在几点了吗？
+282. It’s half past seven. 现在七点半了。
+283. Can you tell me where the nearest subway station is? 你能告诉我最近的地铁站在哪里吗？
+284. Go straight for 200 meters, it’s on your left. 直走200米，它就在你左边。
+285. Excuse me, can I get past? 不好意思，我能过一下吗？
+286. Sure, sorry for blocking the way. 当然，不好意思挡路了。
+287. Can I use your restroom? 我能用一下你的洗手间吗？
+288. Of course, it’s down the hall on the right. 当然，在走廊尽头的右边。
+289. Could you lend me some money? 你能借我点钱吗？
+290. Sure, how much do you need? 没问题，你需要多少？
+291. Can you cover for me tomorrow? 你明天能帮我代个班吗？
+292. Let me check my schedule first. 我先看看我的日程安排。
+293. Would you mind if I leave a little early today? 你介意我今天早点走吗？
+294. That’s totally fine with me. 我完全没问题。
+295. Can you repeat that number again? 你能把那个号码再说一遍吗？
+296. Sure, it’s 138XXXX1234. 没问题，是138XXXX1234。
+297. Could you speak a bit louder? 你能说大声一点吗？
+298. Sorry, is this better? 抱歉，现在这样可以吗？
+299. Can you help me take a photo? 你能帮我拍张照吗？
+300. Sure, just tell me when to press. 当然，告诉我什么时候按快门就行。
+301. Let me take a picture for you two. 我来给你们俩拍张照。
+302. That’s so nice of you, thank you. 你太好了，谢谢你。
+303. Can I have a tissue please? 能给我一张纸巾吗？
+304. Here you are. 给你。
+305. Could you pass me the salt? 你能把盐递给我吗？
+306. Here you go. 给你。
+307. Would you please pass the menu? 能把菜单递给我吗？
+308. Sure, here it is. 当然，给你。
+309. Can I get a napkin? 能给我一张餐巾纸吗？
+310. I’ll go get it for you right now. 我现在就去给你拿。
+311. Do you have a pen I can borrow? 你有笔能借我用一下吗？
+312. I only have this one, you can use it. 我只有这一支，你用吧。
+313. Can you help me move this table? 你能帮我挪一下这张桌子吗？
+314. One, two, three, lift. 一二三，抬。
+315. Could you hold the door for me? 你能帮我扶一下门吗？
+316. No problem, go ahead. 没问题，你走吧。
+317. Can you wait five more minutes? 你能再多等五分钟吗？
+318. Sure, no rush. 当然，不急。
+319. Would you mind sharing your umbrella with me? 你介意和我共用一把伞吗？
+320. Not at all, come under. 完全不介意，过来吧。
+321. Can you help me order a taxi? 你能帮我叫辆出租车吗？
+322. Sure, where are you going? 没问题，你要去哪里？
+323. Could you translate this sentence for me? 你能帮我翻译一下这个句子吗？
+324. Let me have a look. 我看一下。
+325. Can you explain this to me again? 你能再给我解释一遍吗？
+326. Of course, I’ll make it simpler this time. 当然，这次我讲得简单一点。
+327. Do you know how to fix this? 你知道怎么修这个吗？
+328. I think I can help you with that. 我觉得我能帮你搞定。
+329. Can I get your WeChat? 我能加你的微信吗？
+330. Sure, scan my QR code. 当然，扫我的二维码就行。
+331. Could you send me the location? 你能把位置发给我吗？
+332. I just shared it with you. 我刚分享给你了。
+333. Can you pick me up at the station? 你能来车站接我吗？
+334. What time does your train arrive? 你的火车几点到？
+335. Would you please turn on the light? 你能开一下灯吗？
+336. Oh, I didn’t even notice it was dark. 哦，我都没注意到天黑了。
+337. Can you turn off the TV? 你能关一下电视吗？
+338. Sure, I’ll turn it off now. 好的，我现在就关。
+339. Could you plug in my phone for me? 你能帮我给手机充下电吗？
+340. Which charger do you use? 你用的是哪个充电器？
+341. Do you have any extra batteries? 你有多余的电池吗？
+342. Sorry, I don’t have any with me. 抱歉，我身上没带。
+343. Can you help me check the balance? 你能帮我查一下余额吗？
+344. Let me show you how to do it. 我教你怎么操作。
+345. Would you mind closing the window? 你介意关一下窗户吗？
+346. It’s getting a bit cold in here. 屋里有点冷了。
+347. Can you get me a glass of hot water? 你能给我倒杯热水吗？
+348. Coming right up. 马上就来。
+349. Is there anything I can do for you? 有什么我能帮你的吗？
+350. No thanks, I’m all good. 不用了谢谢，我都弄好了。
+351. Hi there, how many people are dining? 你好，请问几位用餐？
+352. Two people, please. 两位。
+353. Would you like a table by the window? 你想要靠窗的位置吗？
+354. That would be perfect, thank you. 那太好了，谢谢。
+355. Here’s the menu, take your time. 这是菜单，慢慢看。
+356. What do you recommend here? 你们这里推荐什么菜？
+357. Our signature dish is the grilled steak. 我们的招牌菜是烤牛排。
+358. Are you ready to order? 你准备好点餐了吗？
+359. Not yet, we need a few more minutes. 还没，我们还需要几分钟。
+360. Can we have two bowls of rice first? 我们先上两碗米饭可以吗？
+361. Sure, I’ll bring them right over. 没问题，我马上给你拿过来。
+362. What would you like to drink? 你想喝点什么？
+363. I’ll have a cup of hot tea. 我要一杯热茶。
+364. I’d like a cold orange juice. 我要一杯冰橙汁。
+365. How would you like your steak cooked? 你的牛排要几分熟？
+366. Medium rare, please. 五分熟，谢谢。
+367. Don’t add any coriander to my dish. 我的菜里不要加香菜。
+368. No spicy for me, please. 我的菜不要放辣。
+369. Can we get an extra plate? 能给我们多拿一个盘子吗？
+370. Sure, here you go. 当然，给你。
+371. Excuse me, where is the restroom? 不好意思，洗手间在哪里？
+372. It’s at the end of the hallway. 在走廊的尽头。
+373. This dish tastes really good. 这道菜味道真不错。
+374. Yeah, it’s better than I expected. 对啊，比我预想的还好吃。
+375. This is a little too salty for me. 这个对我来说有点太咸了。
+376. Let me tell the kitchen to make you a new one. 我让厨房给你重新做一份。
+377. Can I get a refill of my coffee? 我的咖啡能续杯吗？
+378. Of course, it’s free refills. 当然，咖啡可以免费续杯。
+379. Is everything okay with your meal? 你的餐点还合口味吗？
+380. Everything is great, thank you. 一切都很好，谢谢你。
+381. Waiter, can we get the bill please? 服务员，麻烦买单。
+382. Sure, I’ll bring it over right now. 没问题，我马上给你拿过来。
+383. Let me pay for this, it’s my treat. 我来付钱，我请客。
+384. No no, I’ll pay this time. 别别，这次我来付。
+385. Can we split the bill? 我们可以AA制吗？
+386. Sure, I can separate it for you. 当然，我可以给你们分开算。
+387. Do you take credit cards? 你们这里可以刷信用卡吗？
+388. Yes, we accept all major cards. 可以，所有主流卡我们都支持。
+389. Can I pay with Alipay? 我可以用支付宝付款吗？
+390. Sorry, we only take cash and cards. 抱歉，我们只收现金和刷卡。
+391. Keep the change. 不用找零了。
+392. Thank you so much, have a nice day. 非常感谢，祝你今天愉快。
+393. Hi there! What can I get for you today? 你好！今天想喝点什么？
+394. Hi! I’d like a coffee, please. 你好，请给我一杯咖啡。
+395. Sure. What kind of coffee would you prefer? 好的，你想要哪种咖啡？
+396. I’ll have a medium latte. 我要一杯中杯拿铁。
+397. Would you like whole milk, skim milk or oat milk? 你要全脂奶、脱脂奶还是燕麦奶？
+398. Skim milk, please. 请用脱脂奶。
+399. Any sugar or syrup in your latte? 你的拿铁要加糖或者糖浆吗？
+400. Could you add one pump of vanilla syrup? 能加一份香草糖浆吗？
+401. Would you like it hot or iced? 你要热的还是冰的？
+402. Iced, please. It’s quite warm today. 冰的，谢谢。今天挺热的。
+403. Is that for here or to go? 是在这里喝还是带走？
+404. To go, please. 带走。
+405. Would you like any pastries? Our blueberry muffins are fresh. 要来点糕点吗？我们的蓝莓玛芬刚出炉。
+406. That sounds good, I’ll take one. 听起来不错，我来一个。
+407. What’s your order number? 你的取餐号是多少？
+408. It’s number 17. 17号。
+409. Number 17, your order is ready. 17号，你的餐好了。
+410. Thank you so much. 非常感谢你。
+411. Do you want to add some extra toppings? 你想加一些额外的配料吗？
+412. Can I add some extra cheese? 我能多加一点芝士吗？
+413. That will be 2 yuan extra. 这个需要额外加2元。
+414. Do you want fries with that? 你要点配薯条吗？
+415. Yes, a medium size fries. 对，一份中份薯条。
+416. What sauce would you like for your fries? 你的薯条要配什么酱？
+417. Ketchup, please. 番茄酱，谢谢。
+418. Would you like a set meal? It’s cheaper. 你要套餐吗？套餐更便宜。
+419. Then I’ll take the set meal. 那我就要套餐吧。
+420. What size drink do you want? 你要多大杯的饮料？
+421. Large, please. 大杯，谢谢。
+422. Here’s your tray, enjoy your meal. 这是你的餐托盘，慢用。
+423. This burger is huge. 这个汉堡好大。
+424. I can’t finish all of this. 我吃不完这么多。
+425. Let’s pack the leftovers. 我们把剩下的打包吧。
+426. Can we get a takeaway box? 能给我们一个打包盒吗？
+427. Sure, here you are. 当然，给你。
+428. The food here is really delicious. 这里的食物真的很好吃。
+429. I’ll definitely come back again. 我肯定还会再来的。
+430. The service here is really nice. 这里的服务特别好。
+431. Are you a regular here? 你经常来这里吃吗？
+432. Yeah, I come here almost every week. 对啊，我几乎每周都来这里。
+433. The food here never disappoints. 这里的食物从来不会让人失望。
+434. This place has the best noodles in town. 这家店的面条是全城最好吃的。
+435. The portion here is really big. 这里的菜量真的很大。
+436. I’m already full, but I still want to eat more. 我已经饱了，但还想再吃点。
+437. This dish is too spicy for me. 这道菜对我来说太辣了。
+438. My mouth is on fire. 我的嘴辣得像着火了一样。
+439. Quick, pass me a glass of milk. 快，递给我一杯牛奶。
+440. The milk helps with the spiciness. 牛奶能解辣。
+441. This is the most delicious hot pot I’ve ever had. 这是我吃过最好吃的火锅。
+442. The meat here is so fresh. 这里的肉特别新鲜。
+443. The vegetables are crisp and tasty. 蔬菜又脆又好吃。
+444. Can I have more dipping sauce? 能再给我来点蘸料吗？
+445. Sure, help yourself at the counter. 没问题，你可以去自助台自己取。
+446. The self-service area has free fruit. 自助区有免费的水果。
+447. Let’s go get some watermelon. 我们去拿点西瓜吧。
+448. I love eating watermelon after hot pot. 我特别喜欢吃完火锅吃西瓜。
+449. This restaurant is always full at dinner time. 这家饭店晚饭时间总是满座。
+450. We waited 30 minutes to get a table. 我们等了30分钟才等到位置。
+451. Welcome, can I help you find anything? 欢迎光临，需要我帮你找什么吗？
+452. No thanks, I’m just looking around. 不用了谢谢，我就随便逛逛。
+453. Let me know if you need any help. 如果你需要帮忙就告诉我。
+454. How much is this T-shirt? 这件T恤多少钱？
+455. It’s 99 yuan. 这件99元。
+456. Do you have this in a smaller size? 这件有小一点的尺码吗？
+457. Sure, let me go get it for you. 当然，我去给你拿。
+458. Can I try this on? 我能试穿一下吗？
+459. The fitting room is over there. 试衣间在那边。
+460. What size do you usually wear? 你平时穿什么尺码？
+461. I usually wear a medium. 我平时穿中码。
+462. Does this come in other colors? 这件有其他颜色吗？
+463. We have it in black, white and blue. 我们有黑色、白色和蓝色。
+464. The blue one looks better on you. 蓝色的你穿起来更好看。
+465. How do I look in this? 我穿这件看起来怎么样？
+466. It fits you perfectly. 它特别适合你。
+467. This is a little too tight. 这个有点太紧了。
+468. I’ll get you a larger size. 我给你拿大一号的。
+469. Do you offer any discount today? 今天有什么折扣吗？
+470. All items are 20% off today. 今天所有商品都打八折。
+471. That’s a really good deal. 这价格真的很划算。
+472. Can I use this coupon? 我能用这张优惠券吗？
+473. Sure, it’s still valid. 当然，它还在有效期内。
+474. Where do I pay for this? 我在哪里付款？
+475. The cashier is at the front door. 收银台在前门那里。
+476. Can I get a receipt please? 能给我开一张发票吗？
+477. Sure, I’ll print it for you right away. 没问题，我马上给你打印。
+478. Do you have a membership card? 你有会员卡吗？
+479. No, I don’t have one. 我没有会员卡。
+480. You can scan the code to get points. 你可以扫码积分。
+481. Can I return this if it doesn’t work? 如果这个不好用我能退货吗？
+482. You can return it within 7 days with the receipt. 凭小票7天内可以退货。
+483. Can I exchange this for a different size? 我能把这个换个其他尺码吗？
+484. No problem, as long as it’s not worn. 没问题，只要没穿过就行。
+485. Do you provide free shipping? 你们提供免费配送吗？
+486. Free shipping for orders over 100 yuan. 订单满100元就包邮。
+487. Can you wrap this as a gift? 你能把这个包装成礼物吗？
+488. Sure, we have free gift wrapping. 当然，我们提供免费礼品包装。
+489. This bag is so heavy. 这个袋子太重了。
+490. Let me get you a bigger shopping bag. 我给你拿个大一点的购物袋。
+491. How much is this pair of shoes? 这双鞋多少钱？
+492. They are 299 yuan. 这双299元。
+493. Can I try them on? 我能试穿一下吗？
+494. What’s your shoe size? 你穿多大码的鞋？
+495. I wear size 42. 我穿42码。
+496. These shoes are really comfortable. 这双鞋特别舒服。
+497. I’ll take them. 我买这双了。
+498. Do you have socks to match these shoes? 你们有配这双鞋的袜子吗？
+499. Yes, they are on the shelf over there. 有的，在那边的货架上。
+500. I’ll take a pair of white socks too. 我再拿一双白袜子。
+501. How much is the total? 总共多少钱？
+502. That comes to 320 yuan. 一共320元。
+503. Can I pay by WeChat? 我能用微信付款吗？
+504. Sure, scan this QR code. 当然，扫这个二维码就行。
+505. Payment successful. 付款成功了。
+506. Thank you for coming, welcome back again. 感谢光临，欢迎下次再来。
+507. Excuse me, where is the milk? 不好意思，牛奶在哪里？
+508. It’s in the fridge over there. 在那边的冰箱里。
+509. Where can I find the tissue? 我在哪里能找到纸巾？
+510. Aisle 5, on the second shelf. 5号通道，第二层货架上。
+511. Do you have any fresh bread left? 你们还有新鲜面包吗？
+512. The bread was just baked 10 minutes ago. 面包10分钟前刚烤好。
+513. This bread smells so good. 这个面包闻起来太香了。
+514. Can I get half a kilo of apples? 能给我称半斤苹果吗？
+515. Sure, pick whatever you like. 当然，你随便挑。
+516. These apples look really fresh. 这些苹果看起来特别新鲜。
+517. The vegetables are on sale today. 今天蔬菜在打折。
+518. The tomatoes are 3 yuan a kilo. 西红柿3元一公斤。
+519. Can you help me weigh these? 你能帮我称一下这些吗？
+520. That’s 2.5 kilos, 7.5 yuan total. 一共2.5公斤，总共7.5元。
+521. Where is the checkout counter? 收银台在哪里？
+522. It’s at the entrance. 在入口处。
+523. Can I use the self-checkout machine? 我能用自助收银机吗？
+524. Sure, it’s really easy to use. 当然，用起来特别简单。
+525. Scan the barcode one by one. 一个一个扫条形码就行。
+526. Put the items in the bagging area. 把商品放到装袋区。
+527. The machine will calculate the total automatically. 机器会自动计算总价。
+528. Do you need a plastic bag? 你需要塑料袋吗？
+529. No, I brought my own bag. 不用，我自己带了袋子。
+530. That’s 45 yuan in total. 总共45元。
+531. Here’s your change. 这是找你的零钱。
+532. Thank you, have a nice day. 谢谢，祝你今天愉快。
+533. This supermarket has everything I need. 这个超市有我需要的所有东西。
+534. I come here to shop every weekend. 我每个周末都来这里采购。
+535. The prices here are very reasonable. 这里的价格特别合理。
+536. There’s a promotion on yogurt this week. 这周酸奶在做促销。
+537. Buy one get one free. 买一送一。
+538. That’s such a good bargain. 这太划算了。
+539. I’ll take two boxes. 我拿两盒。
+540. This is the last bottle of water. 这是最后一瓶水了。
+541. Lucky I got it. 我拿到它太幸运了。
+542. Do you sell phone chargers here? 你们这里卖手机充电器吗？
+543. Yes, they are in the electronics section. 有的，在电子产品区。
+544. How much is this power bank? 这个充电宝多少钱？
+545. It’s 129 yuan. 这个129元。
+546. Is there any warranty? 有质保吗？
+547. It has a one-year warranty. 有一年质保。
+548. That’s not bad. 还不错。
+549. I’ll take it. 我买了。
+550. Thanks for your recommendation. 谢谢你的推荐。
+551. Excuse me, how do I get to the train station? 不好意思，请问去火车站怎么走？
+552. Take the subway line 3, it goes directly there. 坐3号线地铁，直接就能到。
+553. Where is the nearest subway entrance? 最近的地铁口在哪里？
+554. Walk straight 100 meters, you’ll see it. 直走100米，你就能看到了。
+555. How much is the subway ticket? 地铁票多少钱？
+556. It’s 5 yuan to the train station. 到火车站5元。
+557. Can I pay with my phone? 我能用手机付款吗？
+558. Sure, scan the code on the machine. 当然，扫机器上的二维码就行。
+559. Which line do I take to the city center? 去市中心坐几号线？
+560. Line 1, it stops at the central station. 1号线，在市中心站下车。
+561. Excuse me, is this seat taken? 不好意思，这个位置有人吗？
+562. No, it’s free. 没有，是空的。
+563. Could you please make some space? 你能往里面挪一点吗？
+564. Sure, no problem. 当然，没问题。
+565. We are arriving at the next station. 我们即将到达下一站。
+566. Please get ready to get off. 请准备下车。
+567. The door will open on the left. 左侧车门将会打开。
+568. Watch your step when getting off. 下车的时候注意脚下。
+569. Excuse me, can I get past? 不好意思，我能过一下吗？
+570. Sorry, I’m in your way. 抱歉，我挡着你的路了。
+571. The subway is so crowded during rush hour. 高峰时段地铁特别挤。
+572. I can barely move. 我几乎动不了。
+573. It’s only two stops away. 只剩两站就到了。
+574. I’ll get off at the next stop. 我下一站就下车。
+575. Excuse me, where is the bus stop? 不好意思，公交车站在哪里？
+576. It’s just across the street. 就在街对面。
+577. Does this bus go to the museum? 这趟公交车去博物馆吗？
+578. Yes, it will take you right there. 是的，它直接带你到那里。
+579. How much is the bus fare? 公交车票价多少钱？
+580. It’s 2 yuan, no change needed. 2元，不用找零。
+581. Can I use my transportation card? 我能用交通卡吗？
+582. Sure, just tap it on the reader. 当然，在感应区刷一下就行。
+583. The bus is coming. 公交车来了。
+584. Let’s get on the bus. 我们上车吧。
+585. Please move to the back of the bus. 请往车厢后面走。
+586. Hold on to the handrail, the bus is starting. 扶好扶手，车要开了。
+587. The next stop is the library. 下一站是图书馆。
+588. Ring the bell if you need to get off. 要下车的话按一下铃。
+589. This bus is 10 minutes late. 这趟公交晚了10分钟。
+590. The traffic is really bad today. 今天交通特别堵。
+591. I called a taxi, it’s 5 minutes away. 我叫了一辆出租车，还有5分钟到。
+592. Where are you going, sir? 先生，你要去哪里？
+593. To the airport, please. 去机场，谢谢。
+594. Which terminal? 哪个航站楼？
+595. Terminal 2. 2号航站楼。
+596. Can you take the expressway? 你能走高速吗？
+597. Sure, it’s faster. 当然，这样更快。
+598. The road ahead is jammed. 前面的路堵死了。
+599. Let’s take a different route. 我们换一条路线走吧。
+600. How long will it take to get there? 到那里需要多久？
+601. About 30 minutes if the traffic is good. 如果交通顺畅的话大概30分钟。
+602. Can you roll up the window? 你能把窗户关上吗？
+603. Sure, no problem. 当然，没问题。
+604. The air conditioning is really cold. 空调开得太凉了。
+605. Here we are at the airport. 我们到机场了。
+606. How much is the fare? 车费多少钱？
+607. It’s 85 yuan. 一共85元。
+608. Here’s 100, keep the change. 给你100，不用找零了。
+609. Thank you, have a safe flight. 谢谢你，一路平安。
+610. Excuse me, where is the check-in counter? 不好意思，值机柜台在哪里？
+611. It’s in Area B over there. 在那边的B区。
+612. Can I have your passport and ticket? 能给我你的护照和机票吗？
+613. Here you go. 给你。
+614. Would you like a window seat or an aisle seat? 你想要靠窗的位置还是靠过道的位置？
+615. A window seat, please. 靠窗的位置，谢谢。
+616. Do you have any checked luggage? 你有托运行李吗？
+617. Yes, this suitcase. 有的，就是这个行李箱。
+618. Your boarding pass is ready. 你的登机牌办好了。
+619. The flight will board at Gate 15. 航班在15号登机口登机。
+620. Boarding starts in 30 minutes. 30分钟后开始登机。
+621. Where is the security check? 安检在哪里？
+622. Go straight ahead, you can’t miss it. 一直往前走，你肯定能找到。
+623. Please take out your laptop and power bank. 请拿出你的笔记本电脑和充电宝。
+624. Put all your items on the tray. 把所有物品放到托盘里。
+625. Walk through the scanner please. 请通过安检门。
+626. Your bag is good to go. 你的包可以过了。
+627. Let’s go find the boarding gate. 我们去找登机口吧。
+628. The flight is delayed for one hour. 航班延误一小时。
+629. We can have a coffee in the lounge. 我们可以在休息室喝杯咖啡。
+630. Now boarding for flight CA123. 现在开始登机CA123次航班。
+631. Please have your boarding pass ready. 请准备好你的登机牌。
+632. Welcome aboard. 欢迎登机。
+633. Your seat number is 23A. 你的座位号是23A。
+634. Let me help you put your bag in the overhead bin. 我帮你把包放到行李架上吧。
+635. Please fasten your seatbelt. 请系好安全带。
+636. The plane is taking off soon. 飞机马上要起飞了。
+637. Can I get a glass of water? 能给我一杯水吗？
+638. Sure, here you are. 当然，给你。
+639. When will we arrive? 我们什么时候到达？
+640. We’ll land in two hours. 我们两小时后降落。
+641. The view from the window is amazing. 窗外的景色太美了。
+642. We are starting to descend. 我们开始下降了。
+643. Please make sure your seatbelt is fastened. 请确认你的安全带已经系好。
+644. We have landed safely. 我们已经安全降落了。
+645. Please don’t stand up until the seatbelt light is off. 安全带指示灯熄灭前请不要站起来。
+646. Let’s go get our checked luggage. 我们去取托运行李吧。
+647. Which carousel is for our flight? 我们航班的行李转盘是几号？
+648. Carousel number 7. 7号转盘。
+649. I see my suitcase coming out. 我看到我的行李箱出来了。
+650. We’re finally here. 我们终于到了。
+651. Good morning, everyone. 大家早上好。
+652. Did you have a good weekend? 你周末过得好吗？
+653. Yes, I went hiking with friends. 挺好的，我和朋友去徒步了。
+654. Let’s start today’s meeting. 我们开始今天的会议吧。
+655. First, let’s go over the progress. 首先，我们过一下进度。
+656. I’ve finished the report you asked for. 你要的报告我做完了。
+657. Send it to me via email later. 晚点用邮件发给我。
+658. The deadline is this Friday. 截止日期是这周五。
+659. Can you finish it by then? 你到时候能做完吗？
+660. Yes, I’ll get it done on time. 可以，我会按时完成的。
+661. I need a little extension. 我需要多一点时间。
+662. Can you give me two more days? 你能再多给我两天吗？
+663. That’s okay, but no more delays. 可以，但不能再拖了。
+664. Let’s schedule a meeting for tomorrow afternoon. 我们明天下午安排个会议吧。
+665. Is 3 o’clock okay for everyone? 大家三点有空吗？
+666. Sorry, I have another meeting at 3. 抱歉，我三点有另一个会。
+667. How about 4 o’clock? 四点怎么样？
+668. That works for me. 我没问题。
+669. I’ll send out the meeting invitation. 我来发会议邀请。
+670. Please prepare your presentation before the meeting. 请在会议前准备好你的演示文稿。
+671. I’ll share the screen now. 我现在共享屏幕。
+672. Can everyone hear me clearly? 大家能听清我说话吗？
+673. Sorry, my microphone is muted. 抱歉，我的麦克风静音了。
+674. Let me unmute it. 我来解开静音。
+675. What’s your opinion on this plan? 你对这个方案有什么看法？
+676. I think we need to adjust the budget. 我觉得我们需要调整预算。
+677. That’s a very good point. 这个观点特别好。
+678. Let’s discuss this in detail. 我们详细讨论一下这个问题。
+679. I’ll take notes during the meeting. 会议期间我来做记录。
+680. The meeting will last about one hour. 会议大概持续一小时。
+681. Let’s wrap up this meeting. 我们结束这个会议吧。
+682. The action items are clear now. 待办事项现在都明确了。
+683. I’ll send the meeting minutes to everyone later. 我晚点把会议纪要发给所有人。
+684. Do you have a minute? 你有空吗？
+685. Sure, what’s up? 当然，什么事？
+686. I need to talk to you about the new project. 我想和你聊聊新项目的事。
+687. Let’s go to the meeting room over there. 我们去那边的会议室聊吧。
+688. Can you help me review this document? 你能帮我审核一下这份文件吗？
+689. Sure, send it to me. 没问题，发给我吧。
+690. I’ll give you my feedback this afternoon. 我今天下午给你反馈。
+691. The client called this morning. 客户今天早上打电话来了。
+692. They want to change the delivery date. 他们想更改交付日期。
+693. We need to respond to them before 5 PM. 我们需要在下午5点前回复他们。
+694. Let me draft an email first. 我先起草一封邮件。
+695. Can you check this email for me? 你能帮我看一下这封邮件吗？
+696. It looks good, you can send it. 看起来没问题，你可以发了。
+697. I have to work overtime tonight. 我今晚得加班。
+698. Me too, there’s still a lot of work to do. 我也是，还有好多工作没做完。
+699. Let’s order some takeout for dinner. 我们晚餐点外卖吧。
+700. What do you want to eat? 你想吃什么？
+701. I’ll go get us some coffee. 我去给我们拿点咖啡。
+702. Thanks, I really need a cup of coffee now. 谢谢，我现在特别需要一杯咖啡。
+703. This task is more complicated than I thought. 这个任务比我想象的复杂。
+704. Don’t worry, I’ll help you. 别担心，我会帮你的。
+705. We can finish this together. 我们一起能搞定它。
+706. Great job on the presentation today. 你今天的演示做得特别好。
+707. Thank you, I was really nervous. 谢谢，我刚才特别紧张。
+708. You did a really good job. 你做得真的很棒。
+709. The boss was very satisfied with your work. 老板对你的工作特别满意。
+710. That’s a big relief. 这让我松了一大口气。
+711. I need to take a day off tomorrow. 我明天要请一天假。
+712. What’s the reason for your leave? 你请假的原因是什么？
+713. I have some personal things to deal with. 我有一些私事要处理。
+714. Okay, I’ll approve it. 好的，我批准了。
+715. I’ve finished all my work for today. 我今天所有的工作都做完了。
+716. I’m going to clock out now. 我现在要打卡下班了。
+717. See you tomorrow. 明天见。
+718. Have a good rest. 好好休息。
+719. The team building is this Saturday. 团建在这周六。
+720. Where are we going? 我们要去哪里？
+721. We’re going to the park for a picnic. 我们要去公园野餐。
+722. That sounds like a lot of fun. 听起来特别有意思。
+723. Can we bring our families? 我们能带家属吗？
+724. Sure, everyone is welcome. 当然，欢迎所有人。
+725. I need to book a meeting room for 10 people. 我要预订一个能容纳10人的会议室。
+726. Room 3 is free this morning. 3号会议室今天上午空着。
+727. I’ll reserve it right now. 我现在就预订它。
+728. The projector isn’t working. 投影仪坏了。
+729. Call the IT department to fix it. 打电话让IT部门来修。
+730. They’ll be here in 10 minutes. 他们10分钟内就到。
+731. The Wi-Fi in the office is very slow today. 办公室的Wi-Fi今天特别慢。
+732. I can’t upload this large file. 我传不了这个大文件。
+733. Let’s use the wired network. 我们用有线网吧。
+734. That’s much faster. 这样快多了。
+735. The printer is out of paper. 打印机没纸了。
+736. I’ll go add some paper. 我去加点纸。
+737. Do you need me to print anything for you? 你需要我帮你打印什么吗？
+738. Yes, 3 copies of this document. 对，这份文件打印3份。
+739. Here you go. 给你。
+740. Thanks a lot. 太感谢了。
+741. The annual performance review is next week. 年度绩效考核下周开始。
+742. I need to prepare my self-assessment. 我要准备我的自评报告。
+743. Let me help you with it. 我来帮你弄。
+744. I really appreciate your support. 我特别感谢你的支持。
+745. We make a great team. 我们是很棒的团队。
+746. The new intern will start tomorrow. 新实习生明天入职。
+747. I’ll show him around the office. 我带他熟悉一下办公室。
+748. Welcome to the team. 欢迎加入团队。
+749. Thank you, I’m very excited. 谢谢，我特别开心。
+750. Let’s work together and make progress. 我们一起努力，共同进步。
+751. I’m home! 我回来了！
+752. Welcome back, how was your day? 欢迎回家，今天过得怎么样？
+753. It was a long day, but I’m glad to be home. 今天忙了一整天，回到家真开心。
+754. Go take a shower first, dinner is almost ready. 先去冲个澡，晚饭快做好了。
+755. That smells so good. 闻起来太香了。
+756. What are you cooking? 你在做什么菜？
+757. I’m making your favorite braised pork. 我在做你最喜欢的红烧肉。
+758. I can’t wait to eat. 我都等不及要吃了。
+759. Help me set the table. 帮我摆一下碗筷。
+760. Sure, I’ll get the bowls and chopsticks. 没问题，我去拿碗和筷子。
+761. Dinner is ready, let’s eat. 晚饭做好了，我们吃饭吧。
+762. This tastes amazing. 这个太好吃了。
+763. I’m so full. 我吃得好饱。
+764. Let me do the dishes tonight. 今晚我来洗碗。
+765. No, you cooked, I’ll do it. 不用，你做饭了，我来洗。
+766. Let’s watch a movie after dinner. 我们晚饭后看个电影吧。
+767. What movie do you want to watch? 你想看什么电影？
+768. Let’s pick a comedy, I want to relax. 选个喜剧吧，我想放松一下。
+769. Pass me the remote control. 把遥控器递给我。
+770. Here you go. 给你。
+771. Turn down the volume a little. 把声音调小一点。
+772. It’s too loud. 声音太大了。
+773. This movie is really funny. 这部电影真的很搞笑。
+774. I can’t stop laughing. 我笑到停不下来。
+775. It’s getting late, I should go to bed. 时间不早了，我该睡觉了。
+776. I’m going to brush my teeth. 我要去刷牙了。
+777. Turn off the light when you leave. 你走的时候把灯关了。
+778. Good night, sleep well. 晚安，睡个好觉。
+779. What time is your alarm set for? 你的闹钟定到几点？
+780. 7 o’clock, I need to get up early tomorrow. 7点，我明天要早起。
+781. The alarm went off, time to wake up. 闹钟响了，该起床了。
+782. I don’t want to get out of bed. 我不想起床。
+783. 5 more minutes, please. 让我再睡5分钟。
+784. Breakfast is on the table. 早餐在桌子上。
+785. I made you milk and toast. 我给你准备了牛奶和吐司。
+786. That’s very sweet of you. 你太贴心了。
+787. I’m going to water the plants. 我要去给植物浇水。
+788. This plant needs more sunlight. 这盆植物需要更多阳光。
+789. Let’s move it to the balcony. 我们把它搬到阳台吧。
+790. The clothes are dry, let’s fold them. 衣服干了，我们把它们叠起来。
+791. I’ll hang up the shirts. 我来把衬衫挂起来。
+792. The house is a little messy today. 房子今天有点乱。
+793. Let’s do some cleaning this weekend. 我们这周末大扫除吧。
+794. I’ll sweep the floor. 我来扫地。
+795. I’ll mop the floor and wipe the table. 我来拖地擦桌子。
+796. The house looks so clean now. 房子现在看起来好干净。
+797. Good job, we did it. 干得好，我们搞定了。
+798. My friend is coming over tonight. 我的朋友今晚要来家里。
+799. I’ll prepare some snacks and drinks. 我去准备点零食和饮料。
+800. The doorbell is ringing, that must be him. 门铃响了，肯定是他。
+801. Come in, make yourself at home. 进来吧，别客气。
+802. Thanks for inviting me. 谢谢你邀请我。
+803. Sit down on the sofa. 坐到沙发上吧。
+804. What would you like to drink? 你想喝点什么？
+805. A can of beer would be great. 来一罐啤酒就好。
+806. Let’s play video games together. 我们一起玩电子游戏吧。
+807. I’m not very good at this. 我玩这个不太厉害。
+808. It’s okay, I’ll teach you. 没关系，我教你。
+809. You won again! 你又赢了！
+810. You’re getting better now. 你现在越来越厉害了。
+811. It’s almost 10 o’clock, I should head home. 快10点了，我该回家了。
+812. Stay a little longer, it’s still early. 再待一会吧，还早呢。
+813. No, I have to go to work early tomorrow. 不了，我明天要早起上班。
+814. Thanks for having me, I had a great time. 谢谢你招待我，我玩得特别开心。
+815. I’ll walk you to the door. 我送你到门口。
+816. See you next time. 下次见。
+817. Text me when you get home safely. 你安全到家了给我发个消息。
+818. I will, bye. 我会的，拜拜。
+819. Are you free this Saturday? 你这周六有空吗？
+820. Yeah, I have nothing planned. 有啊，我没什么安排。
+821. Let’s go to the park for a picnic. 我们去公园野餐吧。
+822. That sounds like a perfect plan. 这计划太完美了。
+823. I’ll prepare the sandwiches and fruit. 我来准备三明治和水果。
+824. I’ll bring the blanket and some drinks. 我带野餐垫和一些饮料。
+825. What time should we meet? 我们几点见面？
+826. Let’s meet at 9 in the morning. 我们早上9点见面吧。
+827. Where should we meet? 我们在哪里见面？
+828. At the gate of the park. 在公园门口。
+829. Don’t forget to bring sunscreen. 别忘了带防晒霜。
+830. The sun is really strong this weekend. 这周末太阳特别晒。
+831. I’ll bring my sunglasses too. 我也会带上我的太阳镜。
+832. The picnic spot is so beautiful. 这个野餐地点太美了。
+833. The view of the lake is amazing. 湖边的景色特别棒。
+834. Let’s spread out the blanket here. 我们在这里铺开野餐垫吧。
+835. The food you made tastes so good. 你做的食物太好吃了。
+836. I’m really full now. 我现在吃得特别饱。
+837. Let’s take a walk around the lake. 我们沿着湖边散散步吧。
+838. The breeze feels so nice. 微风吹着太舒服了。
+839. I love days like this. 我特别喜欢这样的日子。
+840. We should do this more often. 我们该多出来这样聚聚。
+841. I don’t feel very well today. 我今天感觉不太舒服。
+842. What’s wrong with you? 你哪里不舒服？
+843. I have a headache and a sore throat. 我头疼，嗓子也疼。
+844. Do you have a fever? 你发烧了吗？
+845. I think I do, my body feels hot. 我觉得是，身上感觉发烫。
+846. Let me take your temperature. 我来给你量一下体温。
+847. It’s 38.5 degrees. 38.5度。
+848. You have a fever, you should see a doctor. 你发烧了，该去看医生。
+849. I’ll make an appointment at the hospital. 我去医院预约个号。
+850. Hello, I’d like to register a consultation. 你好，我想挂个号。
+851. What’s wrong with you? 你哪里不舒服？
+852. I’ve had a fever for two days. 我发烧两天了。
+853. The fever clinic is on the second floor. 发热门诊在二楼。
+854. Go straight and turn left. 直走然后左转。
+855. Good morning, doctor. 医生早上好。
+856. Good morning, what symptoms do you have? 早上好，你有什么症状？
+857. I have a sore throat, cough and fever. 我嗓子疼、咳嗽还发烧。
+858. Let me check your throat. 我检查一下你的喉咙。
+859. Open your mouth and say "ah". 张开嘴说"啊"。
+860. Your throat is very red. 你的喉咙特别红。
+861. Let me listen to your lungs. 我听一下你的肺部。
+862. Take a deep breath in. 深吸一口气。
+863. And breathe out. 然后呼出来。
+864. It’s just a common cold. 就是普通感冒。
+865. I’ll prescribe some medicine for you. 我给你开点药。
+866. Do you have any allergies to medicine? 你有药物过敏史吗？
+867. No, I don’t. 没有。
+868. Take this medicine three times a day. 这个药一天吃三次。
+869. One pill each time after meals. 每次饭后吃一片。
+870. Drink more water and get enough rest. 多喝热水，保证充足休息。
+871. You’ll get better in three days. 三天你就会好的。
+872. Thank you so much, doctor. 太感谢你了医生。
+873. Go to the pharmacy to get your medicine. 去药房取药。
+874. Here’s your prescription. 这是你的处方。
+875. Show this to the pharmacist. 把这个给药剂师看。
+876. Here’s your medicine. 这是你的药。
+877. Remember to take it as the doctor said. 记得按医生说的吃药。
+878. I feel much better after taking the medicine. 吃完药我感觉好多了。
+879. My fever has gone down. 我的烧退了。
+880. I still have a little cough. 我还是有点咳嗽。
+881. Drink some honey water, it helps the cough. 喝点蜂蜜水，对咳嗽有好处。
+882. I have a stomachache. 我肚子疼。
+883. Did you eat something bad yesterday? 你昨天吃什么坏东西了吗？
+884. I ate too much ice cream last night. 我昨晚吃了太多冰淇淋。
+885. That’s probably the reason. 应该就是这个原因。
+886. Don’t eat cold food these days. 这几天别吃凉的东西。
+887. Eat some light food like porridge. 吃点清淡的，比如粥。
+888. My stomach still hurts a lot. 我的胃还是疼得厉害。
+889. Let’s go to the hospital for a check-up. 我们去医院做个检查吧。
+890. You need to get a blood test. 你需要抽个血化验一下。
+891. This won’t hurt much. 不会很疼的。
+892. I’m a little scared of needles. 我有点怕针。
+893. It’s done already, you didn’t even notice. 已经抽完了，你都没察觉到。
+894. The test results will be out in 30 minutes. 化验结果30分钟后出来。
+895. Let’s go get the report. 我们去拿报告。
+896. The results show you have acute gastritis. 结果显示你是急性胃炎。
+897. You need to get an IV drip. 你需要输个液。
+898. It will make you recover faster. 这样你恢复得更快。
+899. The nurse will put in the cannula for you. 护士会给你扎留置针。
+900. Let me know if it hurts too much. 如果太疼了就告诉我。
+901. The drip is almost finished. 液快输完了。
+902. I’ll call the nurse to pull it out. 我叫护士来拔针。
+903. Press here for a few minutes. 在这里按几分钟。
+904. Don’t press too hard. 别太用力按。
+905. My back has been hurting for a week. 我的背疼了一周了。
+906. You’ve been sitting too long at work. 你上班坐太久了。
+907. You need to do some exercise. 你需要做点运动。
+908. Let’s go get a massage this weekend. 我们这周末去按摩吧。
+909. That will help relax your muscles. 那样能帮你放松肌肉。
+910. My eyes feel really tired. 我的眼睛特别累。
+911. You’ve been looking at the screen all day. 你一整天都在看屏幕。
+912. Let’s do eye exercises. 我们来做眼保健操。
+913. Look at the distance for a few minutes. 往远处看几分钟。
+914. It will help your eyes rest. 这样能让你的眼睛休息一下。
+915. I need to go to the dentist. 我要去看牙医。
+916. One of my teeth hurts a lot. 我有一颗牙特别疼。
+917. How long has it been hurting? 疼多久了？
+918. It started hurting three days ago. 三天前开始疼的。
+919. There’s a small cavity in this tooth. 这颗牙有个小蛀牙。
+920. I need to fill it for you. 我需要给你补一下。
+921. It won’t take long, just 20 minutes. 不会很久，就20分钟。
+922. All done, it doesn’t hurt anymore. 好了，现在不疼了。
+923. You should brush your teeth twice a day. 你应该每天刷两次牙。
+924. Don’t eat too much sweet food. 别吃太多甜食。
+925. I went jogging yesterday and my legs hurt. 我昨天去慢跑，现在腿疼。
+926. That’s muscle soreness, it’s normal. 这是肌肉酸痛，很正常。
+927. Stretch before you exercise. 运动前要拉伸。
+928. You’ll feel better tomorrow. 你明天就会舒服点了。
+929. I’m going to the gym this afternoon. 我今天下午要去健身房。
+930. Working out makes me feel energetic. 健身让我感觉精力充沛。
+931. What’s the Wi-Fi password? Wi-Fi密码是多少？
+932. It’s 12345678. 是12345678。
+933. The internet is so slow. 网络太慢了。
+934. The video keeps buffering. 视频一直缓冲。
+935. I’ll restart the router. 我重启一下路由器。
+936. It’s much faster now. 现在快多了。
+937. My phone is out of battery. 我的手机没电了。
+938. Can I borrow your power bank? 我能借你的充电宝吗？
+939. Sure, here you go. 当然，给你。
+940. What’s your WeChat ID? 你的微信号是什么？
+941. It’s my phone number. 就是我的手机号。
+942. I’ll send you a friend request. 我给你发好友申请。
+943. I accepted your request. 我通过你的申请了。
+944. Did you see my message? 你看到我的消息了吗？
+945. Sorry, I just saw it. 抱歉，我刚看到。
+946. I was in a meeting so I couldn’t reply. 我刚才在开会，没法回复。
+947. Can you send me that photo? 你能把那张照片发给我吗？
+948. I just sent it to you in the chat. 我刚在聊天里发给你了。
+949. Did you see the new video online? 你看到网上那个新视频了吗？
+950. Yeah, it went viral yesterday. 看到了，昨天就刷屏了。
+951. That video is so funny. 那个视频太搞笑了。
+952. I laughed for ten minutes. 我笑了十分钟。
+953. Let’s order takeout tonight. 我们今晚点外卖吧。
+954. What app do you use? 你用哪个软件？
+955. I’ll open the app and pick something. 我打开软件选点吃的。
+956. The delivery will arrive in 30 minutes. 外卖30分钟后到。
+957. The delivery person is at the door. 外卖员在门口了。
+958. Thanks for your order, enjoy your meal. 谢谢你的订单，用餐愉快。
+959. I’m shopping online. 我在网购。
+960. This product has really good reviews. 这个商品的评价特别好。
+961. I’ll add it to my cart. 我把它加到购物车。
+962. The express delivery will arrive tomorrow. 快递明天就到了。
+963. The package has been delivered. 包裹已经送达了。
+964. I’ll go pick it up at the courier station. 我去快递站取它。
+965. I got a new package today. 我今天收到一个新快递。
+966. Let me unbox it. 我来拆箱。
+967. The thing I bought is exactly as described. 我买的东西和描述的一模一样。
+968. I’m so happy with it. 我对它特别满意。
+969. The weather forecast says it will rain today. 天气预报说今天会下雨。
+970. I didn’t bring an umbrella. 我没带伞。
+971. Check the weather app. 看一下天气软件。
+972. It says the rain will stop in an hour. 显示雨一小时后就停。
+973. Let’s wait a little while. 我们等一会儿吧。
+974. What time is it now? 现在几点了？
+975. It’s 10 o’clock sharp. 现在正好10点。
+976. It’s time to go. 该走了。
+977. Hurry up, we’re going to be late. 快点，我们要迟到了。
+978. We still have 10 minutes. 我们还有10分钟。
+979. I think I left my keys at home. 我好像把钥匙落在家里了。
+980. Let me check my bag again. 我再检查一下包。
+981. Oh here they are, in my pocket. 哦找到了，在我口袋里。
+982. I almost forgot my wallet. 我差点忘了带钱包。
+983. Don’t worry, I can pay for you. 没关系，我可以帮你付。
+984. I’ll pay you back tomorrow. 我明天还你钱。
+985. It’s my treat today. 今天我请客。
+986. Thank you so much, next time it’s on me. 太谢谢了，下次我请。
+987. The line is so long here. 这里队排得好长。
+988. We might have to wait for 20 minutes. 我们可能要等20分钟。
+989. That’s okay, I’m not in a rush. 没关系，我不急。
+990. Let’s chat while we wait. 我们边等边聊吧。
+991. I forgot to charge my phone last night. 我昨晚忘记给手机充电了。
+992. It died on the way here. 半路上就关机了。
+993. Do you have a charger I can use? 你有充电器可以借我用吗？
+994. Yes, here you are. 有，给你。
+995. I need to make a quick phone call. 我要打个简短的电话。
+996. Go ahead, I’ll wait for you here. 去吧，我在这里等你。
+997. Sorry to keep you waiting. 不好意思让你久等了。
+998. No problem, I just got here too. 没关系，我也刚到。
+999. Today was such a great day. 今天真是美好的一天。
+1000. Let’s do this again sometime. 我们找时间再出来玩吧。
+`;
+
+// 场景定义
+const SCENES = [
+  { id: 'greeting', name: '日常问候与寒暄', icon: '👋', range: [1, 100] },
+  { id: 'emotion', name: '情绪表达与回应', icon: '😊', range: [101, 250] },
+  { id: 'request', name: '日常请求与帮助', icon: '🤝', range: [251, 350] },
+  { id: 'restaurant', name: '餐厅与饮食场景', icon: '🍽️', range: [351, 450] },
+  { id: 'shopping', name: '购物与消费场景', icon: '🛒', range: [451, 550] },
+  { id: 'transport', name: '出行与交通场景', icon: '🚇', range: [551, 650] },
+  { id: 'work', name: '工作与职场场景', icon: '💼', range: [651, 750] },
+  { id: 'home', name: '居家与朋友相处', icon: '🏠', range: [751, 840] },
+  { id: 'health', name: '健康与就医场景', icon: '🏥', range: [841, 930] },
+  { id: 'daily', name: '网络与高频短句', icon: '📱', range: [931, 1000] },
+];
+
+// 解析句子
+function parseSentences() {
+  const sentences = [];
+  const lines = SENTENCES_RAW.trim().split('\n');
+  const regex = /^(\d+)\.\s+(.+?)\s+([\u4e00-\u9fa5].+)$/;
+  for (const line of lines) {
+    const trimmed = line.trim();
+    if (!trimmed) continue;
+    const match = trimmed.match(regex);
+    if (match) {
+      sentences.push({ id: parseInt(match[1]), en: match[2].trim(), cn: match[3].trim() });
+    }
+  }
+  return sentences;
+}
+const ALL_SENTENCES = parseSentences();
+
+// ============================================================
+//  核心状态管理
+// ============================================================
+let state = {
+  learned: new Set(),
+  totalScore: 0,
+  totalAttempts: 0,
+  totalCorrect: 0,
+  maxCombo: 0,
+};
+
+let practice = {
+  list: [],
+  index: 0,
+  current: null,
+  targetTokens: [], 
+  shuffledIndices: [], 
+  usedIndices: new Set(), 
+  matchedIndex: 0, 
+  userInput: '',
+  errors: 0,
+  score: 0,
+  combo: 0,
+  startTime: 0,
+  timer: null,
+  correctCount: 0,
+  chipFocus: -1,
+};
+
+// 进度持久化
+function loadState() {
+  try {
+    const saved = localStorage.getItem('phrases_state');
+    if (saved) {
+      const data = JSON.parse(saved);
+      state.learned = new Set(data.learned || []);
+      state.totalScore = data.totalScore || 0;
+      state.totalAttempts = data.totalAttempts || 0;
+      state.totalCorrect = data.totalCorrect || 0;
+      state.maxCombo = data.maxCombo || 0;
+    }
+  } catch (e) {}
+}
+function saveState() {
+  localStorage.setItem('phrases_state', JSON.stringify({
+    learned: Array.from(state.learned),
+    totalScore: state.totalScore, totalAttempts: state.totalAttempts,
+    totalCorrect: state.totalCorrect, maxCombo: state.maxCombo,
+  }));
+}
+
+// ============================================================
+//  语音合成
+// ============================================================
+let voices = [];
+function loadVoices() { voices = speechSynthesis.getVoices().filter(v => v.lang.startsWith('en')); }
+if (speechSynthesis.onvoiceschanged !== undefined) speechSynthesis.onvoiceschanged = loadVoices;
+loadVoices();
+function speak(text) {
+  if (!text) return;
+  speechSynthesis.cancel();
+  const utter = new SpeechSynthesisUtterance(text);
+  utter.rate = 0.85;
+  const preferred = voices.find(v => /en[-_](US|GB)/i.test(v.lang) && /female|samantha/i.test(v.name)) || voices.find(v => v.lang.startsWith('en'));
+  if (preferred) utter.voice = preferred;
+  speechSynthesis.speak(utter);
+}
+function speakCurrent() {
+  if (practice.current) speak(practice.current.en);
+}
+
+// ============================================================
+//  UI 渲染
+// ============================================================
+function $(id) { return document.getElementById(id); }
+
+function updateHomeStats() {
+  const total = ALL_SENTENCES.length;
+  const learned = state.learned.size;
+  const percent = Math.round(learned / total * 100);
+  $('totalProgressFill').style.width = percent + '%';
+  $('totalProgressText').textContent = `已掌握 ${learned} / ${total} 句 (${percent}%)`;
+  $('statLearned').textContent = learned;
+  $('statAccuracy').textContent = state.totalAttempts > 0 ? Math.round(state.totalCorrect / state.totalAttempts * 100) + '%' : '0%';
+  $('statCombo').textContent = state.maxCombo;
+  $('statScore').textContent = state.totalScore;
+}
+
+function renderScenes() {
+  const grid = $('sceneGrid');
+  grid.innerHTML = '';
+  SCENES.forEach(scene => {
+    const sceneSentences = ALL_SENTENCES.filter(s => s.id >= scene.range[0] && s.id <= scene.range[1]);
+    const doneCount = sceneSentences.filter(s => state.learned.has(s.id)).length;
+    const percent = Math.round(doneCount / sceneSentences.length * 100);
+    
+    const card = document.createElement('div');
+    card.className = 'scene-card';
+    card.innerHTML = `
+      <div class="scene-progress-dot ${doneCount === sceneSentences.length ? 'done' : ''}"></div>
+      <div class="scene-mini-bar" style="width:${percent}%"></div>
+      <div class="scene-icon">${scene.icon}</div>
+      <div class="scene-name">${scene.name}</div>
+      <div class="scene-count">${sceneSentences.length}句 · 已完成${doneCount}句</div>
+    `;
+    card.onclick = () => openScene(scene);
+    grid.appendChild(card);
+  });
+}
+
+let currentScene = null;
+function openScene(scene) {
+  currentScene = scene;
+  $('sceneGrid').style.display = 'none';
+  $('sentenceListArea').style.display = 'block';
+  $('currentSceneTitle').textContent = `${scene.icon} ${scene.name}`;
+  
+  const list = $('sentenceList');
+  list.innerHTML = '';
+  const sentences = ALL_SENTENCES.filter(s => s.id >= scene.range[0] && s.id <= scene.range[1]);
+  const doneCount = sentences.filter(s => state.learned.has(s.id)).length;
+  $('sceneProgressText').textContent = `${doneCount} / ${sentences.length} 已完成`;
+  
+  sentences.forEach(s => {
+    const item = document.createElement('div');
+    item.className = 'sl-item' + (state.learned.has(s.id) ? ' done' : '');
+    item.innerHTML = `
+      <span class="sl-num">${s.id}</span>
+      <div class="sl-content">
+        <div class="sl-en">${s.en}</div>
+        <div class="sl-cn">${s.cn}</div>
+      </div>
+      ${state.learned.has(s.id) ? '<span class="sl-check">✓</span>' : ''}
+    `;
+    item.onclick = () => startPractice([s], 0, currentScene.name);
+    list.appendChild(item);
+  });
+}
+
+function backToScenes() {
+  $('sceneGrid').style.display = 'grid';
+  $('sentenceListArea').style.display = 'none';
+  currentScene = null;
+  updateHomeStats();
+  renderScenes();
+}
+
+function startScenePractice() {
+  if (!currentScene) return;
+  const sentences = ALL_SENTENCES.filter(s => s.id >= currentScene.range[0] && s.id <= currentScene.range[1]);
+  const unlearned = sentences.filter(s => !state.learned.has(s.id));
+  const toPractice = unlearned.length > 0 ? unlearned : sentences;
+  startPractice([...toPractice].sort(() => Math.random() - 0.5), 0, currentScene.name);
+}
+
+function startRandomPractice() {
+  const unlearned = ALL_SENTENCES.filter(s => !state.learned.has(s.id));
+  const pool = unlearned.length > 20 ? unlearned : ALL_SENTENCES;
+  const shuffled = [...pool].sort(() => Math.random() - 0.5).slice(0, 20);
+  startPractice(shuffled, 0, '随机练习');
+}
+
+function startPractice(sentences, startIndex, sceneName) {
+  practice.list = sentences;
+  practice.index = startIndex;
+  practice.correctCount = 0;
+  practice.combo = 0;
+  practice.score = 0;
+  practice.errors = 0;
+  practice.startTime = Date.now();
+  
+  $('psSceneName').textContent = sceneName;
+  $('practiceScreen').classList.add('open');
+  document.body.classList.add('practice-open');
+  
+  if (practice.timer) clearInterval(practice.timer);
+  practice.timer = setInterval(() => {
+    const elapsed = Math.floor((Date.now() - practice.startTime) / 1000);
+    $('psTimer').textContent = elapsed + 's';
+  }, 1000);
+  
+  loadSentence();
+}
+
+function exitPractice() {
+  $('practiceScreen').classList.remove('open');
+  document.body.classList.remove('practice-open');
+  if (practice.timer) clearInterval(practice.timer);
+  speechSynthesis.cancel();
+  saveState();
+  backToScenes();
+  
+  if (practice.correctCount > 0) {
+    showCompleteModal();
+    practice.correctCount = 0;
+  }
+}
+
+// ============================================================
+//  核心逻辑
+// ============================================================
+function loadSentence() {
+  if (practice.index >= practice.list.length) {
+    exitPractice();
+    return;
+  }
+  
+  const s = practice.list[practice.index];
+  practice.current = s;
+  practice.userInput = '';
+  practice.errors = 0;
+  practice.matchedIndex = 0;
+  practice.usedIndices.clear();
+  practice.chipFocus = -1;
+  
+  $('psProgress').textContent = `${practice.index + 1} / ${practice.list.length}`;
+  $('psCn').textContent = s.cn;
+  $('psScore').textContent = practice.score;
+  $('psCombo').textContent = practice.combo;
+  
+  practice.targetTokens = [];
+  const regex = /[a-zA-Z0-9'’\-]+[.,!?;:]*/g;
+  let match;
+  while ((match = regex.exec(s.en)) !== null) {
+    practice.targetTokens.push({ text: match[0], start: match.index, end: match.index + match[0].length });
+  }
+  
+  practice.shuffledIndices = Array.from({ length: practice.targetTokens.length }, (_, i) => i);
+  for (let i = practice.shuffledIndices.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [practice.shuffledIndices[i], practice.shuffledIndices[j]] = [practice.shuffledIndices[j], practice.shuffledIndices[i]];
+  }
+  if (practice.shuffledIndices.join(',') === Array.from({ length: practice.targetTokens.length }, (_, i) => i).join(',') && practice.targetTokens.length > 2) {
+    [practice.shuffledIndices[0], practice.shuffledIndices[1]] = [practice.shuffledIndices[1], practice.shuffledIndices[0]];
+  }
+  
+  renderHistory();
+  setupUI();
+  
+  setTimeout(() => {
+    if (localStorage.getItem('autoSpeak') !== 'false') speak(s.en);
+  }, 300);
+}
+
+function renderHistory() {
+  const container = $('historyList');
+  container.innerHTML = '';
+  const start = Math.max(0, practice.index - 5);
+  for (let i = start; i < practice.index; i++) {
+    const item = practice.list[i];
+    const div = document.createElement('div');
+    div.className = 'history-item';
+    div.innerHTML = `
+      <div class="h-cn">${item.cn}</div>
+      <div class="h-en">${item.en}</div>
+    `;
+    container.appendChild(div);
+  }
+  setTimeout(() => {
+    $('psMiddle').scrollTop = $('psMiddle').scrollHeight;
+  }, 50);
+}
+
+function setupUI() {
+  renderSentenceMask();
+  
+  const chipsContainer = $('chips');
+  chipsContainer.innerHTML = '';
+  practice.shuffledIndices.forEach(idx => {
+    const tokenData = practice.targetTokens[idx];
+    const chip = document.createElement('button');
+    chip.className = 'chip';
+    chip.textContent = tokenData.text;
+    chip.dataset.idx = idx;
+    chip.onclick = () => clickChip(idx, tokenData.text, chip);
+    chipsContainer.appendChild(chip);
+  });
+  
+  $('inputShow').textContent = '';
+}
+
+function renderSentenceMask() {
+  const container = $('psEn');
+  container.innerHTML = '';
+  const sentence = practice.current.en;
+  for (let i = 0; i < sentence.length; i++) {
+    const ch = document.createElement('span');
+    ch.className = 'char masked';
+    ch.innerHTML = sentence[i] === ' ' ? '&nbsp;' : sentence[i]; 
+    container.appendChild(ch);
+  }
+}
+
+function updateSentenceDisplay() {
+  const sentence = practice.current.en;
+  const chars = $('psEn').querySelectorAll('.char');
+  const inputLen = practice.userInput.length;
+
+  for (let i = 0; i < chars.length; i++) {
+    chars[i].classList.remove('correct', 'incorrect', 'current', 'masked');
+    if (i < inputLen) {
+      if (sentence[i] === practice.userInput[i]) {
+        chars[i].classList.add('correct');
+      } else {
+        chars[i].classList.add('incorrect');
+      }
+    } else if (i === inputLen) {
+      chars[i].classList.add('current');
+    } else {
+      chars[i].classList.add('masked');
+    }
+  }
+}
+
+function clickChip(tokenIndex, word, chipEl) {
+  if (practice.usedIndices.has(tokenIndex)) return;
+  
+  const expectedToken = practice.targetTokens[practice.matchedIndex];
+  
+  if (word === expectedToken.text) {
+    practice.usedIndices.add(tokenIndex);
+    practice.matchedIndex++;
+    chipEl.classList.add('used');
+    
+    practice.userInput = practice.current.en.slice(0, expectedToken.end);
+    $('inputShow').textContent = practice.userInput;
+    
+    updateSentenceDisplay();
+    
+    if (practice.matchedIndex === practice.targetTokens.length) {
+      sentenceComplete();
+    }
+  } else {
+    chipEl.classList.add('wrong');
+    practice.errors++;
+    practice.combo = 0;
+    $('psCombo').textContent = 0;
+    setTimeout(() => chipEl.classList.remove('wrong'), 400);
+  }
+}
+
+function cancelLastToken() {
+  if (practice.matchedIndex === 0) return;
+  practice.matchedIndex--;
+  const removedToken = practice.targetTokens[practice.matchedIndex];
+  
+  const chips = document.querySelectorAll('.chip');
+  for (let chip of chips) {
+    const idx = parseInt(chip.dataset.idx);
+    if (practice.shuffledIndices[idx] === practice.matchedIndex) {
+      practice.usedIndices.delete(practice.shuffledIndices[idx]);
+      chip.classList.remove('used');
+      practice.chipFocus = Array.from(chips).indexOf(chip);
+      break;
+    }
+  }
+  
+  if (practice.matchedIndex > 0) {
+    const prevToken = practice.targetTokens[practice.matchedIndex - 1];
+    practice.userInput = practice.current.en.slice(0, prevToken.end);
+  } else {
+    practice.userInput = '';
+  }
+  
+  $('inputShow').textContent = practice.userInput;
+  updateSentenceDisplay();
+  refreshChipFocus();
+}
+
+function sentenceComplete() {
+  state.totalAttempts++;
+  state.totalCorrect++;
+  practice.correctCount++;
+  
+  let scoreGain = 10;
+  if (practice.errors === 0) {
+    scoreGain += 10;
+    practice.combo++;
+    if (practice.combo > state.maxCombo) state.maxCombo = practice.combo;
+    if (practice.combo >= 3) showPopup('comboPopup', practice.combo + ' 连击！🔥');
+    if (practice.combo >= 5) showPopup('perfectPopup', 'PERFECT! ✨');
+  }
+  practice.score += scoreGain;
+  state.totalScore += scoreGain;
+  
+  $('psScore').textContent = practice.score;
+  $('psCombo').textContent = practice.combo;
+  speak(practice.current.en);
+  
+  state.learned.add(practice.current.id);
+  
+  setTimeout(() => nextSentence(), 1500);
+}
+
+function nextSentence() {
+  practice.index++;
+  loadSentence();
+}
+function prevSentence() {
+  if (practice.index > 0) {
+    practice.index--;
+    loadSentence();
+  }
+}
+function showPopup(id, text) {
+  const el = $(id); el.textContent = text;
+  el.classList.remove('show'); void el.offsetWidth; el.classList.add('show');
+}
+function showCompleteModal() {
+  const acc = practice.list.length > 0 ? Math.round(practice.correctCount / (practice.correctCount + practice.errors) * 100) : 100;
+  $('modalCorrect').textContent = practice.correctCount;
+  $('modalAccuracy').textContent = acc + '%';
+  $('modalCombo').textContent = state.maxCombo;
+  $('completeModal').classList.add('show');
+}
+function closeModal() { $('completeModal').classList.remove('show'); }
+function resetProgress() {
+  if (confirm('确定重置所有进度吗？')) {
+    state = { learned: new Set(), totalScore: 0, totalAttempts: 0, totalCorrect: 0, maxCombo: 0 };
+    saveState(); updateHomeStats(); renderScenes();
+  }
+}
+
+// ============================================================
+//  键盘控制 (WASD/HJKL)
+// ============================================================
+function chipEls() { return Array.from(document.querySelectorAll('.chip')); }
+function refreshChipFocus() {
+  const els = chipEls();
+  if (!els.length) { practice.chipFocus = -1; return; }
+  if (practice.chipFocus >= els.length) practice.chipFocus = els.length - 1;
+  els.forEach((el, i) => el.classList.toggle('focused', i === practice.chipFocus));
+}
+function moveChipFocus(step) {
+  const els = chipEls();
+  if (!els.length) return;
+  const idx = practice.chipFocus;
+  if (idx < 0 || idx >= els.length) { practice.chipFocus = step > 0 ? 0 : els.length - 1; refreshChipFocus(); return; }
+  for (let k = 1; k <= els.length; k++) {
+    const j = ((idx + step * k) % els.length + els.length) % els.length;
+    if (!els[j].classList.contains('used')) { practice.chipFocus = j; refreshChipFocus(); return; }
+  }
+}
+
+// ★ 修复连续操作：选中后焦点自动跳到下一个未被使用的词
+function selectFocusedChip() {
+  const els = chipEls();
+  const chip = els[practice.chipFocus];
+  if (!chip || chip.classList.contains('used')) return;
+  
+  const keep = practice.chipFocus;
+  clickChip(parseInt(chip.dataset.idx), chip.textContent, chip);
+  
+  // 顺延焦点
+  const after = chipEls();
+  if (!after.length) return;
+  const n = after.length;
+  for (let k = 1; k <= n; k++) {
+    const j = ((keep + k) % n + n) % n;
+    if (!after[j].classList.contains('used')) {
+      practice.chipFocus = j;
+      refreshChipFocus();
+      return;
+    }
+  }
+  practice.chipFocus = -1;
+  refreshChipFocus();
+}
+
+document.addEventListener('keydown', e => {
+  if (!$('practiceScreen').classList.contains('open')) return;
+  if (e.ctrlKey || e.metaKey || e.altKey) return;
+  
+  const KEY_MAP = {
+    'w': 'ArrowUp', 's': 'ArrowDown', 'a': 'ArrowLeft', 'd': 'ArrowRight',
+    'h': 'ArrowLeft', 'j': 'ArrowDown', 'k': 'ArrowUp', 'l': 'ArrowRight',
+    ' ': 'Enter'
+  };
+  const rawKey = e.key.length === 1 ? e.key.toLowerCase() : e.key;
+  const mappedKey = KEY_MAP[rawKey] || e.key;
+  
+  if ($('completeModal').classList.contains('show')) return;
+
+  const tag = (e.target.tagName || "").toLowerCase();
+  if (tag === "input" || tag === "textarea") return;
+
+  switch (mappedKey) {
+    case "ArrowLeft": e.preventDefault(); moveChipFocus(-1); break;
+    case "ArrowRight": e.preventDefault(); moveChipFocus(1); break;
+    case "ArrowUp": e.preventDefault(); selectFocusedChip(); break;
+    case "Enter": e.preventDefault(); selectFocusedChip(); break;
+    case "ArrowDown": e.preventDefault(); cancelLastToken(); break;
+  }
+});
+
+// 初始化
+loadState();
+updateHomeStats();
+renderScenes();
+</script>
+<script src="nav.js"></script>
+</body>
+</html>
