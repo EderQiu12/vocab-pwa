@@ -5,6 +5,7 @@ const ASSETS = [
   './vocab.html',
   './chat.html',
   './dictionary.html',   // ★ 新增
+  './dict-widget.js',   // ★ 新增
   './nav.js',
   './manifest.json',
   './icons/icon-192.png',

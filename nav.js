@@ -4,6 +4,30 @@
 (function () {
   'use strict';
 
+  // ★ iframe embed 模式下什么都不做
+  if (new URLSearchParams(location.search).get('embed') === '1') return;
+
+  const APPS = {
+    vocab: { icon: '🎯', title: '词汇进化', href: 'vocab.html', desc: '每周消灭 50 个 Comfort Word' },
+    chat: { icon: '💬', title: 'Daily Chat', href: 'chat.html', desc: '12 大场景 · 200 组地道对话' },
+    grammar: { icon: '📝', title: '1000句单句', href: 'phrases.html', desc: '1000句高频单句训练' },
+    dict: { icon: '📖', title: '查词', href: 'dictionary.html', desc: '离线词典 + 联网释义 + 中文简译 + 生词表' }
+  };
+
+  if (!window.DAILY_ENGLISH_APPS) window.DAILY_ENGLISH_APPS = APPS;
+
+  // ★ 所有页面自动加载悬浮词典（首页除外）
+  const CURRENT = document.body.dataset.app || '';
+  if (CURRENT && !window.__DICT_WIDGET_LOADED__) {
+    const s = document.createElement('script');
+    s.src = 'dict-widget.js';
+    s.defer = true;
+    document.body.appendChild(s);
+  }
+
+  if (!CURRENT) return;
+  if (document.querySelector('.app-nav[data-injected]')) return;
+
   // ============================================================
   //  子应用注册表：以后新增子页面只需在这里加一行
   //  desc 字段是给首页卡片用的描述（可选）
