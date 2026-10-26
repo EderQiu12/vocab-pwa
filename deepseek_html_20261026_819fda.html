@@ -1,0 +1,1027 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<meta name="theme-color" content="#1a1a2e" />
+<title>查词 · Daily English</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC",
+      "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+    background-attachment: fixed;
+    min-height: 100vh; color: #e8e8e8; padding: 20px;
+  }
+  .app { max-width: 780px; margin: 0 auto; }
+
+  .header {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 16px; padding: 20px 24px; margin-bottom: 16px;
+    backdrop-filter: blur(10px);
+  }
+  .header h1 {
+    font-size: 22px; font-weight: 800;
+    background: linear-gradient(135deg, #00e5ff, #d500f9);
+    -webkit-background-clip: text; background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  .header .subtitle { font-size: 12px; color: #8a8fa3; margin-top: 4px; }
+
+  .search-bar {
+    display: flex; gap: 10px; margin-bottom: 14px;
+  }
+  #searchInput {
+    flex: 1; padding: 14px 18px; font-size: 17px; font-family: inherit;
+    background: rgba(0,0,0,0.3); color: #fff;
+    border: 2px solid rgba(255,255,255,0.12); border-radius: 12px;
+    outline: none; transition: border-color .15s, box-shadow .15s;
+  }
+  #searchInput:focus { border-color: #00e5ff; box-shadow: 0 0 0 4px rgba(0,229,255,0.15); }
+  #searchBtn {
+    padding: 0 26px; font-size: 15px; font-weight: 700; font-family: inherit;
+    background: linear-gradient(135deg, #00e5ff, #00b8d9); color: #0a1929;
+    border: none; border-radius: 12px; cursor: pointer;
+    box-shadow: 0 4px 16px rgba(0,229,255,0.3); transition: all .15s;
+    white-space: nowrap;
+  }
+  #searchBtn:hover { box-shadow: 0 6px 22px rgba(0,229,255,0.45); transform: translateY(-1px); }
+  #searchBtn:disabled { opacity: 0.5; cursor: wait; }
+
+  /* 历史 + 快捷词 */
+  .chips-row {
+    display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 16px;
+    align-items: center;
+  }
+  .chips-label { font-size: 12px; color: #6a7090; margin-right: 4px; }
+  .chip-link {
+    padding: 5px 12px; font-size: 12.5px; border-radius: 14px;
+    background: rgba(0,229,255,0.08); color: #00e5ff;
+    border: 1px solid rgba(0,229,255,0.25); cursor: pointer;
+    transition: all .15s; user-select: none;
+  }
+  .chip-link:hover { background: rgba(0,229,255,0.18); transform: translateY(-1px); }
+  .chip-clear { color: #ff6b6b; border-color: rgba(255,107,107,0.3); background: rgba(255,107,107,0.08); }
+  .chip-clear:hover { background: rgba(255,107,107,0.18); }
+
+  /* 结果卡片 */
+  .result-card {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 16px; padding: 22px 24px; margin-bottom: 16px;
+    backdrop-filter: blur(10px); animation: fadeUp .25s ease;
+  }
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+
+  .word-head { display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap; margin-bottom: 10px; }
+  .word-title { font-size: 30px; font-weight: 800; color: #fff; }
+  .word-phonetic { font-size: 14px; color: #8a8fa3; font-family: "SF Mono", Monaco, monospace; }
+  .word-source {
+    font-size: 10.5px; padding: 2px 8px; border-radius: 8px;
+    background: rgba(0,229,255,0.12); color: #00e5ff;
+    border: 1px solid rgba(0,229,255,0.25); margin-left: auto;
+  }
+  .word-source.offline { background: rgba(142,68,173,0.15); color: #bb8fce; border-color: rgba(142,68,173,0.35); }
+  .word-source.cached  { background: rgba(80,227,194,0.12); color: #50e3c2; border-color: rgba(80,227,194,0.3); }
+
+  .speak-btn {
+    width: 34px; height: 34px; border-radius: 50%;
+    background: rgba(0,229,255,0.12); border: 1px solid rgba(0,229,255,0.35);
+    color: #00e5ff; cursor: pointer; font-size: 15px;
+    display: inline-flex; align-items: center; justify-content: center;
+    transition: all .15s; padding: 0;
+  }
+  .speak-btn:hover { background: rgba(0,229,255,0.25); transform: scale(1.05); }
+  .speak-btn.playing { background: rgba(0,229,255,0.4); }
+
+  .cn-meaning {
+    font-size: 15px; color: #50e3c2; padding: 10px 14px;
+    background: rgba(80,227,194,0.06); border-left: 3px solid #50e3c2;
+    border-radius: 0 8px 8px 0; margin-bottom: 16px; line-height: 1.6;
+  }
+
+  .meanings-title {
+    font-size: 12px; color: #8a8fa3; margin: 16px 0 10px;
+    text-transform: uppercase; letter-spacing: 1px; font-weight: 700;
+  }
+  .meaning-group {
+    background: rgba(0,0,0,0.2); border-radius: 10px;
+    padding: 14px 16px; margin-bottom: 10px;
+    border: 1px solid rgba(255,255,255,0.06);
+  }
+  .pos {
+    display: inline-block; font-size: 11.5px; font-weight: 700;
+    color: #f39c12; background: rgba(243,156,18,0.12);
+    padding: 2px 10px; border-radius: 10px; margin-bottom: 8px;
+  }
+  .def-item { margin-bottom: 10px; }
+  .def-item:last-child { margin-bottom: 0; }
+  .def-text { font-size: 14px; color: #d8dce8; line-height: 1.6; }
+  .def-example {
+    font-size: 13px; color: #8a8fa3; font-style: italic;
+    margin-top: 4px; padding-left: 14px;
+    border-left: 2px solid rgba(0,229,255,0.2);
+  }
+  .synonyms { margin-top: 8px; font-size: 12px; color: #8a8fa3; }
+  .synonyms .syn-tag {
+    display: inline-block; padding: 1px 8px; margin: 2px;
+    background: rgba(0,229,255,0.08); color: #00e5ff;
+    border-radius: 8px; cursor: pointer;
+  }
+  .synonyms .syn-tag:hover { background: rgba(0,229,255,0.2); }
+
+  .status-msg {
+    text-align: center; padding: 30px 20px; color: #6a7090;
+    font-size: 13px; line-height: 1.7;
+  }
+  .status-msg .icon { font-size: 44px; margin-bottom: 10px; opacity: 0.6; }
+  .status-msg button {
+    margin-top: 12px; padding: 8px 18px; font-family: inherit;
+    font-size: 13px; font-weight: 600; border-radius: 10px; cursor: pointer;
+    background: rgba(0,229,255,0.12); color: #00e5ff;
+    border: 1px solid rgba(0,229,255,0.3); transition: all .15s;
+  }
+  .status-msg button:hover { background: rgba(0,229,255,0.22); }
+
+  @media (max-width: 480px) {
+    body { padding: 12px; }
+    .header, .result-card { padding: 16px 18px; }
+    .word-title { font-size: 24px; }
+    #searchInput { font-size: 16px; padding: 12px 14px; }
+    #searchBtn { padding: 0 18px; font-size: 14px; }
+  }
+</style>
+</head>
+<body data-app="dict">
+
+<div class="app">
+  <div class="header">
+    <h1>📖 查词</h1>
+    <div class="subtitle">离线词典 + 联网释义 + 缓存加速 · 支持发音</div>
+  </div>
+
+  <div class="search-bar">
+    <input id="searchInput" type="text" placeholder="输入英文单词，如 declare / obtain / get"
+           autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" />
+    <button id="searchBtn">查询</button>
+  </div>
+
+  <div class="chips-row" id="historyRow"></div>
+  <div class="chips-row" id="quickRow"></div>
+
+  <div id="resultArea"></div>
+</div>
+
+<script>
+/* ============================================================
+ *  1. 离线词典（vocab 替代词 + 常用高频词，精简格式）
+ *     格式: word: [phonetic, 中文释义]
+ * ============================================================ */
+const OFFLINE_DICT = {
+  // ---- vocab 替代词 ----
+  "declare":["/dɪˈkler/","v. 宣布，声明"],
+  "remark":["/rɪˈmɑːrk/","v. 评论，说起"],
+  "obtain":["/əbˈteɪn/","v. 获得，取得"],
+  "acquire":["/əˈkwaɪər/","v. 获得，学到，收购"],
+  "secure":["/sɪˈkjʊr/","v. 确保，获得"],
+  "procure":["/prəˈkjʊr/","v. 采购，弄到"],
+  "create":["/kriˈeɪt/","v. 创造，产生"],
+  "produce":["/prəˈdjuːs/","v. 生产，制造"],
+  "generate":["/ˈdʒenəreɪt/","v. 生成，引起"],
+  "concoct":["/kənˈkɒkt/","v. 编造，捏造"],
+  "ponder":["/ˈpɑːndər/","v. 沉思，考虑"],
+  "contemplate":["/ˈkɑːntəmpleɪt/","v. 凝视，深思"],
+  "reflect":["/rɪˈflekt/","v. 反思，反省"],
+  "deliberate":["/dɪˈlɪbəreɪt/","v. 仔细考虑，权衡"],
+  "speculate":["/ˈspekjuleɪt/","v. 推测，猜测"],
+  "grasp":["/ɡræsp/","v. 理解，掌握"],
+  "realize":["/ˈriːəlaɪz/","v. 意识到，领悟"],
+  "comprehend":["/ˌkɒmprɪˈhend/","v. 精确理解"],
+  "notice":["/ˈnoʊtɪs/","v. 注意到，察觉"],
+  "observe":["/əbˈzɜːrv/","v. 观察，留意"],
+  "perceive":["/pərˈsiːv/","v. 感知，察觉"],
+  "detect":["/dɪˈtɛkt/","v. 检测，发现"],
+  "gaze":["/ɡeɪz/","v. 凝视"],
+  "monitor":["/ˈmɒnɪtə/","v. 监控"],
+  "scrutinize":["/ˈskruːtənaɪz/","v. 仔细审查"],
+  "excellent":["/ˈeksələnt/","adj. 出色的，卓越的"],
+  "superb":["/suːˈpɜːrb/","adj. 极好的，一流的"],
+  "outstanding":["/aʊtˈstændɪŋ/","adj. 杰出的，出众的"],
+  "remarkable":["/rɪˈmɑːrkəbl/","adj. 非凡的，显著的"],
+  "splendid":["/ˈsplendɪd/","adj. 辉煌的，极好的"],
+  "enormous":["/ɪˈnɔːrməs/","adj. 巨大的，庞大的"],
+  "massive":["/ˈmæsɪv/","adj. 大量的，巨大的"],
+  "immense":["/ɪˈmens/","adj. 无边的，巨大的"],
+  "colossal":["/kəˈlɑːsl/","adj. 巨大的，庞大的"],
+  "gigantic":["/dʒaɪˈɡæntɪk/","adj. 巨大的，巨人般的"],
+  "crucial":["/ˈkruːʃl/","adj. 关键的，决定性的"],
+  "vital":["/ˈvaɪtl/","adj. 必不可少的，至关重要的"],
+  "significant":["/sɪɡˈnɪfɪkənt/","adj. 重要的，意义重大的"],
+  "essential":["/ɪˈsenʃl/","adj. 本质的，必需的"],
+  "paramount":["/ˈpærəmaʊnt/","adj. 至高无上的，首要的"],
+  "state":["/steɪt/","v. 陈述，声明"],
+  "express":["/ɪkˈspres/","v. 表达"],
+  "articulate":["/ɑːrˈtɪkjəleɪt/","v. 清晰表达"],
+  "assert":["/əˈsɜːrt/","v. 断言，主张"],
+  "maintain":["/meɪnˈteɪn/","v. 维持，保养"],
+  "preserve":["/prɪˈzɜːrv/","v. 保存，保护"],
+  "sustain":["/səˈsteɪn/","v. 维持，支撑"],
+  "perpetuate":["/pərˈpetʃueɪt/","v. 使延续，助长"],
+  "allow":["/əˈlaʊ/","v. 允许"],
+  "permit":["/ˈpɜːrmɪt/","v. 允许（正式）"],
+  "enable":["/ɪˈneɪbl/","v. 使能够"],
+  "facilitate":["/fəˈsɪlɪteɪt/","v. 促进，使便利"],
+  "attempt":["/əˈtempt/","v. 尝试（目的性）"],
+  "strive":["/straɪv/","v. 努力（含决心）"],
+  "endeavor":["/ɪnˈdevər/","v. 倾尽全力"],
+  "pursue":["/pərˈsuː/","v. 追求（主动性）"],
+  "request":["/rɪˈkwest/","v. 要求"],
+  "question":["/ˈkwestʃən/","v. 质问"],
+  "inquire":["/ɪnˈkwaɪər/","v. 询问"],
+  "require":["/rɪˈkwaɪər/","v. 需要（正式）"],
+  "essential_adj":["",""],
+  "indispensable":["/ˌɪndɪˈspensəbl/","adj. 不可或缺的"],
+  "sense":["/sens/","v. 感知，察觉"],
+  "register":["/ˈredʒɪstər/","v. 感知，登记"],
+  "formulate":["/ˈfɔːrmjuleɪt/","v. 系统阐述"],
+  "apply":["/əˈplaɪ/","v. 应用，使用"],
+  "utilize":["/ˈjuːtəlaɪz/","v. 充分利用"],
+  "employ":["/ɪmˈplɔɪ/","v. 雇佣，采用"],
+  "harness":["/ˈhɑːrnɪs/","v. 借助，利用"],
+  "discover":["/dɪˈskʌvər/","v. 发现，察觉"],
+  "identify":["/aɪˈdɛntɪfaɪ/","v. 识别，鉴定"],
+  "ascertain":["/ˌæsərˈteɪn/","v. 确认，查明"],
+  "hand":["/hænd/","v. 手递，交出"],
+  "offer":["/ˈɑːfər/","v. 提供，主动提出"],
+  "convey":["/kənˈveɪ/","v. 传达，表达"],
+  "extremely":["/ɪkˈstriːmli/","adv. 非常地"],
+  "exceptionally":["/ɪkˈsɛpʃənəli/","adv. 非常地（超出常态）"],
+  "unbelievably":["/ˌʌnbɪˈliːvəbli/","adv. 难以置信地"],
+  "assist":["/əˈsɪst/","v. 帮助，协助"],
+  "support":["/səˈpɔːrt/","v./n. 支持，扶持"],
+  "aid":["/eɪd/","v./n. 援助，帮助"],
+  "assistance":["/əˈsɪstəns/","n. 协助，援助"],
+  "discuss":["/dɪsˈkʌs/","v. 讨论"],
+  "converse":["/kənˈvɜːrs/","v. 交谈"],
+  "debate":["/dɪˈbeɪt/","v. 辩论"],
+  "negotiate":["/nɪˈɡɒtɪeɪt/","v. 协商"],
+  "shift":["/ʃɪft/","v. 移动，转移"],
+  "rotate":["/rəˈteɪt/","v. 旋转，转动"],
+  "revolve":["/rɪˈvɒlv/","v. 旋转，围绕"],
+  "issue":["/ˈɪsjuː/","n. 问题（中性）"],
+  "challenge":["/ˈtʃælɪndʒ/","n. 挑战"],
+  "conundrum":["/kəˈnʌndrəm/","n. 难题"],
+  "quandary":["/ˈkwɒndəri/","n. 困境"],
+  "commence":["/kəˈmɛns/","v. 开始（正式）"],
+  "initiate":["/ɪˈnɪʃɪeɪt/","v. 启动，开始"],
+  "launch":["/lɔːntʃ/","v. 启动，发射"],
+  "deliver":["/dɪˈlɪvər/","v. 递送，交付"],
+  "orchestrate":["/ˈɔːrkɪstreɪt/","v. 精确协调"],
+  "display":["/dɪˈspleɪ/","v. 展示，陈列"],
+  "demonstrate":["/ˈdemənstreɪt/","v. 证明，示范"],
+  "exhibit":["/ɪkˈzɪbɪt/","v. 展出，陈列"],
+  "illustrate":["/ˈɪləstreɪt/","v. 举例说明，图解"],
+  "section":["/ˈsɛkʃn/","n. 部分，章节"],
+  "element":["/ˈɛlɪmənt/","n. 要素，元素"],
+  "component":["/kəmˈpoʊnənt/","n. 组成部分"],
+  "segment":["/ˈsɛɡmənt/","n. 段落，片段"],
+  "spot":["/spɒt/","n. 地点，位置"],
+  "setting":["/ˈsetɪŋ/","n. 环境，情境"],
+  "sanctuary":["/ˈsæŋktʃuəri/","n. 安全港，藏身处"],
+  "situation":["/sɪtʃuˈeɪʃn/","n. 情况"],
+  "scenario":["/sɪˈnɑːrioʊ/","n. 情境，场景"],
+  "context":["/ˈkɒntɛkst/","n. 背景，语境"],
+  "instance":["/ˈɪnstəns/","n. 实例，事例"],
+  "presence":["/ˈprɛzəns/","n. 存在，出席"],
+  "companion":["/kəmˈpænjən/","n. 伴侣，同伴"],
+  "companionship":["/kəmˈpænjənʃɪp/","n. 陪伴关系"],
+  "structure":["/ˈstrʌktʃə/","n. 结构"],
+  "framework":["/ˈfreɪmwɜːrk/","n. 框架"],
+  "mechanism":["/ˈmekənɪzəm/","n. 机制"],
+  "architecture":["/ˈɑːrkɪtektʃər/","n. 架构"],
+  "correct":["/kəˈrekt/","adj. 正确的"],
+  "just":["/dʒʌst/","adj. 公正的"],
+  "schedule":["/ˈskɛdʒuːl/","n. 日程表"],
+  "routine":["/ruːˈtiːn/","n. 日常流程"],
+  "timetable":["/ˈtaɪmteɪbl/","n. 时间表"],
+  "listen":["/ˈlɪsən/","v. 主动倾听"],
+  "overhear":["/ˌoʊvərˈhɪr/","v. 无意中听到"],
+  "cash":["/kæʃ/","n. 现金"],
+  "funds":["/fʌndz/","n. 资金"],
+  "income":["/ˈɪnkʌm/","n. 收入"],
+  "capital":["/ˈkæpɪtl/","n. 资本"],
+  "truth":["/truːθ/","n. 真相，事实"],
+  "realization":["/ˌriːəlaɪˈzeɪʃn/","n. 认识，领悟"],
+  "various":["/ˈveəriəs/","adj. 各种不同的"],
+  "distinct":["/dɪˈstɪŋkt/","adj. 明显不同的"],
+  "diverse":["/daɪˈvɜːrs/","adj. 多样化的"],
+  "plenty":["/ˈplenti/","n. 大量，充裕"],
+  "quantity":["/ˈkwɒntəti/","n. 数量，量"],
+  "magnitude":["/ˈmæɡnɪtjuːd/","n. 量级，规模"],
+  "scale":["/skeɪl/","n. 规模，范围"],
+  "learn":["/lɜːrn/","v. 学习"],
+  "research":["/rɪˈsɜːrtʃ/","v./n. 研究"],
+  "reserve":["/rɪˈzɜːrv/","v. 预订"],
+  "finalize":["/ˈfaɪnəlaɪz/","v. 最终确定"],
+  "allocate":["/ˈæləkeɪt/","v. 分配，拨出"],
+  "vision":["/ˈvɪʒn/","n. 视觉，视力"],
+  "optic":["/ˈɒptɪk/","adj. 光学的，视觉的"],
+  "work":["/wɜːrk/","n. 工作，事务"],
+  "position":["/pəˈzɪʃn/","n. 职位，岗位"],
+  "occupation":["/ˌɒkjuˈpeɪʃn/","n. 职业"],
+  "vocation":["/voʊˈkeɪʃn/","n. 职业，天职"],
+  "term":["/tɜːrm/","n. 术语"],
+  "enterprise":["/ˈentəpraɪz/","n. 企业，事业"],
+  "company":["/ˈkʌmpəni/","n. 公司"],
+  "corporation":["/ˌkɔːpəˈreɪʃn/","n. 跨国公司"],
+  "organization":["/ˌɔːrɡənaɪˈzeɪʃn/","n. 组织，机构"],
+  "problem":["/ˈprɒbləm/","n. 问题，难题"],
+  "concern":["/kənˈsɜːrn/","n. 担忧，关切"],
+  "topic":["/ˈtɒpɪk/","n. 讨论主题"],
+  "subject":["/ˈsʌbdʒɪkt/","n. 学科，对象"],
+  "aspect":["/ˈæspekt/","n. 方面，视角"],
+  "facet":["/ˈfæsɪt/","n. 层面，特征"],
+  "dimension":["/daɪˈmenʃn/","n. 维度，层面"],
+  "gentle":["/ˈdʒentl/","adj. 温柔的，温和的"],
+  "generous":["/ˈdʒenərəs/","adj. 慷慨的，大方的"],
+  "compassionate":["/kəmˈpæʃənət/","adj. 有同情心的"],
+  "benign":["/bɪˈnaɪn/","adj. 仁慈的，温和的"],
+  "boss":["/bɒs/","n. 负责人，老板"],
+  "leader":["/ˈliːdər/","n. 领导者"],
+  "supervisor":["/ˈsuːpərvaɪzər/","n. 监督者，主管"],
+  "executive":["/ɪɡˈzekjətɪv/","n. 高管，行政主管"],
+  "dark":["/dɑːrk/","adj. 黑暗的，深色的"],
+  "ebony":["/ˈebəni/","adj. 乌木色的"],
+  "jet-black":["/dʒet blæk/","adj. 乌黑发亮的"],
+  "extended":["/ɪkˈstendɪd/","adj. 延长的，持续的"],
+  "prolonged":["/prəˈlɒŋd/","adj. 拖延的，持久的"],
+  "lengthy":["/ˈleŋθi/","adj. 漫长的，冗长的"],
+  "protracted":["/prəˈtræktɪd/","adj. 拖延的，持久的"],
+  "small":["/smɔːl/","adj. 小的"],
+  "modest":["/ˈmɒdɪst/","adj. 适度的，有限的"],
+  "minimal":["/ˈmɪnɪməl/","adj. 最小的，极少的"],
+  "insignificant":["/ˌɪnsɪɡˈnɪfɪkənt/","adj. 微不足道的"],
+  "home":["/hoʊm/","n. 家，居所"],
+  "residence":["/ˈrezɪdəns/","n. 住所，住宅"],
+  "dwelling":["/ˈdwelɪŋ/","n. 住宅，居所"],
+  "supply":["/səˈplaɪ/","v. 供应，供给"],
+  "endow":["/ɪnˈdaʊ/","v. 资助，赋予"],
+  "attendant":["/əˈtendənt/","n. 服务员，助理"],
+  "mate":["/meɪt/","n. 同伴，伙伴"],
+  "pal":["/pæl/","n. 伙伴，好友"],
+  "confidant":["/ˈkɒnfɪdænt/","n. 知己，密友"],
+  "dad":["/dæd/","n. 爸爸"],
+  "parent":["/ˈpeərənt/","n. 父母"],
+  "be seated":["/bi ˈsiːtɪd/","v. 就座，坐下"],
+  "occupy":["/ˈɒkjupaɪ/","v. 占据（座位）"],
+  "influence":["/ˈɪnfluəns/","n. 影响力"],
+  "authority":["/ɔːˈθɒrəti/","n. 权威，职权"],
+  "dominance":["/ˈdɒmɪnəns/","n. 主导地位"],
+  "period":["/ˈpɪəriəd/","n. 时期，时间段"],
+  "duration":["/djuˈreɪʃn/","n. 持续时间"],
+  "interval":["/ˈɪntərvl/","n. 间隔，间歇"],
+  "contest":["/ˈkɒntest/","n. 竞赛，比赛"],
+  "competition":["/ˌkɒmpəˈtɪʃn/","n. 竞争，比赛"],
+  "simulation":["/ˌsɪmjuˈleɪʃn/","n. 模拟，情景再现"],
+  "stroke":["/stroʊk/","n. 笔触，笔画"],
+  "outline":["/ˈaʊtlaɪn/","n. 轮廓，大纲"],
+  "contour":["/ˈkɒntʊər/","n. 轮廓，等高线"],
+  "boundary":["/ˈbaʊndri/","n. 边界，界限"],
+  "governmental":["/ˌɡʌvərnˈmentl/","adj. 政府的，行政的"],
+  "partisan":["/ˌpɑːrtɪˈzæn/","adj. 党派的，偏袒的"],
+  "ideological":["/ˌaɪdiəˈlɒdʒɪkl/","adj. 意识形态的"],
+  "civic":["/ˈsɪvɪk/","adj. 公民的，市政的"],
+  "finish":["/ˈfɪnɪʃ/","v. 完成，结束"],
+  "conclusion":["/kənˈkluːʒn/","n. 结论，结束"],
+  "termination":["/ˌtɜːrmɪˈneɪʃn/","n. 终止，结束"],
+  "closure":["/ˈkloʊʒər/","n. 结局，闭合"],
+  "poor":["/pʊər/","adj. 质量差的"],
+  "awful":["/ˈɔːfl/","adj. 非常糟糕的"],
+  "unsatisfactory":["/ˌʌnsætɪsˈfæktəri/","adj. 不令人满意的"],
+  "inadequate":["/ɪnˈædɪkwət/","adj. 不充分的"],
+  "misplace":["/ˌmɪsˈpleɪs/","v. 误放，弄丢"],
+  "mislay":["/ˌmɪsˈleɪ/","v. 误置，弄丢"],
+  "participant":["/pɑːrˈtɪsɪpənt/","n. 参与者"],
+  "colleague":["/ˈkɒliːɡ/","n. 同事"],
+  "stakeholder":["/ˈsteɪkhoʊldər/","n. 利益相关者"],
+  "constituent":["/kənˈstɪtjuənt/","n. 组成部分"],
+  "settle":["/ˈsetl/","v. 结账，结算"],
+  "remunerate":["/rɪˈmjuːnəreɪt/","v. 支付报酬"],
+  "remit":["/rɪˈmɪt/","v. 汇款，支付"],
+  "rule":["/ruːl/","n. 规则"],
+  "regulation":["/ˌreɡjuˈleɪʃn/","n. 管理条例"],
+  "statute":["/ˈstætʃuːt/","n. 法典，成文法"],
+  "automobile":["/ˈɔːtəməbiːl/","n. 汽车"],
+  "vehicle":["/ˈviːəkl/","n. 交通工具"],
+  "town":["/taʊn/","n. 小城镇"],
+  "metropolis":["/məˈtrɒpəlɪs/","n. 大都市"],
+  "megalopolis":["/ˌmeɡəˈlɒpəlɪs/","n. 超级都市区"],
+  "cosmopolitan":["/ˌkɒzməˈpɒlɪtən/","adj. 国际化的"],
+  "contain":["/kənˈteɪn/","v. 包含，容纳"],
+  "comprise":["/kəmˈpraɪz/","v. 由…组成"],
+  "encompass":["/ɪnˈkʌmpəs/","v. 涵盖，包括"],
+  "incorporate":["/ɪnˈkɔːrpəreɪt/","v. 融入，包含"],
+  "proceed":["/prəˈsiːd/","v. 继续进行"],
+  "carry on":["/ˈkæri ɒn/","v. 坚持做某事"],
+  "group":["/ɡruːp/","n. 组合，集合"],
+  "collection":["/kəˈlekʃn/","n. 收集品"],
+  "cluster":["/ˈklʌstər/","n. 群集，聚集"],
+  "neighborhood":["/ˈneɪbərhʊd/","n. 社区"],
+  "society":["/səˈsaɪəti/","n. 社会"],
+  "collective":["/kəˈlektɪv/","n. 集体"],
+  "coterie":["/ˈkoʊtəri/","n. 精英圈，小圈子"],
+  "title":["/ˈtaɪtl/","n. 标题，称号"],
+  "designation":["/ˌdezɪɡˈneɪʃn/","n. 职称，指定名称"],
+  "pale":["/peɪl/","adj. 淡色的，苍白的"],
+  "ivory":["/ˈaɪvəri/","adj. 象牙白的"],
+  "alabaster":["/ˌæləˈbæstər/","adj. 雪花石膏白的"],
+  "creamy":["/ˈkriːmi/","adj. 奶白色的"],
+  "administrator":["/ədˈmɪnɪstreɪtər/","n. 管理者，行政官"],
+  "chancellor":["/ˈtʃænsələr/","n. 总理，首相"],
+  "study":["/ˈstʌdi/","v. 研究，学习"],
+  "master":["/ˈmɑːstər/","v. 精通，掌握"],
+  "actual":["/ˈæktʃuəl/","adj. 实际的，真实的"],
+  "genuine":["/ˈdʒenjuɪn/","adj. 真实的，真诚的"],
+  "authentic":["/ɔːˈθentɪk/","adj. 真实的，正宗的"],
+  "veritable":["/ˈverɪtəbl/","adj. 名副其实的"],
+  "alter":["/ˈɔːltər/","v. 修改，调整"],
+  "transform":["/trænsˈfɔːrm/","v. 彻底改变"],
+  "evolve":["/ɪˈvɒlv/","v. 演化，逐渐发展"],
+  "metamorphose":["/ˌmetəˈmɔːrfoʊz/","v. 质变，彻底变形"],
+  "unit":["/ˈjuːnɪt/","n. 单位，团队"],
+  "squad":["/skwɑːd/","n. 小队，球队"],
+  "moment":["/ˈmoʊmənt/","n. 瞬间"],
+  "instant":["/ˈɪnstənt/","n. 瞬间"],
+  "second":["/ˈsekənd/","n. 秒"],
+  "fraction":["/ˈfrækʃn/","n. 极小部分"],
+  "top":["/tɒp/","adj. 最顶级的"],
+  "exemplary":["/ɪɡˈzempləri/","adj. 典型的"],
+  "optimal":["/ˈɒptɪməl/","adj. 最佳的"],
+  "concept":["/ˈkɒnsept/","n. 概念"],
+  "notion":["/ˈnoʊʃn/","n. 观念"],
+  "speculation":["/ˌspekjuˈleɪʃn/","n. 猜测，推测"],
+  "corpus":["/ˈkɔːrpəs/","n. 文本集合"],
+  "entity":["/ˈentəti/","n. 实体"],
+  "data":["/ˈdeɪtə/","n. 数据"],
+  "details":["/ˈdiːteɪlz/","n. 细节"],
+  "insight":["/ˈɪnsaɪt/","n. 洞察"],
+  "statistics":["/stəˈtɪstɪks/","n. 统计数据"],
+  "guide":["/ɡaɪd/","v. 引导"],
+  "direct":["/dəˈrekt/","v. 指导"],
+  "steer":["/stɪr/","v. 引航，驾驶"],
+  "community":["/kəˈmjuːnəti/","n. 社区，群体"],
+  "interpersonal":["/ˌɪntərˈpɜːrsənl/","adj. 人际的"],
+  "societal":["/səˈsaɪətl/","adj. 社会的"],
+  "communal":["/kəˈmjuːnl/","adj. 共同的"],
+  "grasp_v":["",""],
+  "fathom":["/ˈfæðəm/","v. 理解，领悟"],
+  "discern":["/dɪˈsɜːrn/","v. 精准辨别"],
+  "track":["/træk/","v. 跟踪，追踪"],
+  "adhere to":["/ədˈhɪr tuː/","v. 遵守，遵循"],
+  "comply with":["/kəmˈplaɪ wɪð/","v. 遵守，服从"],
+  "guardian":["/ˈɡɑːrdiən/","n. 法定监护人"],
+  "caregiver":["/ˈkeərɡɪvər/","n. 看护者"],
+  "custodian":["/kʌˈstoʊdiən/","n. 管理者，监护人"],
+  "cease":["/siːs/","v. 停止"],
+  "halt":["/hɔːlt/","v. 中止"],
+  "suspend":["/səˈspend/","v. 暂停"],
+  "confront":["/kənˈfrʌnt/","v. 面对（挑战）"],
+  "address":["/əˈdres/","v. 处理，解决"],
+  "tackle":["/ˈtækl/","v. 应对，处理"],
+  "develop":["/dɪˈveləp/","v. 发展，培育"],
+  "originate":["/əˈrɪdʒɪneɪt/","v. 起源，首创"],
+  "common":["/ˈkɒmən/","adj. 共同的，普遍的"],
+  "open":["/ˈoʊpən/","adj. 开放的"],
+  "government":["/ˈɡʌvərnmənt/","n. 政府"],
+  "talk":["/tɔːk/","v. 谈论"],
+  "elaborate":["/ɪˈlæbəreɪt/","v. 详细阐述"],
+  "scan":["/skæn/","v. 浏览，快速查看"],
+  "peruse":["/pəˈruːz/","v. 仔细阅读"],
+  "digest":["/daɪˈdʒest/","v. 消化，深入理解"],
+  "grade":["/ɡreɪd/","n. 等级，年级"],
+  "tier":["/tɪr/","n. 层级，等级"],
+  "echelon":["/ˈeʃəlɒn/","n. 阶层，梯队"],
+  "sanction":["/ˈsæŋkʃn/","v. 批准（正式）"],
+  "include":["/ɪnˈkluːd/","v. 包括，包含"],
+  "augment":["/ɔːɡˈment/","v. 增加，增强"],
+  "append":["/əˈpend/","v. 附加，追加"],
+  "workspace":["/ˈwɜːkspeɪs/","n. 工作空间"],
+  "boardroom":["/ˈbɔːrdruːm/","n. 会议室"],
+  "headquarters":["/ˌhedˈkwɔːrtərz/","n. 总部"],
+  "use":["/juːz/","v. 使用，耗费"],
+  "expend":["/ɪkˈspend/","v. 消耗（资源）"],
+  "entrance":["/ˈentrəns/","n. 入口"],
+  "gateway":["/ˈɡeɪtweɪ/","n. 通道，入口"],
+  "portal":["/ˈpɔːrtl/","n. 门户，入口"],
+  "aperture":["/ˈæpərtʃər/","n. 开口，孔径"],
+  "wellness":["/ˈwelnəs/","n. 全面健康"],
+  "vitality":["/vaɪˈtæləti/","n. 生命力，活力"],
+  "fitness":["/ˈfɪtnəs/","n. 体能，适配性"],
+  "resilience":["/rɪˈzɪliəns/","n. 抗压能力，恢复力"],
+  "individual":["/ˌɪndɪˈvɪdʒuəl/","n. 个体"],
+  "craft":["/kræft/","n. 技艺，手艺"],
+  "expertise":["/ˌekspɜːrˈtiːz/","n. 专业知识"],
+  "artistry":["/ˈɑːrtɪstri/","n. 艺术造诣"],
+  "aesthetic":["/esˈθetɪk/","n. 美感，审美"],
+  "certain":["/ˈsɜːrtn/","adj. 确定的"],
+  "confident":["/ˈkɒnfɪdənt/","adj. 自信的"],
+  "definitely":["/ˈdefɪnətli/","adv. 肯定地"],
+  "undoubtedly":["/ʌnˈdaʊtɪdli/","adv. 毫无疑问"],
+  "conflict":["/ˈkɒnflɪkt/","n. 冲突"],
+  "strife":["/straɪf/","n. 纷争"],
+  "hostilities":["/hɒˈstɪlətiz/","n. 武装冲突"],
+  "past":["/pæst/","n. 过去"],
+  "chronicle":["/ˈkrɒnɪkl/","n. 编年史"],
+  "record":["/ˈrekɔːrd/","n. 记录"],
+  "historiography":["/hɪˌstɒriˈɒɡrəfi/","n. 历史编纂学"],
+  "event":["/ɪˈvent/","n. 事件，活动"],
+  "function":["/ˈfʌŋkʃn/","n. 聚会，活动"],
+  "gathering":["/ˈɡæðərɪŋ/","n. 聚会，集会"],
+  "soiree":["/ˈswɑːreɪ/","n. 晚宴，晚会"],
+  "expand":["/ɪkˈspænd/","v. 扩展，扩大"],
+  "proliferate":["/prəˈlɪfəreɪt/","v. 繁殖，大量产生"],
+  "amplify":["/ˈæmplɪfaɪ/","v. 放大，增强"],
+  "outcome":["/ˈaʊtkʌm/","n. 结果，成果"],
+  "output":["/ˈaʊtpʊt/","n. 输出，产物"],
+  "consequence":["/ˈkɒnsɪkwəns/","n. 后果"],
+  "effect":["/ɪˈfekt/","n. 效果，影响"],
+  "available":["/əˈveɪləbl/","adj. 可用的"],
+  "accessible":["/əkˈsesəbl/","adj. 易接近的"],
+  "unfettered":["/ʌnˈfetərd/","adj. 无拘束的"],
+  "daytime":["/ˈdeɪtaɪm/","n. 白天时段"],
+  "daylight":["/ˈdeɪlaɪt/","n. 白天有光时段"],
+  "stroll":["/stroʊl/","v. 漫步，闲逛"],
+  "saunter":["/ˈsɔːntər/","v. 悠闲地走"],
+  "meander":["/miˈændər/","v. 漫无目的地走"],
+  "ramble":["/ˈræmbl/","v. 漫无目的地行走"],
+  "cause":["/kɔːz/","n. 原因"],
+  "motive":["/ˈmoʊtɪv/","n. 动机"],
+  "rationale":["/ˌræʃəˈnæl/","n. 理由"],
+  "justification":["/ˌdʒʌstɪfɪˈkeɪʃn/","n. 正当理由"],
+  "cheap":["/tʃiːp/","adj. 便宜的"],
+  "meager":["/ˈmiːɡər/","adj. 稀少的"],
+  "deplorable":["/dɪˈplɔːrəbl/","adj. 非常糟糕的"],
+  "succeed":["/səkˈsiːd/","v. 成功达成目标"],
+  "investigate":["/ɪnˈvestɪɡeɪt/","v. 调查探究"],
+  "inquiry":["/ɪnˈkwaɪəri/","n. 调查，研究"],
+  "analysis":["/əˈnæləsɪs/","n. 分析，研究"],
+  "young woman":["/jʌŋ ˈwʊmən/","n. 年轻女性"],
+  "female":["/ˈfiːmeɪl/","n. 女性"],
+  "soon":["/suːn/","adv. 不久后"],
+  "promptly":["/ˈprɒmptli/","adv. 迅速地"],
+  "timely":["/ˈtaɪmli/","adv. 适时地"],
+  "prematurely":["/ˌpreməˈtʃʊrli/","adv. 仓促地"],
+  "meal":["/miːl/","n. 一餐"],
+  "diet":["/ˈdaɪət/","n. 饮食，节食"],
+  "nutrition":["/nuˈtrɪʃn/","n. 营养"],
+  "sustenance":["/ˈsʌstənəns/","n. 活命资源"],
+  "brief":["/briːf/","adj. 短暂的"],
+  "span":["/spæn/","n. 时期"],
+  "epoch":["/ˈiːpɒk/","n. 时代"],
+  "atmosphere":["/ˈætməsfɪr/","n. 大气层，氛围"],
+  "mood":["/muːd/","n. 情绪，氛围"],
+  "vibe":["/vaɪb/","n. 氛围，感觉"],
+  "ambiance":["/ˈæmbiəns/","n. 环境氛围"],
+  "instructor":["/ɪnˈstrʌktər/","n. 教授者"],
+  "lecturer":["/ˈlektʃərər/","n. 讲授者"],
+  "mentor":["/ˈmentɔːr/","n. 指导者"],
+  "educator":["/ˈedʒukeɪtər/","n. 教育者"],
+  "press":["/pres/","v. 压迫，敦促"],
+  "urge":["/ɜːrdʒ/","v. 敦促，劝说"],
+  "compel":["/kəmˈpel/","v. 强迫（正式）"],
+  "exert":["/ɪɡˈzɜːrt/","v. 施加（压力）"],
+  "provide":["/prəˈvaɪd/","v. 提供，供给"],
+  "present":["/prɪˈzent/","v. 展示，呈现"],
+  "propose":["/prəˈpoʊz/","v. 提议，建议"],
+  "proffer":["/ˈprɒfər/","v. 提出，呈递"],
+  "learning":["/ˈlɜːrnɪŋ/","n. 学习"],
+  "instruction":["/ɪnˈstrʌkʃn/","n. 指导，教学"],
+  "pedagogy":["/ˈpedəɡɒdʒi/","n. 教学法"],
+  "recollect":["/ˌrekəˈlekt/","v. 回忆，回想"],
+  "retain":["/rɪˈteɪn/","v. 保持，保留"],
+  "keep in mind":["/kiːp ɪn maɪnd/","v. 铭记，记住"],
+
+  // ---- 常用高频补充 ----
+  "hello":["/həˈloʊ/","int. 你好"],
+  "world":["/wɜːrld/","n. 世界"],
+  "thanks":["/θæŋks/","n. 感谢"],
+  "please":["/pliːz/","adv. 请"],
+  "sorry":["/ˈsɒri/","adj. 抱歉的"],
+  "excuse":["/ɪkˈskjuːz/","v. 原谅，打扰"],
+  "welcome":["/ˈwelkəm/","v./adj. 欢迎"],
+  "morning":["/ˈmɔːrnɪŋ/","n. 早上"],
+  "afternoon":["/ˌæftərˈnuːn/","n. 下午"],
+  "evening":["/ˈiːvnɪŋ/","n. 晚上"],
+  "night":["/naɪt/","n. 夜晚"],
+  "today":["/təˈdeɪ/","adv. 今天"],
+  "tomorrow":["/təˈmɒroʊ/","adv. 明天"],
+  "yesterday":["/ˈjestərdeɪ/","adv. 昨天"],
+  "water":["/ˈwɔːtər/","n. 水"],
+  "food":["/fuːd/","n. 食物"],
+  "apple":["/ˈæpl/","n. 苹果"],
+  "book":["/bʊk/","n. 书；v. 预订"],
+  "music":["/ˈmjuːzɪk/","n. 音乐"],
+  "movie":["/ˈmuːvi/","n. 电影"],
+  "happy":["/ˈhæpi/","adj. 高兴的"],
+  "sad":["/sæd/","adj. 伤心的"],
+  "angry":["/ˈæŋɡri/","adj. 生气的"],
+  "tired":["/ˈtaɪərd/","adj. 疲倦的"],
+  "hungry":["/ˈhʌŋɡri/","adj. 饥饿的"],
+  "beautiful":["/ˈbjuːtɪfl/","adj. 美丽的"],
+  "big":["/bɪɡ/","adj. 大的"],
+  "small":["/smɔːl/","adj. 小的"],
+  "fast":["/fæst/","adj. 快速的"],
+  "slow":["/sloʊ/","adj. 慢的"],
+  "easy":["/ˈiːzi/","adj. 容易的"],
+  "difficult":["/ˈdɪfɪkəlt/","adj. 困难的"],
+  "important":["/ɪmˈpɔːrtnt/","adj. 重要的"],
+  "possible":["/ˈpɒsəbl/","adj. 可能的"],
+  "interesting":["/ˈɪntrəstɪŋ/","adj. 有趣的"],
+  "boring":["/ˈbɔːrɪŋ/","adj. 无聊的"],
+  "friend":["/frend/","n. 朋友"],
+  "family":["/ˈfæməli/","n. 家庭"],
+  "teacher":["/ˈtiːtʃər/","n. 老师"],
+  "student":["/ˈstuːdnt/","n. 学生"],
+  "doctor":["/ˈdɒktər/","n. 医生"],
+  "computer":["/kəmˈpjuːtər/","n. 电脑"],
+  "phone":["/foʊn/","n. 电话"],
+  "car":["/kɑːr/","n. 汽车"],
+  "house":["/haʊs/","n. 房子"],
+  "city":["/ˈsɪti/","n. 城市"],
+  "country":["/ˈkʌntri/","n. 国家"],
+  "language":["/ˈlæŋɡwɪdʒ/","n. 语言"],
+  "English":["/ˈɪŋɡlɪʃ/","n. 英语"],
+  "Chinese":["/ˌtʃaɪˈniːz/","n. 中文"],
+  "question":["/ˈkwestʃən/","n. 问题"],
+  "answer":["/ˈænsər/","n./v. 回答"],
+  "understand":["/ˌʌndərˈstænd/","v. 理解"],
+  "remember":["/rɪˈmembər/","v. 记得"],
+  "forget":["/fərˈɡet/","v. 忘记"],
+  "believe":["/bɪˈliːv/","v. 相信"],
+  "hope":["/hoʊp/","v./n. 希望"],
+  "dream":["/driːm/","n. 梦想"],
+  "love":["/lʌv/","v./n. 爱"],
+  "like":["/laɪk/","v. 喜欢"],
+  "hate":["/heɪt/","v. 讨厌"],
+  "want":["/wɑːnt/","v. 想要"],
+  "need":["/niːd/","v. 需要"],
+  "help":["/help/","v. 帮助"],
+  "learn":["/lɜːrn/","v. 学习"],
+  "teach":["/tiːtʃ/","v. 教"],
+  "read":["/riːd/","v. 阅读"],
+  "write":["/raɪt/","v. 写"],
+  "speak":["/spiːk/","v. 说话"],
+  "listen":["/ˈlɪsn/","v. 听"],
+  "watch":["/wɒtʃ/","v. 观看"],
+  "play":["/pleɪ/","v. 玩"],
+  "run":["/rʌn/","v. 跑"],
+  "walk":["/wɔːk/","v. 走"],
+  "eat":["/iːt/","v. 吃"],
+  "drink":["/drɪŋk/","v. 喝"],
+  "sleep":["/sliːp/","v. 睡觉"],
+  "work":["/wɜːrk/","v./n. 工作"],
+  "study":["/ˈstʌdi/","v. 学习，研究"]
+};
+
+/* ============================================================
+ *  2. 缓存（localStorage，永久离线可查）
+ * ============================================================ */
+const CACHE_KEY = "dict_cache_v1";
+const HISTORY_KEY = "dict_history_v1";
+const MAX_HISTORY = 12;
+
+function loadCache() {
+  try { return JSON.parse(localStorage.getItem(CACHE_KEY) || "{}"); }
+  catch (e) { return {}; }
+}
+function saveCache(c) {
+  try { localStorage.setItem(CACHE_KEY, JSON.stringify(c)); } catch (e) {}
+}
+function loadHistory() {
+  try { return JSON.parse(localStorage.getItem(HISTORY_KEY) || "[]"); }
+  catch (e) { return []; }
+}
+function pushHistory(word) {
+  let h = loadHistory().filter(w => w !== word);
+  h.unshift(word);
+  if (h.length > MAX_HISTORY) h = h.slice(0, MAX_HISTORY);
+  try { localStorage.setItem(HISTORY_KEY, JSON.stringify(h)); } catch (e) {}
+  renderHistory();
+}
+function clearHistory() {
+  try { localStorage.removeItem(HISTORY_KEY); } catch (e) {}
+  renderHistory();
+}
+
+/* ============================================================
+ *  3. DOM + 状态
+ * ============================================================ */
+const searchInput = document.getElementById("searchInput");
+const searchBtn = document.getElementById("searchBtn");
+const resultArea = document.getElementById("resultArea");
+const historyRow = document.getElementById("historyRow");
+const quickRow = document.getElementById("quickRow");
+
+/* ============================================================
+ *  4. 数据获取
+ * ============================================================ */
+async function fetchFromAPI(word) {
+  const url = `https://api.dictionaryapi.dev/api/v2/entries/en/${encodeURIComponent(word)}`;
+  const res = await fetch(url);
+  if (!res.ok) throw new Error("not_found");
+  return res.json();
+}
+
+function buildOfflineResult(word) {
+  const item = OFFLINE_DICT[word];
+  if (!item) return null;
+  return {
+    word,
+    phonetic: item[0] || "",
+    cnMeaning: item[1] || "",
+    meanings: [],
+    source: "offline",
+    cachedAt: Date.now()
+  };
+}
+
+function normalizeApi(apiData, word) {
+  const entry = apiData[0] || {};
+  const phonetics = entry.phonetics || [];
+  const audio = (phonetics.find(p => p.audio) || {}).audio || "";
+  const phoneticText = entry.phonetic
+    || (phonetics.find(p => p.text) || {}).text
+    || "";
+  const off = OFFLINE_DICT[word.toLowerCase()];
+  return {
+    word: entry.word || word,
+    phonetic: phoneticText,
+    audio,
+    cnMeaning: off ? off[1] : "",
+    meanings: (entry.meanings || []).map(m => ({
+      partOfSpeech: m.partOfSpeech,
+      definitions: (m.definitions || []).slice(0, 4).map(d => ({
+        definition: d.definition,
+        example: d.example || "",
+        synonyms: (d.synonyms || []).slice(0, 4)
+      })),
+      synonyms: (m.synonyms || []).slice(0, 6)
+    })),
+    source: "api",
+    cachedAt: Date.now()
+  };
+}
+
+/* ============================================================
+ *  5. 查询主流程
+ * ============================================================ */
+let currentEntry = null;
+let currentAudioEl = null;
+
+async function search(rawWord) {
+  const word = String(rawWord || "").trim().toLowerCase();
+  if (!word) { renderStatus("🔍", "请输入要查询的英文单词"); return; }
+  if (!/^[a-z][a-z' -]*$/.test(word)) {
+    renderStatus("⚠️", "只支持英文单词查询"); return;
+  }
+
+  searchBtn.disabled = true;
+  const cache = loadCache();
+
+  // 1) 缓存命中 → 直接展示
+  if (cache[word]) {
+    currentEntry = cache[word];
+    renderEntry(currentEntry, "cached");
+    pushHistory(word);
+    searchBtn.disabled = false;
+    return;
+  }
+
+  // 2) 离线词典命中 → 展示，同时后台尝试联网补全
+  const offline = buildOfflineResult(word);
+  if (offline) {
+    currentEntry = offline;
+    renderEntry(offline, "offline");
+    pushHistory(word);
+    // 后台补全（不阻塞 UI）
+    fetchFromAPI(word).then(apiData => {
+      const enriched = normalizeApi(apiData, word);
+      const merged = { ...offline, ...enriched, cnMeaning: offline.cnMeaning || enriched.cnMeaning };
+      const c = loadCache(); c[word] = merged; saveCache(c);
+      if (currentEntry && currentEntry.word === word) {
+        currentEntry = merged;
+        renderEntry(merged, "offline");
+      }
+    }).catch(() => { /* 忽略：离线已可用 */ });
+    searchBtn.disabled = false;
+    return;
+  }
+
+  // 3) 联网查询
+  renderStatus("⏳", "正在联网查询…");
+  try {
+    const apiData = await fetchFromAPI(word);
+    const entry = normalizeApi(apiData, word);
+    const c = loadCache(); c[word] = entry; saveCache(c);
+    currentEntry = entry;
+    renderEntry(entry, "api");
+    pushHistory(word);
+  } catch (e) {
+    renderStatus("🔌", "本地词典没有该词，且联网查询失败或该词不存在。请检查拼写或网络。");
+  } finally {
+    searchBtn.disabled = false;
+  }
+}
+
+/* ============================================================
+ *  6. 渲染
+ * ============================================================ */
+function renderStatus(icon, msg) {
+  resultArea.innerHTML = `
+    <div class="result-card">
+      <div class="status-msg">
+        <div class="icon">${icon}</div>
+        <div>${msg}</div>
+      </div>
+    </div>`;
+}
+
+function renderEntry(entry, sourceType) {
+  const sourceLabel = {
+    cached: "缓存",
+    offline: "离线",
+    api: "联网"
+  }[sourceType] || "来源";
+  const sourceCls = sourceType === "offline" ? "offline" : (sourceType === "cached" ? "cached" : "");
+
+  let html = `<div class="result-card">
+    <div class="word-head">
+      <span class="word-title">${escapeHtml(entry.word)}</span>
+      ${entry.phonetic ? `<span class="word-phonetic">${escapeHtml(entry.phonetic)}</span>` : ""}
+      <button class="speak-btn" id="speakBtn" title="朗读">🔊</button>
+      <span class="word-source ${sourceCls}">${sourceLabel}</span>
+    </div>`;
+
+  if (entry.cnMeaning) {
+    html += `<div class="cn-meaning">${escapeHtml(entry.cnMeaning)}</div>`;
+  }
+
+  if (entry.meanings && entry.meanings.length) {
+    html += `<div class="meanings-title">英文释义</div>`;
+    entry.meanings.forEach(m => {
+      html += `<div class="meaning-group">`;
+      if (m.partOfSpeech) html += `<span class="pos">${escapeHtml(m.partOfSpeech)}</span>`;
+      m.definitions.forEach(d => {
+        html += `<div class="def-item"><div class="def-text">${escapeHtml(d.definition)}</div>`;
+        if (d.example) {
+          html += `<div class="def-example">"${escapeHtml(d.example)}"</div>`;
+        }
+        if (d.synonyms && d.synonyms.length) {
+          html += `<div class="synonyms">近义：
+            ${d.synonyms.map(s => `<span class="syn-tag" data-word="${escapeHtml(s)}">${escapeHtml(s)}</span>`).join(" ")}
+          </div>`;
+        }
+        html += `</div>`;
+      });
+      html += `</div>`;
+    });
+  } else if (!entry.cnMeaning) {
+    html += `<div class="status-msg" style="padding:16px;">暂无更多释义。可点击下方「🔄 重新联网查询」重试。</div>`;
+  }
+
+  html += `</div>`;
+  resultArea.innerHTML = html;
+
+  // 朗读按钮
+  const speakBtn = document.getElementById("speakBtn");
+  if (speakBtn) {
+    speakBtn.addEventListener("click", () => speakWord(entry, speakBtn));
+  }
+
+  // 近义词点击 → 直接查询
+  resultArea.querySelectorAll(".syn-tag").forEach(el => {
+    el.addEventListener("click", () => {
+      const w = el.dataset.word;
+      if (w) { searchInput.value = w; search(w); }
+    });
+  });
+}
+
+/* ============================================================
+ *  7. 发音
+ * ============================================================ */
+let lastCancel = 0;
+
+function speakWord(entry, btn) {
+  // 有 API 音频 → 优先播放
+  if (entry.audio) {
+    try {
+      if (currentAudioEl) { currentAudioEl.pause(); currentAudioEl = null; }
+      const audio = new Audio(entry.audio);
+      currentAudioEl = audio;
+      audio.play().catch(() => speakText(entry.word));
+      if (btn) {
+        btn.classList.add("playing");
+        audio.onended = () => btn.classList.remove("playing");
+        audio.onerror = () => btn.classList.remove("playing");
+      }
+      return;
+    } catch (e) { /* fallthrough */ }
+  }
+  speakText(entry.word);
+}
+
+function speakText(text) {
+  if (!window.speechSynthesis) return;
+  const now = Date.now();
+  if (speechSynthesis.speaking && now - lastCancel > 300) {
+    speechSynthesis.cancel();
+    lastCancel = now;
+    setTimeout(() => actuallySpeak(text), 60);
+  } else {
+    actuallySpeak(text);
+  }
+}
+function actuallySpeak(text) {
+  try {
+    const u = new SpeechSynthesisUtterance(text);
+    u.lang = "en-US"; u.rate = 0.85; u.volume = 1;
+    const voices = speechSynthesis.getVoices();
+    const v = voices.find(x => /en-US/i.test(x.lang));
+    if (v) u.voice = v;
+    speechSynthesis.speak(u);
+  } catch (e) {}
+}
+
+/* ============================================================
+ *  8. 历史 / 快捷词
+ * ============================================================ */
+function renderHistory() {
+  const h = loadHistory();
+  if (!h.length) { historyRow.innerHTML = ""; return; }
+  historyRow.innerHTML = `<span class="chips-label">最近：</span>` +
+    h.map(w => `<span class="chip-link" data-word="${escapeHtml(w)}">${escapeHtml(w)}</span>`).join("") +
+    `<span class="chip-link chip-clear" id="clearHistoryBtn">清空</span>`;
+  historyRow.querySelectorAll(".chip-link[data-word]").forEach(el => {
+    el.addEventListener("click", () => {
+      searchInput.value = el.dataset.word;
+      search(el.dataset.word);
+    });
+  });
+  const clearBtn = document.getElementById("clearHistoryBtn");
+  if (clearBtn) clearBtn.addEventListener("click", clearHistory);
+}
+
+const QUICK_WORDS = ["declare", "obtain", "essential", "crucial", "significant", "articulate", "comprehend", "resilience", "innovative", "efficient"];
+
+function renderQuick() {
+  quickRow.innerHTML = `<span class="chips-label">快捷：</span>` +
+    QUICK_WORDS.map(w => `<span class="chip-link" data-word="${w}">${w}</span>`).join("");
+  quickRow.querySelectorAll(".chip-link").forEach(el => {
+    el.addEventListener("click", () => {
+      searchInput.value = el.dataset.word;
+      search(el.dataset.word);
+    });
+  });
+}
+
+/* ============================================================
+ *  9. 工具
+ * ============================================================ */
+function escapeHtml(s) {
+  if (s == null) return "";
+  return String(s)
+    .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;").replace(/'/g, "&#39;");
+}
+
+/* ============================================================
+ *  10. 事件 + 初始化
+ * ============================================================ */
+searchBtn.addEventListener("click", () => search(searchInput.value));
+searchInput.addEventListener("keydown", (e) => {
+  if (e.key === "Enter") { e.preventDefault(); search(searchInput.value); }
+});
+
+if (window.speechSynthesis) {
+  speechSynthesis.onvoiceschanged = () => {};
+  speechSynthesis.getVoices();
+}
+
+renderHistory();
+renderQuick();
+
+// URL 参数直达：dictionary.html?w=declare
+const paramW = new URLSearchParams(location.search).get("w");
+if (paramW) {
+  searchInput.value = paramW;
+  search(paramW);
+} else {
+  renderStatus("👋", "输入英文单词开始查词。已内置约 400 条离线词典（含 vocab 替代词），其余走联网。");
+}
+</script>
+<script src="nav.js"></script>
+</body>
+</html>

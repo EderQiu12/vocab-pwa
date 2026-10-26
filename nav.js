@@ -27,6 +27,13 @@
       title: '1000句单句',
       href: 'phrases.html',
       desc: '1000句高频单句训练'
+    },
+    // ★ 新增
+    dict: {
+      icon: '📖',
+      title: '查词',
+      href: 'dictionary.html',
+      desc: '离线词典 + 联网释义 + 发音 · 查词后离线可查'
     }
   };
 

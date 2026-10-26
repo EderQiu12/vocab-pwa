@@ -1,9 +1,10 @@
-const CACHE = 'vocab-pwa-v8';
+const CACHE = 'vocab-pwa-v9';
 const ASSETS = [
   './',
   './index.html',
   './vocab.html',
   './chat.html',
+  './dictionary.html',   // ★ 新增
   './nav.js',
   './manifest.json',
   './icons/icon-192.png',
